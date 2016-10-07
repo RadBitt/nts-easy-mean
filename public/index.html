@@ -25,7 +25,7 @@
 
   <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -34,10 +34,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">NTS </a>
+          <a class="navbar-brand hidden-sm hidden-xs" href="#">Nautical Tech Services</a>
+          <a class="navbar-brand visible-sm visible-xs" href="#">NTS</a>
+          <p class="navbar-text"><strong>Call: (310)333-3548</strong></p>
+          <button class="btn btn-default navbar-btn navbar-left hidden-xs" type="button">Get a Quote</button>
         </div>
+
         <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="#">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
@@ -47,19 +51,9 @@
     </nav>
 
     <div class="container">
-      
-      <div id="info-row" class="row">
-        <div class="col-md-6">
-          <h3>Call: (123)456 - 7890</h3>
-        </div>
-
-        <div class="col-md-6">
-          <button class="btn-lg btn-primary" type="button">Fast Quote</button>
-        </div>
-      </div>
 
       <!-- Start Carousel -->
-      <div id="carousel" class="carousel slide col-md-12" data-ride="carousel">
+      <div id="carousel" class="carousel slide col-md-12 hidden-xs" data-ride="carousel">
         <!-- Indicators -->
         <ol class="carousel-indicators">
           <li data-target="#carousel" data-slide-to="0" class="active"></li>
@@ -107,11 +101,92 @@
         </a> -->
       </div>
       <!-- End Carousel -->
-
-
-
+        <div class="container main-content">
+            <div class="row page-header no-border">
+                <div class="col-md-12 text-center">
+                    <h1>Nautical Tech Services <br><small>Everything you need for a first-class boat.</small></h1>
+                </div>
+            </div>
+            <div class="row gradient-bg">
+                <div class="col-md-6">
+                    <h2>What our clients have to say:</h2>
+                    <blockquote>
+                    <p>"Tony showed up on time and totally fixed my boat this weekend" -@Boaterfan</p>
+                    </blockquote>
+                    <blockquote>
+                    <p>"I was about to head out to Catalina when I found my steering stopped working. Tony sent a tech out to at an instant and the weekend was saved." -@Boaterfan2</p>
+                    </blockquote>
+                </div>
+                <div class="col-md-6">
+                    <h1>Serving Marina Del Rey</h1>
+                    <P>Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi.</P>
+                </div>
+            </div>
+            <div class="row no-border">
+                <div class="col-md-12 text-center">
+                    <h2>Factory trained in all leading systems.</h2>
+                </div>
+            </div>
+            <div class="row text-center specialties-row no-border">
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img src="img/garmin-logo.gif">
+                        <h2>Garmin Authorized Technition</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img src="img/furino-logo.gif">
+                        <h2>Furino Authorized Technition</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img src="img/raymarine-logo.jpg">
+                        <h2>Raymarine Authorized Technition</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row no-border text-center specialties-row">
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img src="img/yanmar-logo.jpeg">
+                        <h2>Yanmar Authorized Mechanic</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img src="img/cummins-logo.png">
+                        <h2>Cummins Authorized Mechanic</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img src="img/volvo-logo.gif">
+                        <h2>Volvo Authorized Mechanic</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class=" jumbotron col-md-12">
+                    <h2>October Special:</h2>
+                    <p>Request a service this month and recieve 5% off.</p>
+                    <button class="btn-lg btn-primary" type="button">Request Service</button>
+                </div>
+            </div>
+        </div>
 
     </div><!-- /.container -->
+    <DIV id="footer" class="container-fluid">
+        <div class="col-md-4">
+            <ul class="info-list">
+                <li>List Item 1</li>
+                <li>List Item 2</li>
+                <li>List Item 3</li>
+                <li>List Item 4</li>
+            </ul>
+        </div>
+    </DIV>
 
 
     <!-- Bootstrap core JavaScript
