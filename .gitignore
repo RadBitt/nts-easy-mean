@@ -2,4 +2,4 @@
 /public/bower_components
 /client-bin
 
-*.db
+Thumbs.db

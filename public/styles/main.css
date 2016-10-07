@@ -1,8 +1,13 @@
 /* Common styles */
 
 body {
-  padding-top: 50px;
+  margin-top: 50px;
   width: 100%;
+  max-width: 1900px;
+}
+
+.container-fluid {
+	padding: 0;
 }
 
 .row {
@@ -46,10 +51,18 @@ body {
 }
 
 /* Carousel Styles */
+#carousel {
+	padding: 0;
+}
+
 .carousel-caption h3 {
 	padding: 10px;
 	background-color: rgba(11,39,67, 0.9);
 	border-radius: 5px;
+}
+
+#carousel .item img {
+	width: 100%;
 }
 
 
