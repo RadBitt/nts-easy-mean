@@ -1,5 +1,16 @@
-/* Common styles */
 
+
+/* Typeography */
+body {
+  font-family: 'FontAwesome';
+}
+
+body, p {
+  /*font-size: 14px;*/
+}
+
+
+/* Common styles */
 body {
   margin-top: 50px;
   width: 100%;
@@ -11,7 +22,7 @@ body {
 }
 
 .row {
-	margin: 50px 0;
+	margin: 30px 0;
 	border-top: 1px solid #1F3649;
 }
 
@@ -63,11 +74,15 @@ body {
 
 #carousel .item img {
 	width: 100%;
+	max-height: 350px;
 }
 
 
 /* Page-Header Styles */
-
+.page-header {
+	margin: 0;
+	padding: 0;
+}
 
 /* Index Styles */
 .specialties-row {
