@@ -8,4 +8,4 @@
 //   }
 // }
 
-// module.exports = templateDirective;
+// module.exports = directive;
