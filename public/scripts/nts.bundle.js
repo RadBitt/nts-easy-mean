@@ -11,7 +11,7 @@ webpackJsonp([0],[
 	.config(['$routeProvider', '$locationProvider',
 	  function($routeProvider, $locationProvider) {
 	    $routeProvider
-	      .when('/home', {
+	      .when('/', {
 	        templateUrl: 'templates/home.html'
 	        // controller: 'BookCtrl',
 	        // controllerAs: 'book'
@@ -1169,11 +1169,6 @@ webpackJsonp([0],[
 
 	function mainController ($scope) {
 
-		$scope.template = 'templates/home.html';
-
-		$scope.changeTemplate = function(page) {
-			$scope.template = 'templates/' + page + '.html';
-		}
 
 	}
 

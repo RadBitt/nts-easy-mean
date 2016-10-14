@@ -7,7 +7,7 @@ angular.module('ntsApp', [ngRoute])
 .config(['$routeProvider', '$locationProvider',
   function($routeProvider, $locationProvider) {
     $routeProvider
-      .when('/home', {
+      .when('/', {
         templateUrl: 'templates/home.html'
         // controller: 'BookCtrl',
         // controllerAs: 'book'
