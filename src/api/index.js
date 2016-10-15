@@ -2,16 +2,22 @@
 
 var express = require('express');
 
-var requests = require('../../mock/mock.json');
+var NtsRequests = require('../models/ntsRequests')
+// var ntsRequests = require('../../mock/mock.json');
 
 var router = express.Router(); 
 
-
 router.get('/requests', function(req, res) {
-	res.json({requests: requests}); 
+	NtsRequests.find({}, function(err, ntsRequests) {
+		if(err) {
+			return res.status(500).json({message: error.message});
+		} else
+			res.json({ntsRequests: ntsRequests}); 
+	})
+	
 });
 
-// TODO: Add post route to create new entries
+// TODO: Add POST route to create new entries
 
 // TODO: Add PUT route to update entries
 
