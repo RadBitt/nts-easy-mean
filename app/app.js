@@ -17,6 +17,11 @@ angular.module('ntsApp', [ngRoute])
         // controller: 'ChapterCtrl',
         // controllerAs: 'chapter'
       })
+      .when('/request/status', {
+        templateUrl: 'templates/status.html'
+        // controller: 'requestCtrl'
+        // controllerAs: 'chapter'
+      })
       .when('/about', {
         templateUrl: 'templates/about.html'
         // controller: 'ChapterCtrl',
@@ -25,11 +30,28 @@ angular.module('ntsApp', [ngRoute])
 
     $locationProvider.html5Mode(true);
 }])
-.controller('appBodyControl', ['$route', '$routeParams', '$location',
-  function appBodyControl($route, $routeParams, $location) {
+.controller('mainCtrl', ['$route', '$routeParams', '$location','$scope', '$http', 'dataService', 'stringService',
+  function mainCtrl($route, $routeParams, $location, $scope, $http, dataService, stringService) {
+
     this.$route = $route;
     this.$location = $location;
     this.$routeParams = $routeParams;
+
+    $scope.reqStatus = false;
+    $scope.message = {};
+    $scope.ntsReq = {}; 
+
+    $scope.saveRequest = function() {
+
+      $http.post('/api/requests', $scope.ntsReq).then(function(res) {
+        if (res.status == 200){
+          $scope.reqStatus = true;
+        }
+        $scope.message = stringService.postMessage($scope.reqStatus);
+      });
+
+    }
+
 }]);
 
 require('./scripts/services');

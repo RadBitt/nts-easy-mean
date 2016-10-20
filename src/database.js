@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://nts-easy-mean/nts-requests', function(err) {
+mongoose.connect('mongodb://nts-easy-mean/ntsRequests', function(err) {
 
 	if(err) {
 		console.log('Failed connecting to MongoDB');

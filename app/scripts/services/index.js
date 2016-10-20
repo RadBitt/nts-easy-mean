@@ -2,4 +2,6 @@
 
 var angular = require('angular');
 
-// angular.module('appName').service('newService', require('./newServiceFile'));
+angular.module('ntsApp').service('dataService', require('./data'));
+
+angular.module('ntsApp').service('stringService', require('./stringService'));

@@ -21,6 +21,11 @@ webpackJsonp([0],[
 	        // controller: 'ChapterCtrl',
 	        // controllerAs: 'chapter'
 	      })
+	      .when('/request/status', {
+	        templateUrl: 'templates/status.html'
+	        // controller: 'requestCtrl'
+	        // controllerAs: 'chapter'
+	      })
 	      .when('/about', {
 	        templateUrl: 'templates/about.html'
 	        // controller: 'ChapterCtrl',
@@ -29,16 +34,33 @@ webpackJsonp([0],[
 
 	    $locationProvider.html5Mode(true);
 	}])
-	.controller('appBodyControl', ['$route', '$routeParams', '$location',
-	  function appBodyControl($route, $routeParams, $location) {
+	.controller('mainCtrl', ['$route', '$routeParams', '$location','$scope', '$http', 'dataService', 'stringService',
+	  function mainCtrl($route, $routeParams, $location, $scope, $http, dataService, stringService) {
+
 	    this.$route = $route;
 	    this.$location = $location;
 	    this.$routeParams = $routeParams;
+
+	    $scope.reqStatus = false;
+	    $scope.message = {};
+	    $scope.ntsReq = {}; 
+
+	    $scope.saveRequest = function() {
+
+	      $http.post('/api/requests', $scope.ntsReq).then(function(res) {
+	        if (res.status == 200){
+	          $scope.reqStatus = true;
+	        }
+	        $scope.message = stringService.postMessage($scope.reqStatus);
+	      });
+
+	    }
+
 	}]);
 
 	__webpack_require__(5);
-	__webpack_require__(6);
-	__webpack_require__(7);
+	__webpack_require__(8);
+	__webpack_require__(9);
 
 
 
@@ -1135,10 +1157,71 @@ webpackJsonp([0],[
 
 	var angular = __webpack_require__(1);
 
-	// angular.module('appName').service('newService', require('./newServiceFile'));
+	angular.module('ntsApp').service('dataService', __webpack_require__(6));
+
+	angular.module('ntsApp').service('stringService', __webpack_require__(7));
 
 /***/ },
 /* 6 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	function dataService ($http) {
+
+	  this.getNtsReqs = function(cb) {
+	    $http.get('/api/requests').then(cb);
+	  };
+
+	  this.getNtsRequest = function(cb) {
+	    $http.get('/api/requests/status/:id').then(cb); 
+	  }
+
+	  // this.deleteTodo = function(todo) {
+	  //   if (!todo._id) {
+	  //     return $q.resolve();
+	  //   }
+	  //   return $http.delete('/api/todos/' + todo._id).then(function() {
+	  //     console.log("I deleted the " + todo.name + " todo!");
+	  //   });
+	  // };
+
+	}
+
+	module.exports = dataService;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	function stringService() {
+
+		this.postMessage = function(bool) {
+
+			var message = {
+				reqStatus: '',
+				kindWords: ''
+			};
+
+			if (bool) {
+				message.reqStatus = 'Thank you';
+				message.kindWords = 'Our team has recieved your request and will reply to via Email shortly.';
+			} else {
+				message.reqStatus = 'We\'re sorry';
+				message.kindWords = 'something went wrong.';
+			}
+
+			return message;
+		};
+		
+	}
+
+	module.exports = stringService;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1150,29 +1233,17 @@ webpackJsonp([0],[
 	// angular.module('ntsApp').directive('appBody', require('./appBody'));
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var angular = __webpack_require__(1);
 
-	// angular.module('appName').controller('newController', require('./newControllerFile'));
-
-	angular.module('ntsApp').controller('mainController', __webpack_require__(8));
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	function mainController ($scope) {
+	// angular.module('ntsApp').controller('statusCtrl', ['stringService', require('./statusCtrl')]);
 
 
-	}
 
-	module.exports = mainController;
 
 /***/ }
 ]);
