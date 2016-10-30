@@ -47,9 +47,16 @@ webpackJsonp([0],[
 
 	    $scope.saveRequest = function() {
 
+	      $scope.ntsReq.archived = false; 
+
 	      $http.post('/api/requests', $scope.ntsReq).then(function(res) {
 	        if (res.status == 200){
 	          $scope.reqStatus = true;
+	          $http.post('/mailer/request-submitted', $scope.ntsReq).then(function(res) {
+	            if (res.status == 200){
+	              // mail sent
+	            }
+	          });
 	        }
 	        $scope.message = stringService.postMessage($scope.reqStatus);
 	      });
@@ -1207,7 +1214,7 @@ webpackJsonp([0],[
 
 			if (bool) {
 				message.reqStatus = 'Thank you';
-				message.kindWords = 'Our team has recieved your request and will reply to via Email shortly.';
+				message.kindWords = 'Our team has recieved your request and will reply via the Email provided shortly.';
 			} else {
 				message.reqStatus = 'We\'re sorry';
 				message.kindWords = 'something went wrong.';

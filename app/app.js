@@ -43,9 +43,16 @@ angular.module('ntsApp', [ngRoute])
 
     $scope.saveRequest = function() {
 
+      $scope.ntsReq.archived = false; 
+
       $http.post('/api/requests', $scope.ntsReq).then(function(res) {
         if (res.status == 200){
           $scope.reqStatus = true;
+          $http.post('/mailer/request-submitted', $scope.ntsReq).then(function(res) {
+            if (res.status == 200){
+              // mail sent
+            }
+          });
         }
         $scope.message = stringService.postMessage($scope.reqStatus);
       });

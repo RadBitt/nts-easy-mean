@@ -11,7 +11,7 @@ function stringService() {
 
 		if (bool) {
 			message.reqStatus = 'Thank you';
-			message.kindWords = 'Our team has recieved your request and will reply to via Email shortly.';
+			message.kindWords = 'Our team has recieved your request and will reply via the Email provided shortly.';
 		} else {
 			message.reqStatus = 'We\'re sorry';
 			message.kindWords = 'something went wrong.';
