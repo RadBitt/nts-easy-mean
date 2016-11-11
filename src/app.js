@@ -7,9 +7,6 @@ var mailRouter = require('./mailer');
 
 var app = express();
 
-require('./database'); 
-require('./seed');
-
 app.use(parser.json()); 
 
 app.use('/', express.static('public'));

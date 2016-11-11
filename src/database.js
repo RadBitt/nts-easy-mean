@@ -1,14 +1,14 @@
 'use strict';
 
-var mongoose = require('mongoose');
+var firebase = require('firebase');
 
-mongoose.connect('mongodb://nts-easy-mean/ntsRequests', function(err) {
+var config = {
+  databaseURL: "https://nts-easy-mean.firebaseio.com/",
+};
 
-	if(err) {
-		console.log('Failed connecting to MongoDB');
-	} else {
-		console.log('Connected to MongoDb'); 
-	}
+firebase.initializeApp(config);
 
-});
+var database = firebase.database();
+
+module.exports = firebase; 
 
