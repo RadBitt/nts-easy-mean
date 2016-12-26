@@ -6,19 +6,22 @@ var firebase = require('../database');
 
 var router = express.Router(); 
 
+var database = firebase.database();
+
+
 // // REQ route to get all entries
-// router.get('/requests', function(req, res) {
-// 	NtsRequests.find({}, function(err, ntsRequests) {
-// 		if(err) {
-// 			return res.status(500).json({message: error.message});
-// 		} else
-// 			res.json({ntsRequests: ntsRequests}); 
-// 	})
-// });
+router.get('/requests', function(req, res) {
+	database.find({}, function(err, ntsRequests) {
+		if(err) {
+			return res.status(500).json({message: error.message});
+		} else
+			res.json({ntsRequests: ntsRequests}); 
+	})
+});
 
 // // REQ route to get all entries
 // router.get('/requests/status/:id', function(req, res) {
-// 	NtsRequests.find({}, function(err, ntsRequests) {
+// 	database.find({}, function(err, ntsRequests) {
 // 		if(err) {
 // 			return res.status(500).json({message: error.message});
 // 		} else
@@ -27,15 +30,31 @@ var router = express.Router();
 // });
 
 // // POST route to create new entries
-// router.post('/requests', function(req, res) {
-// 	var ntsReq = req.body;
-// 	NtsRequests.create(ntsReq, function(err, ntsReq) {
-// 		if(err) {
-// 			return res.status(500).json({err: err.message});
-// 		}
-// 		res.json(ntsReq);
-// 	});
-// });
+router.post('/requests', function(req, res) {
+
+	var ntsReq = req.body;
+
+	ntsReq.date = Date.now();
+
+	requestId = ntsReq.email + '/'
+
+	firebase.database().ref('/requests/' + requestId).set({
+	    date: ntsReq.date,
+		email: ntsReq.email,
+		password: ntsReq.passWord1,
+		firstName: ntsReq.firstName,
+		lastName: ntsReq.lastName,
+		phoneNumber: ntsReq.phoneNumber,
+		boatType: ntsReq.boatType,
+		boatName: ntsReq.boatName,
+		boatLoc: ntsReq.boatLoc,
+		jobDesc: ntsReq.jobDesc,
+		archived: ntsReq.archived
+	});
+
+});
+
+
 
 // // PUT route to update entries
 // router.put('/requests/:id', function(req, res) {
@@ -45,7 +64,7 @@ var router = express.Router();
 // 		return res.status(500).json({err: "Ids don't match!"});
 // 	}
 
-// 	NtsRequests.findByIdAndUpdate(id, ntsRequest, {new: true}, function(err, ntsRequest) {
+// 	database.findByIdAndUpdate(id, ntsRequest, {new: true}, function(err, ntsRequest) {
 // 		if(err) {
 // 			return res.status(500).json({err: err.message});
 // 		}

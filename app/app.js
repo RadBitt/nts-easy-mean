@@ -17,6 +17,11 @@ angular.module('ntsApp', [ngRoute])
         // controller: 'ChapterCtrl',
         // controllerAs: 'chapter'
       })
+      .when('/signup', {
+        templateUrl: 'templates/signup.html'
+        // controller: 'ChapterCtrl',
+        // controllerAs: 'chapter'
+      })
       .when('/request/status', {
         templateUrl: 'templates/status.html'
         // controller: 'requestCtrl'
