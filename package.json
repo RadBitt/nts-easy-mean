@@ -21,13 +21,12 @@
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "firebase": "^3.6.0",
-    "history": "4.2.0",
     "nodemailer": "^2.6.4",
     "re-base": "2.2.0",
     "react": "15.3.2",
     "react-addons-css-transition-group": "15.3.2",
     "react-dom": "15.3.2",
-    "react-router": "4.0.0-alpha.4"
+    "react-router": "^4.0.0-0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

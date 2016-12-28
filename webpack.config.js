@@ -1,11 +1,17 @@
+var webpack = require('webpack');
+
 module.exports = {
-  entry: './app/index.js',
-  
+  entry: {
+    app: './app/index.js',
+    vendor: ['react', 'react-dom', 'react-router']
+  },
   output: {
     // path: 'build',
     filename: './public/scripts/nts.bundle.js'
   },
-  
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"./public/scripts/vendor.bundle.js")
+  ],
   module: {
     loaders: [
       {
