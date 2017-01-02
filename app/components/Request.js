@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router'; 
 
 class Request extends React.Component {
   render() {
@@ -92,7 +93,7 @@ class Request extends React.Component {
           <fieldset>
             <div className="col-md-6 col-sm-12">
               <label for="submit" className="sr-only">Submit Request</label>
-              <a href="/request/status"><button ng-click="saveRequest()" className="btn btn-default btn-primary">Request Service</button></a>
+              <Link to="/request/status"><button ng-click="saveRequest()" className="btn btn-default btn-primary">Request Service</button></Link>
             </div>
           </fieldset>
         </form>

@@ -62,6 +62,10 @@ webpackJsonp([0],{
 
 	var _Request2 = _interopRequireDefault(_Request);
 
+	var _RequestStatus = __webpack_require__(213);
+
+	var _RequestStatus2 = _interopRequireDefault(_RequestStatus);
+
 	var _reactRouter = __webpack_require__(178);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -183,7 +187,8 @@ webpackJsonp([0],{
 							null,
 							_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: '/', component: _Home2.default }),
 							_react2.default.createElement(_reactRouter.Match, { pattern: '/about', component: _About2.default }),
-							_react2.default.createElement(_reactRouter.Match, { pattern: '/request', component: _Request2.default })
+							_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: '/request', component: _Request2.default }),
+							_react2.default.createElement(_reactRouter.Match, { pattern: '/request/status', component: _RequestStatus2.default })
 						),
 						_react2.default.createElement(_Footer2.default, null)
 					)
@@ -765,7 +770,7 @@ webpackJsonp([0],{
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -776,6 +781,8 @@ webpackJsonp([0],{
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(178);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -795,236 +802,236 @@ webpackJsonp([0],{
 	  }
 
 	  _createClass(Request, [{
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        "div",
-	        { className: "container main-content" },
+	        'div',
+	        { className: 'container main-content' },
 	        _react2.default.createElement(
-	          "div",
-	          { className: "row" },
+	          'div',
+	          { className: 'row' },
 	          _react2.default.createElement(
-	            "div",
-	            { className: "col-md-12" },
+	            'div',
+	            { className: 'col-md-12' },
 	            _react2.default.createElement(
-	              "h1",
+	              'h1',
 	              null,
 	              _react2.default.createElement(
-	                "small",
+	                'small',
 	                null,
-	                "Request a service and recieve a response within 24 Hours"
+	                'Request a service and recieve a response within 24 Hours'
 	              )
 	            )
 	          )
 	        ),
 	        _react2.default.createElement(
-	          "form",
-	          { className: "form-horizontal row no-border" },
+	          'form',
+	          { className: 'form-horizontal row no-border' },
 	          _react2.default.createElement(
-	            "fieldset",
+	            'fieldset',
 	            null,
 	            _react2.default.createElement(
-	              "legend",
+	              'legend',
 	              null,
-	              "Account Information"
+	              'Account Information'
 	            ),
 	            _react2.default.createElement(
-	              "div",
-	              { className: "col-md-6 col-sm-12" },
+	              'div',
+	              { className: 'col-md-6 col-sm-12' },
 	              _react2.default.createElement(
-	                "div",
-	                { className: "form-group" },
+	                'div',
+	                { className: 'form-group' },
 	                _react2.default.createElement(
-	                  "label",
-	                  { "for": "email", className: "sr-only" },
-	                  "Email"
+	                  'label',
+	                  { 'for': 'email', className: 'sr-only' },
+	                  'Email'
 	                ),
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "col-md-10 col-sm-8" },
-	                  _react2.default.createElement("input", { type: "email", className: "form-control", "ng-model": "ntsReq.email", placeholder: "Email" })
+	                  'div',
+	                  { className: 'col-md-10 col-sm-8' },
+	                  _react2.default.createElement('input', { type: 'email', className: 'form-control', 'ng-model': 'ntsReq.email', placeholder: 'Email' })
 	                )
 	              ),
 	              _react2.default.createElement(
-	                "div",
-	                { className: "form-group" },
+	                'div',
+	                { className: 'form-group' },
 	                _react2.default.createElement(
-	                  "label",
-	                  { "for": "passWord1", className: "sr-only" },
-	                  "Password"
+	                  'label',
+	                  { 'for': 'passWord1', className: 'sr-only' },
+	                  'Password'
 	                ),
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "col-md-10 col-sm-8" },
-	                  _react2.default.createElement("input", { type: "password", className: "form-control", "ng-model": "ntsReq.passWord1", placeholder: "Password" })
+	                  'div',
+	                  { className: 'col-md-10 col-sm-8' },
+	                  _react2.default.createElement('input', { type: 'password', className: 'form-control', 'ng-model': 'ntsReq.passWord1', placeholder: 'Password' })
 	                )
 	              ),
 	              _react2.default.createElement(
-	                "div",
-	                { className: "form-group" },
+	                'div',
+	                { className: 'form-group' },
 	                _react2.default.createElement(
-	                  "label",
-	                  { "for": "passWord2", className: "sr-only" },
-	                  "Confirm Password"
+	                  'label',
+	                  { 'for': 'passWord2', className: 'sr-only' },
+	                  'Confirm Password'
 	                ),
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "col-md-10 col-sm-8" },
-	                  _react2.default.createElement("input", { type: "password", className: "form-control", "ng-model": "ntsReq.passWord2", placeholder: "Confirm Password" })
+	                  'div',
+	                  { className: 'col-md-10 col-sm-8' },
+	                  _react2.default.createElement('input', { type: 'password', className: 'form-control', 'ng-model': 'ntsReq.passWord2', placeholder: 'Confirm Password' })
 	                )
 	              )
 	            )
 	          ),
 	          _react2.default.createElement(
-	            "fieldset",
+	            'fieldset',
 	            null,
 	            _react2.default.createElement(
-	              "legend",
+	              'legend',
 	              null,
-	              "Contact Information"
+	              'Contact Information'
 	            ),
 	            _react2.default.createElement(
-	              "div",
-	              { className: "col-md-6 col-sm-12" },
+	              'div',
+	              { className: 'col-md-6 col-sm-12' },
 	              _react2.default.createElement(
-	                "div",
-	                { className: "form-group" },
+	                'div',
+	                { className: 'form-group' },
 	                _react2.default.createElement(
-	                  "label",
-	                  { "for": "firstName", className: "sr-only" },
-	                  "First Name"
+	                  'label',
+	                  { 'for': 'firstName', className: 'sr-only' },
+	                  'First Name'
 	                ),
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "col-md-10 col-sm-8" },
-	                  _react2.default.createElement("input", { type: "text", className: "form-control", "ng-model": "ntsReq.firstName", placeholder: "First Name" })
+	                  'div',
+	                  { className: 'col-md-10 col-sm-8' },
+	                  _react2.default.createElement('input', { type: 'text', className: 'form-control', 'ng-model': 'ntsReq.firstName', placeholder: 'First Name' })
 	                )
 	              ),
 	              _react2.default.createElement(
-	                "div",
-	                { className: "form-group" },
+	                'div',
+	                { className: 'form-group' },
 	                _react2.default.createElement(
-	                  "label",
-	                  { "for": "lastName", className: "sr-only" },
-	                  "Last Name"
+	                  'label',
+	                  { 'for': 'lastName', className: 'sr-only' },
+	                  'Last Name'
 	                ),
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "col-md-10 col-sm-8" },
-	                  _react2.default.createElement("input", { type: "text", className: "form-control", "ng-model": "ntsReq.lastName", placeholder: "Last Name" })
+	                  'div',
+	                  { className: 'col-md-10 col-sm-8' },
+	                  _react2.default.createElement('input', { type: 'text', className: 'form-control', 'ng-model': 'ntsReq.lastName', placeholder: 'Last Name' })
 	                )
 	              )
 	            ),
 	            _react2.default.createElement(
-	              "div",
-	              { className: "col-md-6 col-sm-12" },
+	              'div',
+	              { className: 'col-md-6 col-sm-12' },
 	              _react2.default.createElement(
-	                "div",
-	                { className: "form-group" },
+	                'div',
+	                { className: 'form-group' },
 	                _react2.default.createElement(
-	                  "label",
-	                  { "for": "phoneNumber", className: "sr-only" },
-	                  "Phone Number"
+	                  'label',
+	                  { 'for': 'phoneNumber', className: 'sr-only' },
+	                  'Phone Number'
 	                ),
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "col-md-10 col-sm-8" },
-	                  _react2.default.createElement("input", { type: "text", className: "form-control", "ng-model": "ntsReq.phoneNumber", placeholder: "Phone Number" })
+	                  'div',
+	                  { className: 'col-md-10 col-sm-8' },
+	                  _react2.default.createElement('input', { type: 'text', className: 'form-control', 'ng-model': 'ntsReq.phoneNumber', placeholder: 'Phone Number' })
 	                )
 	              )
 	            )
 	          ),
 	          _react2.default.createElement(
-	            "fieldset",
+	            'fieldset',
 	            null,
 	            _react2.default.createElement(
-	              "legend",
+	              'legend',
 	              null,
-	              "Vessel Information"
+	              'Vessel Information'
 	            ),
 	            _react2.default.createElement(
-	              "div",
-	              { className: "col-md-6 col-sm-12" },
+	              'div',
+	              { className: 'col-md-6 col-sm-12' },
 	              _react2.default.createElement(
-	                "div",
-	                { className: "form-group" },
+	                'div',
+	                { className: 'form-group' },
 	                _react2.default.createElement(
-	                  "label",
-	                  { "for": "boatName", className: "sr-only" },
-	                  "Boat Name"
+	                  'label',
+	                  { 'for': 'boatName', className: 'sr-only' },
+	                  'Boat Name'
 	                ),
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "col-md-10 col-sm-8" },
-	                  _react2.default.createElement("input", { type: "text", className: "form-control", "ng-model": "ntsReq.boatName", placeholder: "Boat Name" })
+	                  'div',
+	                  { className: 'col-md-10 col-sm-8' },
+	                  _react2.default.createElement('input', { type: 'text', className: 'form-control', 'ng-model': 'ntsReq.boatName', placeholder: 'Boat Name' })
 	                )
 	              ),
 	              _react2.default.createElement(
-	                "div",
-	                { className: "form-group" },
+	                'div',
+	                { className: 'form-group' },
 	                _react2.default.createElement(
-	                  "label",
-	                  { "for": "boatType", className: "sr-only" },
-	                  "Boat Type"
+	                  'label',
+	                  { 'for': 'boatType', className: 'sr-only' },
+	                  'Boat Type'
 	                ),
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "col-md-10 col-sm-8" },
-	                  _react2.default.createElement("input", { type: "text", className: "form-control", "ng-model": "ntsReq.boatType", placeholder: "Boat Model and Length" })
+	                  'div',
+	                  { className: 'col-md-10 col-sm-8' },
+	                  _react2.default.createElement('input', { type: 'text', className: 'form-control', 'ng-model': 'ntsReq.boatType', placeholder: 'Boat Model and Length' })
 	                )
 	              ),
 	              _react2.default.createElement(
-	                "div",
-	                { className: "form-group" },
+	                'div',
+	                { className: 'form-group' },
 	                _react2.default.createElement(
-	                  "label",
-	                  { "for": "boatLoc", className: "sr-only" },
-	                  "Boat Location"
+	                  'label',
+	                  { 'for': 'boatLoc', className: 'sr-only' },
+	                  'Boat Location'
 	                ),
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "col-md-10 col-sm-8" },
-	                  _react2.default.createElement("input", { type: "text", className: "form-control", "ng-model": "ntsReq.boatLoc", placeholder: "Boat Location" })
+	                  'div',
+	                  { className: 'col-md-10 col-sm-8' },
+	                  _react2.default.createElement('input', { type: 'text', className: 'form-control', 'ng-model': 'ntsReq.boatLoc', placeholder: 'Boat Location' })
 	                )
 	              )
 	            ),
 	            _react2.default.createElement(
-	              "div",
-	              { className: "col-md-6 col-sm-12" },
+	              'div',
+	              { className: 'col-md-6 col-sm-12' },
 	              _react2.default.createElement(
-	                "div",
-	                { className: "form-group" },
+	                'div',
+	                { className: 'form-group' },
 	                _react2.default.createElement(
-	                  "label",
-	                  { "for": "jobDesc", className: "sr-only" },
-	                  "Job Description"
+	                  'label',
+	                  { 'for': 'jobDesc', className: 'sr-only' },
+	                  'Job Description'
 	                ),
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "col-md-10 col-sm-8" },
-	                  _react2.default.createElement("textarea", { className: "form-control", rows: "6", "ng-model": "ntsReq.jobDesc", placeholder: "Job Description" })
+	                  'div',
+	                  { className: 'col-md-10 col-sm-8' },
+	                  _react2.default.createElement('textarea', { className: 'form-control', rows: '6', 'ng-model': 'ntsReq.jobDesc', placeholder: 'Job Description' })
 	                )
 	              )
 	            )
 	          ),
 	          _react2.default.createElement(
-	            "fieldset",
+	            'fieldset',
 	            null,
 	            _react2.default.createElement(
-	              "div",
-	              { className: "col-md-6 col-sm-12" },
+	              'div',
+	              { className: 'col-md-6 col-sm-12' },
 	              _react2.default.createElement(
-	                "label",
-	                { "for": "submit", className: "sr-only" },
-	                "Submit Request"
+	                'label',
+	                { 'for': 'submit', className: 'sr-only' },
+	                'Submit Request'
 	              ),
 	              _react2.default.createElement(
-	                "a",
-	                { href: "/request/status" },
+	                _reactRouter.Link,
+	                { to: '/request/status' },
 	                _react2.default.createElement(
-	                  "button",
-	                  { "ng-click": "saveRequest()", className: "btn btn-default btn-primary" },
-	                  "Request Service"
+	                  'button',
+	                  { 'ng-click': 'saveRequest()', className: 'btn btn-default btn-primary' },
+	                  'Request Service'
 	                )
 	              )
 	            )
@@ -1040,6 +1047,136 @@ webpackJsonp([0],{
 	exports.default = Request;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Request.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+
+/***/ 213:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(178);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var RequestStatus = function (_React$Component) {
+	  _inherits(RequestStatus, _React$Component);
+
+	  function RequestStatus() {
+	    _classCallCheck(this, RequestStatus);
+
+	    return _possibleConstructorReturn(this, (RequestStatus.__proto__ || Object.getPrototypeOf(RequestStatus)).apply(this, arguments));
+	  }
+
+	  _createClass(RequestStatus, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { 'class': 'container main-content' },
+	        _react2.default.createElement(
+	          'div',
+	          { 'class': 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { 'class': 'col-md-12' },
+	            _react2.default.createElement(
+	              'h1',
+	              null,
+	              'Message about status',
+	              _react2.default.createElement(
+	                'small',
+	                null,
+	                'Kind words'
+	              )
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { 'class': 'row no-border' },
+	          _react2.default.createElement(
+	            'div',
+	            { 'class': 'col-md-12' },
+	            _react2.default.createElement(
+	              'h1',
+	              null,
+	              'Request Information'
+	            ),
+	            _react2.default.createElement(
+	              'ul',
+	              null,
+	              _react2.default.createElement(
+	                'li',
+	                null,
+	                'First Name: '
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                null,
+	                'Last Name: '
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                null,
+	                'Email: '
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                null,
+	                'Phone Number: '
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                null,
+	                'Boat Type: '
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                null,
+	                'Boat Name: '
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                null,
+	                'Boat Location: '
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                null,
+	                'Job Description: '
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return RequestStatus;
+	}(_react2.default.Component);
+
+	exports.default = RequestStatus;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "RequestStatus.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 

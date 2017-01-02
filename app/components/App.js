@@ -4,6 +4,7 @@ import Footer from './Footer';
 import Home from './Home';
 import About from './About';
 import Request from './Request';
+import RequestStatus from './RequestStatus';
 
 import { BrowserRouter, Match, Miss, Link } from 'react-router';
 
@@ -38,9 +39,10 @@ class App extends React.Component {
 					</nav>
 				<Carousel />
 				<div>
-						<Match exactly pattern="/" component={Home} />
+					<Match exactly pattern="/" component={Home} />
 				    <Match pattern="/about" component={About} />
-				    <Match pattern="/request" component={Request} />
+				    <Match exactly pattern="/request" component={Request} />
+				    <Match pattern="/request/status" component={RequestStatus} />
 				</div>
 				<Footer />
 				</BrowserRouter>
