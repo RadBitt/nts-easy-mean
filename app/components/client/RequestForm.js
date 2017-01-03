@@ -1,29 +1,23 @@
-import React from 'react';
-import { Link } from 'react-router'; 
+import React from 'react'; 
 
-class Request extends React.Component {
+class RequestForm extends React.Component {
 
   submitRequest(event) {
     event.preventDefault();
 
     const ntsReq = {
-      email: this.email.value,
-      passWord1: this.passWord1.value,
-      passWord2: this.passWord2.value,
-      firstName: this.firstName.value,
-      lastName: this.lastName.value,
-      phoneNumber: this.phoneNumber.value,
       boatName: this.boatName.value,
       boatType: this.boatType.value,
       boatLoc: this.boatLoc.value,
       jobDesc: this.jobDesc.value,
+      techy: 0,
       date: Date.now()
     }
 
     this.props.postRequest(ntsReq); 
 
     console.log('You changed the URL');
-    this.context.router.transitionTo('/request/status');
+    this.context.router.transitionTo('/dashboard/status');
   }
 
   render() {
@@ -37,14 +31,15 @@ class Request extends React.Component {
         <form className="form-horizontal row no-border" onSubmit={(e) => this.submitRequest(e)}>
           <fieldset>
             <legend>Account Information</legend>
+            {/*
             <div className="col-md-6 col-sm-12">
               <div className="form-group">
                 <label htmlFor="email" className="sr-only">Email</label>
                 <div className="col-md-10 col-sm-8">
                   <input ref={(input) => this.email = input} type="email" className="form-control" placeholder="Email" />
                 </div>
-              </div>
-              <div className="form-group">
+              </div>*
+              {/*<div className="form-group">
                 <label htmlFor="passWord1" className="sr-only">Password</label>
                 <div className="col-md-10 col-sm-8">
                   <input ref={(input)=> this.passWord1 = input} type="password" className="form-control" placeholder="Password" />
@@ -57,6 +52,7 @@ class Request extends React.Component {
                 </div>
               </div>
             </div>
+            */}
           </fieldset>
           <fieldset>
             <legend>Contact Information</legend>
@@ -126,8 +122,8 @@ class Request extends React.Component {
   }
 }
 
-Request.contextTypes = {
+RequestForm.contextTypes = {
   router: React.PropTypes.object
 };
 
-export default Request;
+export default RequestForm;

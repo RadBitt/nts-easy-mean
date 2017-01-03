@@ -1,79 +1,101 @@
+import { BrowserRouter, Match, Miss, Link } from 'react-router';
 import React from 'react';
+import Navigation from './Navigation';
 import Carousel from './Carousel';
 import Footer from './Footer';
 import Home from './Home';
 import About from './About';
-import Request from './Request';
-import RequestStatus from './RequestStatus';
+import base from '../base';
+// Client Imports
+	import Dashboard from './client/Dashboard';
+	import Register from './client/Register'; 
 
-import { BrowserRouter, Match, Miss, Link } from 'react-router';
-
+// Main Class
 class App extends React.Component {
 
 	constructor() {
 		super();
-
-		this.postRequest = this.postRequest.bind(this); 
-		// initial state
+		this.authenticate = this.authenticate.bind(this);
+		this.authHandler = this.authHandler.bind(this);
+		this.logout = this.logout.bind(this); 
+		// Initial state
 		this.state = {
-			requests: {}
+			uid: null
 		};
 	}
 
-	postRequest(ntsReq) {
-		// update state
-		const requests = this.state.requests;
-		// add in our request
-		const timestamp = Date.now();
-		requests['request-' + timestamp] = ntsReq; 
-		// set state
-		this.setState({ requests });
+	componentDidMount() {
+    base.onAuth((user) => {
+      if(user) {
+        this.authHandler(null, { user });
+      }
+    });
+  }
+
+  // Logout 
+  logout() {
+    base.unauth();
+    this.setState({ uid: null });
+  }
+
+	// Auth via provider
+	authenticate(provider) {
+		console.log('Logging in with ' + provider);
+		base.authWithOAuthPopup(provider, this.authHandler);
+	}
+
+	// Handle Auth
+	authHandler(err, authData) {
+		console.log(authData);
+		if(err) {
+			console.log(err);
+			return;
+		}
+		// Set user ID State
+		this.setState({ uid: authData.user.uid });
+		const uid = this.state.uid;
+		// Ref nts-easy-mean/users/:uid
+		const userRef = base.database().ref(`users/${uid}`);
+		// Query the DB for the user
+		userRef.once('value', (snapshot) => {
+			const data = snapshot.val() || {};
+
+			// If its the user's first time logging in.
+			if(!data.dispayName) {
+				userRef.set({
+					email: authData.user.email,
+					displayName: authData.user.displayName
+				});
+			}
+		});
 	}
 
 	render() {
 		return (
 			<div>
 				<BrowserRouter>
-					<nav className="navbar navbar-fixed-top">
-				    <div className="container">
-				      <div className="navbar-header">
-				        <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-				          <span className="sr-only">Toggle navigation</span>
-				          <span className="icon-bar"></span>
-				          <span className="icon-bar"></span>
-				          <span className="icon-bar"></span>
-				        </button>
-				        <a className="navbar-brand hidden-sm hidden-xs" href="#">Nautical Tech Services</a>
-				        <a className="navbar-brand visible-sm visible-xs" href="#">NTS</a>
-				        <p className="navbar-text"><strong>Call: (310) 333-3548</strong></p>
-				        <a href="/signup"><button className="btn btn-default navbar-btn navbar-left hidden-xs" type="button">Register Today</button></a>
-				      </div>
-				      <div id="navbar" className="collapse navbar-collapse">
-				        <ul className="nav navbar-nav navbar-right">
-				          <li className="active"><Link to="/">Home</Link></li>
-				          <li><Link to="/request">Request Service</Link></li>
-				          <li><Link to="/about">About</Link></li>
-				        </ul>
-				      </div>
-				  	{/* nav-collapse */}
-				    </div>
-					</nav>
-				<Carousel />
-				<div>
-					{/* Home Component */}
-					<Match exactly pattern="/" component={Home} />
-					{/* About Component */}
-				  <Match pattern="/about" component={About} />
-					{/* Request Component */}
-				  <Match exactly pattern="/request" render={
-				  	() => (<Request postRequest={this.postRequest} />)
-				  } />
-					{/* RequestStatus Component */}
-				    <Match exactly pattern="/request/status" render={
-				    	() => (<RequestStatus />)
-				  } />
-				</div>
-				<Footer />
+					<Navigation uid={this.state.uid} />
+					<Carousel />
+						{/* Home Component */}
+						<Match exactly pattern="/" component={Home} />
+						{/* About Component */}
+					  <Match exactly pattern="/about" component={About} />
+						{/* Register Component */}
+					  <Match exactly pattern="/register" render={
+					  	() => (<Register authenticate={this.authenticate} />)
+					  } />
+					  {/* Dashboard Components */}
+					  <Match pattern="/dashboard/:action?/:key?" render={
+					  	(props) => (
+					  		<Dashboard 
+						  		uid={this.state.uid} 
+						  		authenticate={this.authenticate}
+						  		logout={this.logout}
+						  		{...props}			
+						  	/>
+					  	)
+					  } />
+					<Footer />
 				</BrowserRouter>
 			</div>
 		)

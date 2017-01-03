@@ -3,7 +3,7 @@ var webpack = require('webpack');
 module.exports = {
   entry: {
     app: './app/index.js',
-    vendor: ['react', 'react-dom', 'react-router']
+    vendor: ['react', 'react-dom', 'react-router', 're-base']
   },
   output: {
     // path: 'build',
