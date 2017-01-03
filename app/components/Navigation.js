@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import NavHeader from './NavHeader';
+import NavStateBtn from './NavStateBtn';
 
 class Navigation extends React.Component {
 
@@ -29,13 +29,18 @@ class Navigation extends React.Component {
 			    <a className="navbar-brand hidden-sm hidden-xs" href="#">Nautical Tech Services</a>
 			    <a className="navbar-brand visible-sm visible-xs" href="#">NTS</a>
 			    <p className="navbar-text"><strong>Call: (310) 333-3548</strong></p> 
-			    <NavHeader uid={this.state.uid} />
+			    <span className="hidden-xs">
+			    	<NavStateBtn uid={this.state.uid} />
+			    </span>
 			  </div>
 			  <div id="navbar" className="collapse navbar-collapse">
 			    <ul className="nav navbar-nav navbar-right">
 			      <li className="active"><Link to="/">Home</Link></li>
 			      <li><Link to="/dashboard/request">Request Service</Link></li>
 			      <li><Link to="/about">About</Link></li>
+			      <li className="visible-xs">
+			      	<NavStateBtn uid={this.state.uid} />
+			      </li>
 			    </ul>
 			  </div>
 				{/* nav-collapse */}

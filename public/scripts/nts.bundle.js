@@ -171,27 +171,27 @@ webpackJsonp([0],{
 				var _this3 = this;
 
 				return _react2.default.createElement(
-					'div',
+					_reactRouter.BrowserRouter,
 					null,
+					_react2.default.createElement(_Navigation2.default, { uid: this.state.uid }),
+					_react2.default.createElement(_Carousel2.default, null),
 					_react2.default.createElement(
-						_reactRouter.BrowserRouter,
-						null,
-						_react2.default.createElement(_Navigation2.default, { uid: this.state.uid }),
-						_react2.default.createElement(_Carousel2.default, null),
+						'div',
+						{ className: 'container main-content' },
 						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: '/', component: _Home2.default }),
 						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: '/about', component: _About2.default }),
 						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: '/register', render: function render() {
 								return _react2.default.createElement(_Register2.default, { authenticate: _this3.authenticate });
 							} }),
-						_react2.default.createElement(_reactRouter.Match, { pattern: '/dashboard/:action?/:key?', render: function render(props) {
+						_react2.default.createElement(_reactRouter.Match, { pattern: '/dashboard/:location?', render: function render(props) {
 								return _react2.default.createElement(_Dashboard2.default, _extends({
 									uid: _this3.state.uid,
 									authenticate: _this3.authenticate,
 									logout: _this3.logout
 								}, props));
-							} }),
-						_react2.default.createElement(_Footer2.default, null)
-					)
+							} })
+					),
+					_react2.default.createElement(_Footer2.default, null)
 				);
 			}
 		}]);
@@ -224,9 +224,9 @@ webpackJsonp([0],{
 
 	var _reactRouter = __webpack_require__(173);
 
-	var _NavHeader = __webpack_require__(209);
+	var _NavStateBtn = __webpack_require__(209);
 
-	var _NavHeader2 = _interopRequireDefault(_NavHeader);
+	var _NavStateBtn2 = _interopRequireDefault(_NavStateBtn);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -298,7 +298,11 @@ webpackJsonp([0],{
 									'Call: (310) 333-3548'
 								)
 							),
-							_react2.default.createElement(_NavHeader2.default, { uid: this.state.uid })
+							_react2.default.createElement(
+								'span',
+								{ className: 'hidden-xs' },
+								_react2.default.createElement(_NavStateBtn2.default, { uid: this.state.uid })
+							)
 						),
 						_react2.default.createElement(
 							'div',
@@ -332,6 +336,11 @@ webpackJsonp([0],{
 										{ to: '/about' },
 										'About'
 									)
+								),
+								_react2.default.createElement(
+									'li',
+									{ className: 'visible-xs' },
+									_react2.default.createElement(_NavStateBtn2.default, { uid: this.state.uid })
 								)
 							)
 						)
@@ -376,13 +385,13 @@ webpackJsonp([0],{
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var NavHeader = function (_React$Component) {
-		_inherits(NavHeader, _React$Component);
+	var NavStateBtnr = function (_React$Component) {
+		_inherits(NavStateBtnr, _React$Component);
 
-		function NavHeader(props) {
-			_classCallCheck(this, NavHeader);
+		function NavStateBtnr(props) {
+			_classCallCheck(this, NavStateBtnr);
 
-			var _this = _possibleConstructorReturn(this, (NavHeader.__proto__ || Object.getPrototypeOf(NavHeader)).call(this, props));
+			var _this = _possibleConstructorReturn(this, (NavStateBtnr.__proto__ || Object.getPrototypeOf(NavStateBtnr)).call(this, props));
 
 			_this.renderRegisterButton = _this.renderRegisterButton.bind(_this);
 			_this.state = {
@@ -391,7 +400,7 @@ webpackJsonp([0],{
 			return _this;
 		}
 
-		_createClass(NavHeader, [{
+		_createClass(NavStateBtnr, [{
 			key: 'componentWillReceiveProps',
 			value: function componentWillReceiveProps(nextProps) {
 				this.setState({ uid: nextProps.uid });
@@ -401,11 +410,11 @@ webpackJsonp([0],{
 			value: function renderRegisterButton() {
 				return _react2.default.createElement(
 					_reactRouter.Link,
-					{ to: '/register' },
+					{ className: 'nav-st-btn', to: '/register' },
 					_react2.default.createElement(
 						'button',
-						{ className: 'btn btn-default navbar-btn navbar-left hidden-xs', type: 'button' },
-						'Register / Login'
+						{ className: 'btn btn-default navbar-btn navbar-left', type: 'button' },
+						'Login'
 					)
 				);
 			}
@@ -426,10 +435,10 @@ webpackJsonp([0],{
 					null,
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: '/dashboard' },
+						{ className: 'nav-st-btn', to: '/dashboard' },
 						_react2.default.createElement(
 							'button',
-							{ className: 'btn btn-success navbar-btn navbar-left hidden-xs', type: 'button' },
+							{ className: 'btn btn-success navbar-btn navbar-left', type: 'button' },
 							'Dashboard'
 						)
 					)
@@ -437,12 +446,12 @@ webpackJsonp([0],{
 			}
 		}]);
 
-		return NavHeader;
+		return NavStateBtnr;
 	}(_react2.default.Component);
 
-	exports.default = NavHeader;
+	exports.default = NavStateBtnr;
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "NavHeader.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "NavStateBtn.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
 
@@ -652,7 +661,7 @@ webpackJsonp([0],{
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -670,198 +679,198 @@ webpackJsonp([0],{
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Home = function (_React$Component) {
-	    _inherits(Home, _React$Component);
+	  _inherits(Home, _React$Component);
 
-	    function Home() {
-	        _classCallCheck(this, Home);
+	  function Home() {
+	    _classCallCheck(this, Home);
 
-	        return _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).apply(this, arguments));
+	  }
+
+	  _createClass(Home, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "top-row" },
+	        _react2.default.createElement(
+	          "div",
+	          { className: "row gradient-bg" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-6" },
+	            _react2.default.createElement(
+	              "h2",
+	              null,
+	              "What our clients have to say:"
+	            ),
+	            _react2.default.createElement(
+	              "blockquote",
+	              null,
+	              _react2.default.createElement(
+	                "p",
+	                null,
+	                "\"Tony showed up on time and totally fixed my boat this weekend\" -@Boaterfan"
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "blockquote",
+	              null,
+	              _react2.default.createElement(
+	                "p",
+	                null,
+	                "\"I was about to head out to Catalina when I found my steering stopped working. Tony sent a tech out to at an instant and the weekend was saved.\" -@Boaterfan2"
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-6" },
+	            _react2.default.createElement(
+	              "h1",
+	              null,
+	              "Serving Marina Del Rey"
+	            ),
+	            _react2.default.createElement(
+	              "p",
+	              null,
+	              "Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "row no-border" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-12 text-center" },
+	            _react2.default.createElement(
+	              "h2",
+	              null,
+	              "Factory trained in all leading systems."
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "row text-center specialties-row no-border" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-4" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "thumbnail" },
+	              _react2.default.createElement("img", { src: "img/garmin-logo.gif" }),
+	              _react2.default.createElement(
+	                "h2",
+	                null,
+	                "Garmin Authorized Technition"
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-4" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "thumbnail" },
+	              _react2.default.createElement("img", { src: "img/furino-logo.gif" }),
+	              _react2.default.createElement(
+	                "h2",
+	                null,
+	                "Furino Authorized Technition"
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-4" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "thumbnail" },
+	              _react2.default.createElement("img", { src: "img/raymarine-logo.jpg" }),
+	              _react2.default.createElement(
+	                "h2",
+	                null,
+	                "Raymarine Authorized Technition"
+	              )
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "row no-border text-center specialties-row" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-4" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "thumbnail" },
+	              _react2.default.createElement("img", { src: "img/yanmar-logo.jpeg" }),
+	              _react2.default.createElement(
+	                "h2",
+	                null,
+	                "Yanmar Authorized Mechanic"
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-4" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "thumbnail" },
+	              _react2.default.createElement("img", { src: "img/cummins-logo.png" }),
+	              _react2.default.createElement(
+	                "h2",
+	                null,
+	                "Cummins Authorized Mechanic"
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-4" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "thumbnail" },
+	              _react2.default.createElement("img", { src: "img/volvo-logo.gif" }),
+	              _react2.default.createElement(
+	                "h2",
+	                null,
+	                "Volvo Authorized Mechanic"
+	              )
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "row" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: " jumbotron col-md-12" },
+	            _react2.default.createElement(
+	              "h2",
+	              null,
+	              "October Special:"
+	            ),
+	            _react2.default.createElement(
+	              "p",
+	              null,
+	              "Request a service this month and recieve 5% off."
+	            ),
+	            _react2.default.createElement(
+	              "button",
+	              { className: "btn-lg btn-primary", type: "button" },
+	              "Request Service"
+	            )
+	          )
+	        )
+	      );
 	    }
+	  }]);
 
-	    _createClass(Home, [{
-	        key: "render",
-	        value: function render() {
-	            return _react2.default.createElement(
-	                "div",
-	                { className: "container main-content" },
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "row gradient-bg" },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "col-md-6" },
-	                        _react2.default.createElement(
-	                            "h2",
-	                            null,
-	                            "What our clients have to say:"
-	                        ),
-	                        _react2.default.createElement(
-	                            "blockquote",
-	                            null,
-	                            _react2.default.createElement(
-	                                "p",
-	                                null,
-	                                "\"Tony showed up on time and totally fixed my boat this weekend\" -@Boaterfan"
-	                            )
-	                        ),
-	                        _react2.default.createElement(
-	                            "blockquote",
-	                            null,
-	                            _react2.default.createElement(
-	                                "p",
-	                                null,
-	                                "\"I was about to head out to Catalina when I found my steering stopped working. Tony sent a tech out to at an instant and the weekend was saved.\" -@Boaterfan2"
-	                            )
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "col-md-6" },
-	                        _react2.default.createElement(
-	                            "h1",
-	                            null,
-	                            "Serving Marina Del Rey"
-	                        ),
-	                        _react2.default.createElement(
-	                            "p",
-	                            null,
-	                            "Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "row no-border" },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "col-md-12 text-center" },
-	                        _react2.default.createElement(
-	                            "h2",
-	                            null,
-	                            "Factory trained in all leading systems."
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "row text-center specialties-row no-border" },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "col-md-4" },
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: "thumbnail" },
-	                            _react2.default.createElement("img", { src: "img/garmin-logo.gif" }),
-	                            _react2.default.createElement(
-	                                "h2",
-	                                null,
-	                                "Garmin Authorized Technition"
-	                            )
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "col-md-4" },
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: "thumbnail" },
-	                            _react2.default.createElement("img", { src: "img/furino-logo.gif" }),
-	                            _react2.default.createElement(
-	                                "h2",
-	                                null,
-	                                "Furino Authorized Technition"
-	                            )
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "col-md-4" },
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: "thumbnail" },
-	                            _react2.default.createElement("img", { src: "img/raymarine-logo.jpg" }),
-	                            _react2.default.createElement(
-	                                "h2",
-	                                null,
-	                                "Raymarine Authorized Technition"
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "row no-border text-center specialties-row" },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "col-md-4" },
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: "thumbnail" },
-	                            _react2.default.createElement("img", { src: "img/yanmar-logo.jpeg" }),
-	                            _react2.default.createElement(
-	                                "h2",
-	                                null,
-	                                "Yanmar Authorized Mechanic"
-	                            )
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "col-md-4" },
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: "thumbnail" },
-	                            _react2.default.createElement("img", { src: "img/cummins-logo.png" }),
-	                            _react2.default.createElement(
-	                                "h2",
-	                                null,
-	                                "Cummins Authorized Mechanic"
-	                            )
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "col-md-4" },
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: "thumbnail" },
-	                            _react2.default.createElement("img", { src: "img/volvo-logo.gif" }),
-	                            _react2.default.createElement(
-	                                "h2",
-	                                null,
-	                                "Volvo Authorized Mechanic"
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "row" },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: " jumbotron col-md-12" },
-	                        _react2.default.createElement(
-	                            "h2",
-	                            null,
-	                            "October Special:"
-	                        ),
-	                        _react2.default.createElement(
-	                            "p",
-	                            null,
-	                            "Request a service this month and recieve 5% off."
-	                        ),
-	                        _react2.default.createElement(
-	                            "button",
-	                            { className: "btn-lg btn-primary", type: "button" },
-	                            "Request Service"
-	                        )
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return Home;
+	  return Home;
 	}(_react2.default.Component);
 
 	exports.default = Home;
@@ -878,7 +887,7 @@ webpackJsonp([0],{
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-					value: true
+			value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -888,70 +897,66 @@ webpackJsonp([0],{
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var About = function About(props) {
-					return _react2.default.createElement(
-									"div",
-									{ className: "container main-content" },
+			return _react2.default.createElement(
+					"div",
+					{ className: "main-row" },
+					_react2.default.createElement(
+							"div",
+							{ className: "col-md-8" },
+							_react2.default.createElement(
+									"h1",
+									null,
+									"Serving Marina Del Rey"
+							),
+							_react2.default.createElement(
+									"p",
+									null,
+									"Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
+							),
+							_react2.default.createElement(
+									"h1",
+									null,
+									"Never Take Second"
+							),
+							_react2.default.createElement(
+									"p",
+									null,
+									"Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
+							),
+							_react2.default.createElement(
+									"p",
+									null,
+									"Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
+							)
+					),
+					_react2.default.createElement(
+							"div",
+							{ className: "col-md-4" },
+							_react2.default.createElement(
+									"h2",
+									null,
+									"Tetestimonials"
+							),
+							_react2.default.createElement(
+									"blockquote",
+									null,
 									_react2.default.createElement(
-													"div",
-													{ className: "row" },
-													_react2.default.createElement(
-																	"div",
-																	{ className: "col-md-8" },
-																	_react2.default.createElement(
-																					"h1",
-																					null,
-																					"Serving Marina Del Rey"
-																	),
-																	_react2.default.createElement(
-																					"p",
-																					null,
-																					"Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
-																	),
-																	_react2.default.createElement(
-																					"h1",
-																					null,
-																					"Never Take Second"
-																	),
-																	_react2.default.createElement(
-																					"p",
-																					null,
-																					"Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
-																	),
-																	_react2.default.createElement(
-																					"p",
-																					null,
-																					"Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
-																	)
-													),
-													_react2.default.createElement(
-																	"div",
-																	{ className: "col-md-4" },
-																	_react2.default.createElement(
-																					"h2",
-																					null,
-																					"Tetestimonials"
-																	),
-																	_react2.default.createElement(
-																					"blockquote",
-																					null,
-																					_react2.default.createElement(
-																									"p",
-																									null,
-																									"\"Tony showed up on time and totally fixed my boat this weekend\" -@Boaterfan"
-																					)
-																	),
-																	_react2.default.createElement(
-																					"blockquote",
-																					null,
-																					_react2.default.createElement(
-																									"p",
-																									null,
-																									"\"I was about to head out to Catalina when I found my steering stopped working. Tony sent a tech out to at an instant and the weekend was saved.\" -@Boaterfan2"
-																					)
-																	)
-													)
+											"p",
+											null,
+											"\"Tony showed up on time and totally fixed my boat this weekend\" -@Boaterfan"
 									)
-					);
+							),
+							_react2.default.createElement(
+									"blockquote",
+									null,
+									_react2.default.createElement(
+											"p",
+											null,
+											"\"I was about to head out to Catalina when I found my steering stopped working. Tony sent a tech out to at an instant and the weekend was saved.\" -@Boaterfan2"
+									)
+							)
+					)
+			);
 	};
 
 	exports.default = About;
@@ -1006,6 +1011,8 @@ webpackJsonp([0],{
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRouter = __webpack_require__(173);
+
 	var _RequestForm = __webpack_require__(224);
 
 	var _RequestForm2 = _interopRequireDefault(_RequestForm);
@@ -1039,7 +1046,6 @@ webpackJsonp([0],{
 			var _this = _possibleConstructorReturn(this, (Dashboard.__proto__ || Object.getPrototypeOf(Dashboard)).call(this, props));
 
 			_this.postRequest = _this.postRequest.bind(_this);
-			_this.goTo = _this.goTo.bind(_this);
 			_this.state = {
 				uid: null,
 				displayName: null,
@@ -1072,14 +1078,6 @@ webpackJsonp([0],{
 				});
 			}
 
-			// Change dashboard components
-
-		}, {
-			key: 'goTo',
-			value: function goTo(p) {
-				this.context.router.transitionTo('dashboard/' + p);
-			}
-
 			// Add request to state/firebase
 
 		}, {
@@ -1101,8 +1099,10 @@ webpackJsonp([0],{
 				});
 				// set state
 				requests[key] = ntsReq;
-				this.setState({ requests: requests });
-				this.setState({ lastRequestKey: key });
+				this.setState({
+					requests: requests,
+					lastRequestKey: key
+				});
 			}
 		}, {
 			key: 'render',
@@ -1117,59 +1117,56 @@ webpackJsonp([0],{
 						_react2.default.createElement(_Register2.default, { authenticate: this.props.authenticate })
 					);
 				}
-				// Logged In
-				// Render param
-				var p = this.props.params.action;
-				if (p === 'request') return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(_RequestForm2.default, { postRequest: this.postRequest })
-				);
-				if (p === 'status') return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(_RequestStatus2.default, { ntsReq: this.state.requests[this.state.lastRequestKey] })
-				);
-				if (p === 'active') return _react2.default.createElement('div', null);
-				if (p === 'invoices') return _react2.default.createElement('div', null);
-				if (p === 'account') return _react2.default.createElement('div', null);
-				if (p === 'vessel') return _react2.default.createElement('div', null);
 
-				// Default Logged in
+				// Logged In
+				// Client Buttons
+				var pathname = '/dashboard';
+				var location = this.props.params.location;
+				location = location == undefined ? '' : location = location;
+				var request = _react2.default.createElement(
+					_reactRouter.Link,
+					{ to: pathname + '/request' },
+					_react2.default.createElement(
+						'button',
+						{ className: 'btn btn-lg btn-primary' },
+						'New Request'
+					)
+				);
 				var activeRequests = _react2.default.createElement(
-					'button',
-					{ className: 'btn btn-lg btn-primary', onClick: function onClick(p) {
-							return _this3.goTo('active');
-						} },
-					'Active Requests'
+					_reactRouter.Link,
+					{ to: pathname + '/active' },
+					_react2.default.createElement(
+						'button',
+						{ className: 'btn btn-lg btn-primary' },
+						'Active Requests'
+					)
 				);
 				var invoices = _react2.default.createElement(
-					'button',
-					{ className: 'btn btn-lg btn-primary', onClick: function onClick(p) {
-							return _this3.goTo('invoices');
-						} },
-					'Invoices'
-				);
-				var request = _react2.default.createElement(
-					'button',
-					{ className: 'btn btn-lg btn-primary', onClick: function onClick(p) {
-							return _this3.goTo('request');
-						} },
-					'New Request'
+					_reactRouter.Link,
+					{ to: pathname + '/invoices' },
+					_react2.default.createElement(
+						'button',
+						{ className: 'btn btn-lg btn-primary' },
+						'Invoices'
+					)
 				);
 				var accountInformation = _react2.default.createElement(
-					'button',
-					{ className: 'btn btn-lg btn-primary', onClick: function onClick(p) {
-							return _this3.goTo('account');
-						} },
-					'Account Information'
+					_reactRouter.Link,
+					{ to: pathname + '/account' },
+					_react2.default.createElement(
+						'button',
+						{ className: 'btn btn-lg btn-primary' },
+						'Account Information'
+					)
 				);
 				var vesselInformation = _react2.default.createElement(
-					'button',
-					{ className: 'btn btn-lg btn-primary', onClick: function onClick(p) {
-							return _this3.goTo('vessel');
-						} },
-					'Vessel Information'
+					_reactRouter.Link,
+					{ to: pathname + '/vessel' },
+					_react2.default.createElement(
+						'button',
+						{ className: 'btn btn-lg btn-primary' },
+						'Vessel Information'
+					)
 				);
 				var logout = _react2.default.createElement(
 					'button',
@@ -1179,7 +1176,7 @@ webpackJsonp([0],{
 
 				return _react2.default.createElement(
 					'div',
-					{ className: 'container main-content' },
+					{ className: 'top-row' },
 					_react2.default.createElement(
 						'div',
 						{ className: 'row gradient-bg' },
@@ -1188,13 +1185,13 @@ webpackJsonp([0],{
 							{ className: 'col-md-12' },
 							_react2.default.createElement(
 								'h1',
-								null,
-								'Dashboard'
+								{ className: 'dash-location' },
+								pathname.slice(1) + ' > ' + (location = location == 'active' ? 'active requests' : location)
 							),
 							_react2.default.createElement(
-								'h2',
+								'h3',
 								null,
-								'Welcome ',
+								'Hello ',
 								this.state.displayName
 							)
 						)
@@ -1204,28 +1201,34 @@ webpackJsonp([0],{
 						{ className: 'row no-border' },
 						_react2.default.createElement(
 							'div',
-							{ className: 'col-md-6 btn-group' },
+							{ className: 'col-md-10' },
+							_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/request/:key?', render: function render(props) {
+									return _react2.default.createElement(_RequestForm2.default, { postRequest: _this3.postRequest });
+								} }),
+							_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/active/:key?', render: function render(props) {
+									return _react2.default.createElement(RequestsActive, null);
+								} }),
+							_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/invoices/:key?', render: function render(props) {
+									return _react2.default.createElement(Invoices, null);
+								} }),
+							_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/account/:key?', render: function render(props) {
+									return _react2.default.createElement(Account, null);
+								} }),
+							_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/vessel/:key?', render: function render(props) {
+									return _react2.default.createElement(Vessel, null);
+								} }),
+							_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/status/:key?', render: function render(props) {
+									return _react2.default.createElement(_RequestStatus2.default, { ntsReq: _this3.state.requests[_this3.state.lastRequestKey] });
+								} })
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'col-md-2 btn-group' },
+							request,
 							activeRequests,
 							invoices,
-							request
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'row no-border' },
-						_react2.default.createElement(
-							'div',
-							{ className: 'col-md-6 btn-group' },
 							accountInformation,
-							vesselInformation
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'row no-border' },
-						_react2.default.createElement(
-							'div',
-							{ className: 'col-md-6' },
+							vesselInformation,
 							logout
 						)
 					)
@@ -1235,10 +1238,6 @@ webpackJsonp([0],{
 
 		return Dashboard;
 	}(_react2.default.Component);
-
-	Dashboard.contextTypes = {
-		router: _react2.default.PropTypes.object
-	};
 
 	exports.default = Dashboard;
 
@@ -1306,103 +1305,21 @@ webpackJsonp([0],{
 
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'container main-content' },
+	        { className: 'main-row' },
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'row' },
+	          'h1',
+	          null,
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'col-md-12' },
-	            _react2.default.createElement(
-	              'h1',
-	              null,
-	              _react2.default.createElement(
-	                'small',
-	                null,
-	                'Request a service and recieve a response within 24 Hours'
-	              )
-	            )
+	            'small',
+	            null,
+	            'Request a service and recieve a response within 24 Hours'
 	          )
 	        ),
 	        _react2.default.createElement(
 	          'form',
-	          { className: 'form-horizontal row no-border', onSubmit: function onSubmit(e) {
+	          { className: 'form-horizontal row no-border col-md-12', onSubmit: function onSubmit(e) {
 	              return _this2.submitRequest(e);
 	            } },
-	          _react2.default.createElement(
-	            'fieldset',
-	            null,
-	            _react2.default.createElement(
-	              'legend',
-	              null,
-	              'Account Information'
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'fieldset',
-	            null,
-	            _react2.default.createElement(
-	              'legend',
-	              null,
-	              'Contact Information'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-md-6 col-sm-12' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'form-group' },
-	                _react2.default.createElement(
-	                  'label',
-	                  { htmlFor: 'firstName', className: 'sr-only' },
-	                  'First Name'
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { ref: function ref(input) {
-	                      return _this2.firstName = input;
-	                    }, type: 'text', className: 'form-control', placeholder: 'First Name' })
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'form-group' },
-	                _react2.default.createElement(
-	                  'label',
-	                  { htmlFor: 'lastName', className: 'sr-only' },
-	                  'Last Name'
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { ref: function ref(input) {
-	                      return _this2.lastName = input;
-	                    }, type: 'text', className: 'form-control', placeholder: 'Last Name' })
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-md-6 col-sm-12' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'form-group' },
-	                _react2.default.createElement(
-	                  'label',
-	                  { htmlFor: 'phoneNumber', className: 'sr-only' },
-	                  'Phone Number'
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { ref: function ref(input) {
-	                      return _this2.phoneNumber = input;
-	                    }, type: 'text', className: 'form-control', placeholder: 'Phone Number' })
-	                )
-	              )
-	            )
-	          ),
 	          _react2.default.createElement(
 	            'fieldset',
 	            null,
@@ -1413,74 +1330,66 @@ webpackJsonp([0],{
 	            ),
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'col-md-6 col-sm-12' },
+	              { className: 'form-group' },
 	              _react2.default.createElement(
-	                'div',
-	                { className: 'form-group' },
-	                _react2.default.createElement(
-	                  'label',
-	                  { htmlFor: 'boatName', className: 'sr-only' },
-	                  'Boat Name'
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { ref: function ref(input) {
-	                      return _this2.boatName = input;
-	                    }, type: 'text', className: 'form-control', placeholder: 'Boat Name' })
-	                )
+	                'label',
+	                { htmlFor: 'boatName', className: 'sr-only' },
+	                'Boat Name'
 	              ),
 	              _react2.default.createElement(
 	                'div',
-	                { className: 'form-group' },
-	                _react2.default.createElement(
-	                  'label',
-	                  { htmlFor: 'boatType', className: 'sr-only' },
-	                  'Boat Type'
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { ref: function ref(input) {
-	                      return _this2.boatType = input;
-	                    }, type: 'text', className: 'form-control', placeholder: 'Boat Model and Length' })
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'form-group' },
-	                _react2.default.createElement(
-	                  'label',
-	                  { htmlFor: 'boatLoc', className: 'sr-only' },
-	                  'Boat Location'
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { ref: function ref(input) {
-	                      return _this2.boatLoc = input;
-	                    }, type: 'text', className: 'form-control', placeholder: 'Boat Location' })
-	                )
+	                { className: 'col-md-8 col-sm-8' },
+	                _react2.default.createElement('input', { ref: function ref(input) {
+	                    return _this2.boatName = input;
+	                  }, type: 'text', className: 'form-control', placeholder: 'Boat Name' })
 	              )
 	            ),
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'col-md-6 col-sm-12' },
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { htmlFor: 'boatType', className: 'sr-only' },
+	                'Boat Type'
+	              ),
 	              _react2.default.createElement(
 	                'div',
-	                { className: 'form-group' },
-	                _react2.default.createElement(
-	                  'label',
-	                  { htmlFor: 'jobDesc', className: 'sr-only' },
-	                  'Job Description'
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('textarea', { ref: function ref(input) {
-	                      return _this2.jobDesc = input;
-	                    }, className: 'form-control', rows: '6', placeholder: 'Job Description' })
-	                )
+	                { className: 'col-md-8 col-sm-8' },
+	                _react2.default.createElement('input', { ref: function ref(input) {
+	                    return _this2.boatType = input;
+	                  }, type: 'text', className: 'form-control', placeholder: 'Boat Model and Length' })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { htmlFor: 'boatLoc', className: 'sr-only' },
+	                'Boat Location'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-md-8 col-sm-8' },
+	                _react2.default.createElement('input', { ref: function ref(input) {
+	                    return _this2.boatLoc = input;
+	                  }, type: 'text', className: 'form-control', placeholder: 'Boat Location' })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { htmlFor: 'jobDesc', className: 'sr-only' },
+	                'Job Description'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-md-8 col-sm-8' },
+	                _react2.default.createElement('textarea', { ref: function ref(input) {
+	                    return _this2.jobDesc = input;
+	                  }, className: 'form-control', rows: '6', placeholder: 'Job Description' })
 	              )
 	            )
 	          ),
@@ -1502,7 +1411,8 @@ webpackJsonp([0],{
 	              )
 	            )
 	          )
-	        )
+	        ),
+	        _react2.default.createElement('div', null)
 	      );
 	    }
 	  }]);
@@ -1562,74 +1472,78 @@ webpackJsonp([0],{
 	      var ntsReq = this.props.ntsReq;
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'container main-content' },
+	        { className: 'main-row' },
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'row' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'col-md-12' },
+	            { className: 'row' },
 	            _react2.default.createElement(
-	              'h1',
-	              null,
-	              'Message about status',
+	              'div',
+	              { className: 'col-md-12' },
 	              _react2.default.createElement(
-	                'small',
+	                'h1',
 	                null,
-	                ' Kind words'
+	                'Message about status',
+	                _react2.default.createElement(
+	                  'small',
+	                  null,
+	                  ' Kind words'
+	                )
 	              )
 	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'row no-border' },
+	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'col-md-12' },
+	            { className: 'row no-border' },
 	            _react2.default.createElement(
-	              'h1',
-	              null,
-	              'Request Information'
-	            ),
-	            _react2.default.createElement(
-	              'ul',
-	              null,
+	              'div',
+	              { className: 'col-md-12' },
 	              _react2.default.createElement(
-	                'li',
+	                'h1',
 	                null,
-	                'Date Requested: ',
-	                ntsReq.date
+	                'Request Information'
 	              ),
 	              _react2.default.createElement(
-	                'li',
+	                'ul',
 	                null,
-	                'User Id: ',
-	                ntsReq.uid
-	              ),
-	              _react2.default.createElement(
-	                'li',
-	                null,
-	                'Boat Type: ',
-	                ntsReq.boatType
-	              ),
-	              _react2.default.createElement(
-	                'li',
-	                null,
-	                'Boat Name: ',
-	                ntsReq.boatName
-	              ),
-	              _react2.default.createElement(
-	                'li',
-	                null,
-	                'Boat Location: ',
-	                ntsReq.boatLoc
-	              ),
-	              _react2.default.createElement(
-	                'li',
-	                null,
-	                'Job Description: ',
-	                ntsReq.jobDesc
+	                _react2.default.createElement(
+	                  'li',
+	                  null,
+	                  'Date Requested: ',
+	                  ntsReq.date
+	                ),
+	                _react2.default.createElement(
+	                  'li',
+	                  null,
+	                  'User Id: ',
+	                  ntsReq.uid
+	                ),
+	                _react2.default.createElement(
+	                  'li',
+	                  null,
+	                  'Boat Type: ',
+	                  ntsReq.boatType
+	                ),
+	                _react2.default.createElement(
+	                  'li',
+	                  null,
+	                  'Boat Name: ',
+	                  ntsReq.boatName
+	                ),
+	                _react2.default.createElement(
+	                  'li',
+	                  null,
+	                  'Boat Location: ',
+	                  ntsReq.boatLoc
+	                ),
+	                _react2.default.createElement(
+	                  'li',
+	                  null,
+	                  'Job Description: ',
+	                  ntsReq.jobDesc
+	                )
 	              )
 	            )
 	          )
@@ -1692,47 +1606,43 @@ webpackJsonp([0],{
 
 				return _react2.default.createElement(
 					'div',
-					{ className: 'container main-content' },
+					{ className: 'main-row' },
 					_react2.default.createElement(
 						'div',
-						{ className: 'row' },
+						{ className: 'col-md-12' },
 						_react2.default.createElement(
-							'div',
-							{ className: 'col-md-12' },
+							'nav',
+							{ className: 'login' },
 							_react2.default.createElement(
-								'nav',
-								{ className: 'login' },
-								_react2.default.createElement(
-									'h2',
-									null,
-									'Register / Log In'
-								),
-								_react2.default.createElement(
-									'p',
-									null,
-									'Sign in to manage your vessel\'s services'
-								),
-								_react2.default.createElement(
-									'button',
-									{ className: 'github', onClick: function onClick() {
-											return _this2.props.authenticate('google');
-										} },
-									'Log In with Google'
-								),
-								_react2.default.createElement(
-									'button',
-									{ className: 'facebook', onClick: function onClick() {
-											return _this2.props.authenticate('facebook');
-										} },
-									'Log In with Facebook'
-								),
-								_react2.default.createElement(
-									'button',
-									{ className: 'twitter', onClick: function onClick() {
-											return _this2.props.authenticate('twitter');
-										} },
-									'Log In with Email'
-								)
+								'h2',
+								null,
+								'Register / Log In'
+							),
+							_react2.default.createElement(
+								'p',
+								null,
+								'Sign in to manage your vessel\'s services'
+							),
+							_react2.default.createElement(
+								'button',
+								{ className: 'github', onClick: function onClick() {
+										return _this2.props.authenticate('google');
+									} },
+								'Log In with Google'
+							),
+							_react2.default.createElement(
+								'button',
+								{ className: 'facebook', onClick: function onClick() {
+										return _this2.props.authenticate('facebook');
+									} },
+								'Log In with Facebook'
+							),
+							_react2.default.createElement(
+								'button',
+								{ className: 'twitter', onClick: function onClick() {
+										return _this2.props.authenticate('twitter');
+									} },
+								'Log In with Email'
 							)
 						)
 					)

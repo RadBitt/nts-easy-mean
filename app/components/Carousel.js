@@ -3,9 +3,8 @@ import React from 'react';
 class Carousel extends React.Component {
   render() {
     return(
-      
       <div id="carousel" className="carousel slide col-md-12 hidden-xs" data-ride="carousel">{/* Start Carousel */}
-      {/* Indicators */}
+        {/* Indicators */}
         <ol className="carousel-indicators">
           <li data-target="#carousel" data-slide-to="0" className="active"></li>
           <li data-target="#carousel" data-slide-to="1"></li>
@@ -46,9 +45,8 @@ class Carousel extends React.Component {
               <h3>Nautical Tech Services takes pride in its wiring</h3>
             </div>
           </div>
-        </div>
-      {/* Carousel */}</div>
-      
+        </div>{/* Carousel */}
+      </div>
     )
   }
 }

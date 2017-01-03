@@ -21,8 +21,12 @@ body {
 	padding: 0;
 }
 
+.top-row {
+	margin-top: 30px;
+}
+
 .row {
-	margin: 30px 0;
+	margin-bottom: 15px;
 	border-top: 1px solid #1F3649;
 }
 
@@ -50,6 +54,11 @@ body {
 	color: #FFF;
 }
 
+/* For Login / Dashboard Button */
+	.nav-st-btn {
+		margin: 8px 15px;
+	}
+
 #navbar ul li a, .navbar-header a{
 	color: #FFF;
 }
@@ -64,6 +73,7 @@ body {
 /* Carousel Styles */
 #carousel {
 	padding: 0;
+	float: none;
 }
 
 .carousel-caption h3 {
@@ -113,4 +123,9 @@ body {
 
 .info-list li {
 	margin-bottom: 5px;
+}
+
+/* Client Styles */
+.dash-location {
+	text-transform: capitalize;
 }

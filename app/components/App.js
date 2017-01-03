@@ -72,10 +72,10 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<div>
 				<BrowserRouter>
 					<Navigation uid={this.state.uid} />
 					<Carousel />
+					<div className="container main-content">
 						{/* Home Component */}
 						<Match exactly pattern="/" component={Home} />
 						{/* About Component */}
@@ -85,19 +85,19 @@ class App extends React.Component {
 					  	() => (<Register authenticate={this.authenticate} />)
 					  } />
 					  {/* Dashboard Components */}
-					  <Match pattern="/dashboard/:action?/:key?" render={
+					  <Match pattern="/dashboard/:location?" render={
 					  	(props) => (
 					  		<Dashboard 
 						  		uid={this.state.uid} 
 						  		authenticate={this.authenticate}
 						  		logout={this.logout}
-						  		{...props}			
+						  		{...props}
 						  	/>
 					  	)
 					  } />
+					</div>
 					<Footer />
 				</BrowserRouter>
-			</div>
 		)
 	}
 }
