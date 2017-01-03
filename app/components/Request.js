@@ -2,6 +2,30 @@ import React from 'react';
 import { Link } from 'react-router'; 
 
 class Request extends React.Component {
+
+  submitRequest(event) {
+    event.preventDefault();
+
+    const ntsReq = {
+      email: this.email.value,
+      passWord1: this.passWord1.value,
+      passWord2: this.passWord2.value,
+      firstName: this.firstName.value,
+      lastName: this.lastName.value,
+      phoneNumber: this.phoneNumber.value,
+      boatName: this.boatName.value,
+      boatType: this.boatType.value,
+      boatLoc: this.boatLoc.value,
+      jobDesc: this.jobDesc.value,
+      date: Date.now()
+    }
+
+    this.props.postRequest(ntsReq); 
+
+    console.log('You changed the URL');
+    this.context.router.transitionTo('/request/status');
+  }
+
   render() {
     return(
       <div className="container main-content">
@@ -10,26 +34,26 @@ class Request extends React.Component {
             <h1><small>Request a service and recieve a response within 24 Hours</small></h1>
           </div>
         </div>
-        <form className="form-horizontal row no-border">
+        <form className="form-horizontal row no-border" onSubmit={(e) => this.submitRequest(e)}>
           <fieldset>
             <legend>Account Information</legend>
             <div className="col-md-6 col-sm-12">
               <div className="form-group">
-                <label for="email" className="sr-only">Email</label>
+                <label htmlFor="email" className="sr-only">Email</label>
                 <div className="col-md-10 col-sm-8">
-                  <input type="email" className="form-control" ng-model="ntsReq.email" placeholder="Email" />
+                  <input ref={(input) => this.email = input} type="email" className="form-control" placeholder="Email" />
                 </div>
               </div>
               <div className="form-group">
-                <label for="passWord1" className="sr-only">Password</label>
+                <label htmlFor="passWord1" className="sr-only">Password</label>
                 <div className="col-md-10 col-sm-8">
-                  <input type="password" className="form-control" ng-model="ntsReq.passWord1" placeholder="Password" />
+                  <input ref={(input)=> this.passWord1 = input} type="password" className="form-control" placeholder="Password" />
                 </div>
               </div>
               <div className="form-group">
-                <label for="passWord2" className="sr-only">Confirm Password</label>
+                <label htmlFor="passWord2" className="sr-only">Confirm Password</label>
                 <div className="col-md-10 col-sm-8">
-                  <input type="password" className="form-control" ng-model="ntsReq.passWord2" placeholder="Confirm Password" />
+                  <input ref={(input)=> this.passWord2 = input} type="password" className="form-control"  placeholder="Confirm Password" />
                 </div>
               </div>
             </div>
@@ -38,23 +62,23 @@ class Request extends React.Component {
             <legend>Contact Information</legend>
             <div className="col-md-6 col-sm-12">
               <div className="form-group">
-                <label for="firstName" className="sr-only">First Name</label>
+                <label htmlFor="firstName" className="sr-only">First Name</label>
                 <div className="col-md-10 col-sm-8">
-                  <input type="text" className="form-control" ng-model="ntsReq.firstName" placeholder="First Name" />
+                  <input ref={(input)=> this.firstName = input} type="text" className="form-control" placeholder="First Name" />
                 </div>
               </div>
               <div className="form-group">
-                <label for="lastName" className="sr-only">Last Name</label>
+                <label htmlFor="lastName" className="sr-only">Last Name</label>
                 <div className="col-md-10 col-sm-8">
-                  <input type="text" className="form-control" ng-model="ntsReq.lastName" placeholder="Last Name" /> 
+                  <input ref={(input)=> this.lastName = input} type="text" className="form-control" placeholder="Last Name" /> 
                 </div>
               </div>
             </div>
             <div className="col-md-6 col-sm-12">
               <div className="form-group">
-                <label for="phoneNumber" className="sr-only">Phone Number</label>
+                <label htmlFor="phoneNumber" className="sr-only">Phone Number</label>
                 <div className="col-md-10 col-sm-8">
-                  <input type="text" className="form-control" ng-model="ntsReq.phoneNumber" placeholder="Phone Number" />
+                  <input ref={(input)=> this.phoneNumber = input} type="text" className="form-control" placeholder="Phone Number" />
                 </div>
               </div>
             </div>
@@ -63,37 +87,37 @@ class Request extends React.Component {
             <legend>Vessel Information</legend>
             <div className="col-md-6 col-sm-12">
               <div className="form-group">
-                <label for="boatName" className="sr-only">Boat Name</label>
+                <label htmlFor="boatName" className="sr-only">Boat Name</label>
                 <div className="col-md-10 col-sm-8">
-                  <input type="text" className="form-control" ng-model="ntsReq.boatName" placeholder="Boat Name" />
+                  <input ref={(input)=> this.boatName = input} type="text" className="form-control" placeholder="Boat Name" />
                 </div>
               </div>
               <div className="form-group">
-                <label for="boatType" className="sr-only">Boat Type</label>
+                <label htmlFor="boatType" className="sr-only">Boat Type</label>
                 <div className="col-md-10 col-sm-8">
-                  <input type="text" className="form-control" ng-model="ntsReq.boatType" placeholder="Boat Model and Length" />
+                  <input ref={(input)=> this.boatType = input} type="text" className="form-control" placeholder="Boat Model and Length" />
                 </div>
               </div>
               <div className="form-group">
-                <label for="boatLoc" className="sr-only">Boat Location</label>
+                <label htmlFor="boatLoc" className="sr-only">Boat Location</label>
                 <div className="col-md-10 col-sm-8">
-                  <input type="text" className="form-control" ng-model="ntsReq.boatLoc" placeholder="Boat Location" />
+                  <input ref={(input)=> this.boatLoc = input} type="text" className="form-control" placeholder="Boat Location" />
                 </div>
               </div>
             </div>
             <div className="col-md-6 col-sm-12">
               <div className="form-group">
-                  <label for="jobDesc" className="sr-only">Job Description</label>
+                  <label htmlFor="jobDesc" className="sr-only">Job Description</label>
                   <div className="col-md-10 col-sm-8">
-                    <textarea className="form-control" rows="6" ng-model="ntsReq.jobDesc" placeholder="Job Description"></textarea>
+                    <textarea ref={(input)=> this.jobDesc = input} className="form-control" rows="6" placeholder="Job Description"></textarea>
                   </div>
               </div>
             </div>
           </fieldset>
           <fieldset>
             <div className="col-md-6 col-sm-12">
-              <label for="submit" className="sr-only">Submit Request</label>
-              <Link to="/request/status"><button ng-click="saveRequest()" className="btn btn-default btn-primary">Request Service</button></Link>
+              <label htmlFor="submit" className="sr-only">Submit Request</label>
+              <button type="submit" className="btn btn-default btn-primary">Request Service</button>
             </div>
           </fieldset>
         </form>
@@ -101,5 +125,9 @@ class Request extends React.Component {
     )
   }
 }
+
+Request.contextTypes = {
+  router: React.PropTypes.object
+};
 
 export default Request;

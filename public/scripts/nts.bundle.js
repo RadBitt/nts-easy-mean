@@ -82,12 +82,32 @@ webpackJsonp([0],{
 		function App() {
 			_classCallCheck(this, App);
 
-			return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+			var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
+
+			_this.postRequest = _this.postRequest.bind(_this);
+			// initial state
+			_this.state = {
+				requests: {}
+			};
+			return _this;
 		}
 
 		_createClass(App, [{
+			key: 'postRequest',
+			value: function postRequest(ntsReq) {
+				// update state
+				var requests = this.state.requests;
+				// add in our request
+				var timestamp = Date.now();
+				requests['request-' + timestamp] = ntsReq;
+				// set state
+				this.setState({ requests: requests });
+			}
+		}, {
 			key: 'render',
 			value: function render() {
+				var _this2 = this;
+
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -187,8 +207,12 @@ webpackJsonp([0],{
 							null,
 							_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: '/', component: _Home2.default }),
 							_react2.default.createElement(_reactRouter.Match, { pattern: '/about', component: _About2.default }),
-							_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: '/request', component: _Request2.default }),
-							_react2.default.createElement(_reactRouter.Match, { pattern: '/request/status', component: _RequestStatus2.default })
+							_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: '/request', render: function render() {
+									return _react2.default.createElement(_Request2.default, { postRequest: _this2.postRequest });
+								} }),
+							_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: '/request/status', render: function render() {
+									return _react2.default.createElement(_RequestStatus2.default, null);
+								} })
 						),
 						_react2.default.createElement(_Footer2.default, null)
 					)
@@ -352,73 +376,50 @@ webpackJsonp([0],{
 	  value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Footer = function (_React$Component) {
-	  _inherits(Footer, _React$Component);
-
-	  function Footer() {
-	    _classCallCheck(this, Footer);
-
-	    return _possibleConstructorReturn(this, (Footer.__proto__ || Object.getPrototypeOf(Footer)).apply(this, arguments));
-	  }
-
-	  _createClass(Footer, [{
-	    key: "render",
-	    value: function render() {
-	      return _react2.default.createElement(
+	var Footer = function Footer(props) {
+	  return _react2.default.createElement(
+	    "div",
+	    { id: "footer", className: "container-fluid" },
+	    _react2.default.createElement(
+	      "div",
+	      { className: "container" },
+	      _react2.default.createElement(
 	        "div",
-	        { id: "footer", className: "container-fluid" },
+	        { className: "col-md-4" },
 	        _react2.default.createElement(
-	          "div",
-	          { className: "container" },
+	          "ul",
+	          { className: "info-list" },
 	          _react2.default.createElement(
-	            "div",
-	            { className: "col-md-4" },
-	            _react2.default.createElement(
-	              "ul",
-	              { className: "info-list" },
-	              _react2.default.createElement(
-	                "li",
-	                null,
-	                "List Item 1"
-	              ),
-	              _react2.default.createElement(
-	                "li",
-	                null,
-	                "List Item 2"
-	              ),
-	              _react2.default.createElement(
-	                "li",
-	                null,
-	                "List Item 3"
-	              ),
-	              _react2.default.createElement(
-	                "li",
-	                null,
-	                "List Item 4"
-	              )
-	            )
+	            "li",
+	            null,
+	            "List Item 1"
+	          ),
+	          _react2.default.createElement(
+	            "li",
+	            null,
+	            "List Item 2"
+	          ),
+	          _react2.default.createElement(
+	            "li",
+	            null,
+	            "List Item 3"
+	          ),
+	          _react2.default.createElement(
+	            "li",
+	            null,
+	            "List Item 4"
 	          )
 	        )
-	      );
-	    }
-	  }]);
-
-	  return Footer;
-	}(_react2.default.Component);
+	      )
+	    )
+	  );
+	};
 
 	exports.default = Footer;
 
@@ -660,10 +661,8 @@ webpackJsonp([0],{
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-			value: true
+					value: true
 	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
@@ -671,93 +670,72 @@ webpackJsonp([0],{
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var About = function (_React$Component) {
-			_inherits(About, _React$Component);
-
-			function About() {
-					_classCallCheck(this, About);
-
-					return _possibleConstructorReturn(this, (About.__proto__ || Object.getPrototypeOf(About)).apply(this, arguments));
-			}
-
-			_createClass(About, [{
-					key: "render",
-					value: function render() {
-							return _react2.default.createElement(
+	var About = function About(props) {
+					return _react2.default.createElement(
 									"div",
 									{ className: "container main-content" },
 									_react2.default.createElement(
-											"div",
-											{ className: "row" },
-											_react2.default.createElement(
 													"div",
-													{ className: "col-md-8" },
+													{ className: "row" },
 													_react2.default.createElement(
-															"h1",
-															null,
-															"Serving Marina Del Rey"
+																	"div",
+																	{ className: "col-md-8" },
+																	_react2.default.createElement(
+																					"h1",
+																					null,
+																					"Serving Marina Del Rey"
+																	),
+																	_react2.default.createElement(
+																					"p",
+																					null,
+																					"Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
+																	),
+																	_react2.default.createElement(
+																					"h1",
+																					null,
+																					"Never Take Second"
+																	),
+																	_react2.default.createElement(
+																					"p",
+																					null,
+																					"Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
+																	),
+																	_react2.default.createElement(
+																					"p",
+																					null,
+																					"Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
+																	)
 													),
 													_react2.default.createElement(
-															"p",
-															null,
-															"Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
-													),
-													_react2.default.createElement(
-															"h1",
-															null,
-															"Never Take Second"
-													),
-													_react2.default.createElement(
-															"p",
-															null,
-															"Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
-													),
-													_react2.default.createElement(
-															"p",
-															null,
-															"Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi."
+																	"div",
+																	{ className: "col-md-4" },
+																	_react2.default.createElement(
+																					"h2",
+																					null,
+																					"Tetestimonials"
+																	),
+																	_react2.default.createElement(
+																					"blockquote",
+																					null,
+																					_react2.default.createElement(
+																									"p",
+																									null,
+																									"\"Tony showed up on time and totally fixed my boat this weekend\" -@Boaterfan"
+																					)
+																	),
+																	_react2.default.createElement(
+																					"blockquote",
+																					null,
+																					_react2.default.createElement(
+																									"p",
+																									null,
+																									"\"I was about to head out to Catalina when I found my steering stopped working. Tony sent a tech out to at an instant and the weekend was saved.\" -@Boaterfan2"
+																					)
+																	)
 													)
-											),
-											_react2.default.createElement(
-													"div",
-													{ className: "col-md-4" },
-													_react2.default.createElement(
-															"h2",
-															null,
-															"Tetestimonials"
-													),
-													_react2.default.createElement(
-															"blockquote",
-															null,
-															_react2.default.createElement(
-																	"p",
-																	null,
-																	"\"Tony showed up on time and totally fixed my boat this weekend\" -@Boaterfan"
-															)
-													),
-													_react2.default.createElement(
-															"blockquote",
-															null,
-															_react2.default.createElement(
-																	"p",
-																	null,
-																	"\"I was about to head out to Catalina when I found my steering stopped working. Tony sent a tech out to at an instant and the weekend was saved.\" -@Boaterfan2"
-															)
-													)
-											)
 									)
-							);
-					}
-			}]);
-
-			return About;
-	}(_react2.default.Component);
+					);
+	};
 
 	exports.default = About;
 
@@ -802,8 +780,34 @@ webpackJsonp([0],{
 	  }
 
 	  _createClass(Request, [{
+	    key: 'submitRequest',
+	    value: function submitRequest(event) {
+	      event.preventDefault();
+
+	      var ntsReq = {
+	        email: this.email.value,
+	        passWord1: this.passWord1.value,
+	        passWord2: this.passWord2.value,
+	        firstName: this.firstName.value,
+	        lastName: this.lastName.value,
+	        phoneNumber: this.phoneNumber.value,
+	        boatName: this.boatName.value,
+	        boatType: this.boatType.value,
+	        boatLoc: this.boatLoc.value,
+	        jobDesc: this.jobDesc.value,
+	        date: Date.now()
+	      };
+
+	      this.props.postRequest(ntsReq);
+
+	      console.log('You changed the URL');
+	      this.context.router.transitionTo('/request/status');
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'container main-content' },
@@ -826,7 +830,9 @@ webpackJsonp([0],{
 	        ),
 	        _react2.default.createElement(
 	          'form',
-	          { className: 'form-horizontal row no-border' },
+	          { className: 'form-horizontal row no-border', onSubmit: function onSubmit(e) {
+	              return _this2.submitRequest(e);
+	            } },
 	          _react2.default.createElement(
 	            'fieldset',
 	            null,
@@ -843,13 +849,15 @@ webpackJsonp([0],{
 	                { className: 'form-group' },
 	                _react2.default.createElement(
 	                  'label',
-	                  { 'for': 'email', className: 'sr-only' },
+	                  { htmlFor: 'email', className: 'sr-only' },
 	                  'Email'
 	                ),
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { type: 'email', className: 'form-control', 'ng-model': 'ntsReq.email', placeholder: 'Email' })
+	                  _react2.default.createElement('input', { ref: function ref(input) {
+	                      return _this2.email = input;
+	                    }, type: 'email', className: 'form-control', placeholder: 'Email' })
 	                )
 	              ),
 	              _react2.default.createElement(
@@ -857,13 +865,15 @@ webpackJsonp([0],{
 	                { className: 'form-group' },
 	                _react2.default.createElement(
 	                  'label',
-	                  { 'for': 'passWord1', className: 'sr-only' },
+	                  { htmlFor: 'passWord1', className: 'sr-only' },
 	                  'Password'
 	                ),
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { type: 'password', className: 'form-control', 'ng-model': 'ntsReq.passWord1', placeholder: 'Password' })
+	                  _react2.default.createElement('input', { ref: function ref(input) {
+	                      return _this2.passWord1 = input;
+	                    }, type: 'password', className: 'form-control', placeholder: 'Password' })
 	                )
 	              ),
 	              _react2.default.createElement(
@@ -871,13 +881,15 @@ webpackJsonp([0],{
 	                { className: 'form-group' },
 	                _react2.default.createElement(
 	                  'label',
-	                  { 'for': 'passWord2', className: 'sr-only' },
+	                  { htmlFor: 'passWord2', className: 'sr-only' },
 	                  'Confirm Password'
 	                ),
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { type: 'password', className: 'form-control', 'ng-model': 'ntsReq.passWord2', placeholder: 'Confirm Password' })
+	                  _react2.default.createElement('input', { ref: function ref(input) {
+	                      return _this2.passWord2 = input;
+	                    }, type: 'password', className: 'form-control', placeholder: 'Confirm Password' })
 	                )
 	              )
 	            )
@@ -898,13 +910,15 @@ webpackJsonp([0],{
 	                { className: 'form-group' },
 	                _react2.default.createElement(
 	                  'label',
-	                  { 'for': 'firstName', className: 'sr-only' },
+	                  { htmlFor: 'firstName', className: 'sr-only' },
 	                  'First Name'
 	                ),
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { type: 'text', className: 'form-control', 'ng-model': 'ntsReq.firstName', placeholder: 'First Name' })
+	                  _react2.default.createElement('input', { ref: function ref(input) {
+	                      return _this2.firstName = input;
+	                    }, type: 'text', className: 'form-control', placeholder: 'First Name' })
 	                )
 	              ),
 	              _react2.default.createElement(
@@ -912,13 +926,15 @@ webpackJsonp([0],{
 	                { className: 'form-group' },
 	                _react2.default.createElement(
 	                  'label',
-	                  { 'for': 'lastName', className: 'sr-only' },
+	                  { htmlFor: 'lastName', className: 'sr-only' },
 	                  'Last Name'
 	                ),
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { type: 'text', className: 'form-control', 'ng-model': 'ntsReq.lastName', placeholder: 'Last Name' })
+	                  _react2.default.createElement('input', { ref: function ref(input) {
+	                      return _this2.lastName = input;
+	                    }, type: 'text', className: 'form-control', placeholder: 'Last Name' })
 	                )
 	              )
 	            ),
@@ -930,13 +946,15 @@ webpackJsonp([0],{
 	                { className: 'form-group' },
 	                _react2.default.createElement(
 	                  'label',
-	                  { 'for': 'phoneNumber', className: 'sr-only' },
+	                  { htmlFor: 'phoneNumber', className: 'sr-only' },
 	                  'Phone Number'
 	                ),
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { type: 'text', className: 'form-control', 'ng-model': 'ntsReq.phoneNumber', placeholder: 'Phone Number' })
+	                  _react2.default.createElement('input', { ref: function ref(input) {
+	                      return _this2.phoneNumber = input;
+	                    }, type: 'text', className: 'form-control', placeholder: 'Phone Number' })
 	                )
 	              )
 	            )
@@ -957,13 +975,15 @@ webpackJsonp([0],{
 	                { className: 'form-group' },
 	                _react2.default.createElement(
 	                  'label',
-	                  { 'for': 'boatName', className: 'sr-only' },
+	                  { htmlFor: 'boatName', className: 'sr-only' },
 	                  'Boat Name'
 	                ),
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { type: 'text', className: 'form-control', 'ng-model': 'ntsReq.boatName', placeholder: 'Boat Name' })
+	                  _react2.default.createElement('input', { ref: function ref(input) {
+	                      return _this2.boatName = input;
+	                    }, type: 'text', className: 'form-control', placeholder: 'Boat Name' })
 	                )
 	              ),
 	              _react2.default.createElement(
@@ -971,13 +991,15 @@ webpackJsonp([0],{
 	                { className: 'form-group' },
 	                _react2.default.createElement(
 	                  'label',
-	                  { 'for': 'boatType', className: 'sr-only' },
+	                  { htmlFor: 'boatType', className: 'sr-only' },
 	                  'Boat Type'
 	                ),
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { type: 'text', className: 'form-control', 'ng-model': 'ntsReq.boatType', placeholder: 'Boat Model and Length' })
+	                  _react2.default.createElement('input', { ref: function ref(input) {
+	                      return _this2.boatType = input;
+	                    }, type: 'text', className: 'form-control', placeholder: 'Boat Model and Length' })
 	                )
 	              ),
 	              _react2.default.createElement(
@@ -985,13 +1007,15 @@ webpackJsonp([0],{
 	                { className: 'form-group' },
 	                _react2.default.createElement(
 	                  'label',
-	                  { 'for': 'boatLoc', className: 'sr-only' },
+	                  { htmlFor: 'boatLoc', className: 'sr-only' },
 	                  'Boat Location'
 	                ),
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('input', { type: 'text', className: 'form-control', 'ng-model': 'ntsReq.boatLoc', placeholder: 'Boat Location' })
+	                  _react2.default.createElement('input', { ref: function ref(input) {
+	                      return _this2.boatLoc = input;
+	                    }, type: 'text', className: 'form-control', placeholder: 'Boat Location' })
 	                )
 	              )
 	            ),
@@ -1003,13 +1027,15 @@ webpackJsonp([0],{
 	                { className: 'form-group' },
 	                _react2.default.createElement(
 	                  'label',
-	                  { 'for': 'jobDesc', className: 'sr-only' },
+	                  { htmlFor: 'jobDesc', className: 'sr-only' },
 	                  'Job Description'
 	                ),
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'col-md-10 col-sm-8' },
-	                  _react2.default.createElement('textarea', { className: 'form-control', rows: '6', 'ng-model': 'ntsReq.jobDesc', placeholder: 'Job Description' })
+	                  _react2.default.createElement('textarea', { ref: function ref(input) {
+	                      return _this2.jobDesc = input;
+	                    }, className: 'form-control', rows: '6', placeholder: 'Job Description' })
 	                )
 	              )
 	            )
@@ -1022,17 +1048,13 @@ webpackJsonp([0],{
 	              { className: 'col-md-6 col-sm-12' },
 	              _react2.default.createElement(
 	                'label',
-	                { 'for': 'submit', className: 'sr-only' },
+	                { htmlFor: 'submit', className: 'sr-only' },
 	                'Submit Request'
 	              ),
 	              _react2.default.createElement(
-	                _reactRouter.Link,
-	                { to: '/request/status' },
-	                _react2.default.createElement(
-	                  'button',
-	                  { 'ng-click': 'saveRequest()', className: 'btn btn-default btn-primary' },
-	                  'Request Service'
-	                )
+	                'button',
+	                { type: 'submit', className: 'btn btn-default btn-primary' },
+	                'Request Service'
 	              )
 	            )
 	          )
@@ -1043,6 +1065,10 @@ webpackJsonp([0],{
 
 	  return Request;
 	}(_react2.default.Component);
+
+	Request.contextTypes = {
+	  router: _react2.default.PropTypes.object
+	};
 
 	exports.default = Request;
 
@@ -1091,13 +1117,13 @@ webpackJsonp([0],{
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        { 'class': 'container main-content' },
+	        { className: 'container main-content' },
 	        _react2.default.createElement(
 	          'div',
-	          { 'class': 'row' },
+	          { className: 'row' },
 	          _react2.default.createElement(
 	            'div',
-	            { 'class': 'col-md-12' },
+	            { className: 'col-md-12' },
 	            _react2.default.createElement(
 	              'h1',
 	              null,
@@ -1112,10 +1138,10 @@ webpackJsonp([0],{
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          { 'class': 'row no-border' },
+	          { className: 'row no-border' },
 	          _react2.default.createElement(
 	            'div',
-	            { 'class': 'col-md-12' },
+	            { className: 'col-md-12' },
 	            _react2.default.createElement(
 	              'h1',
 	              null,
