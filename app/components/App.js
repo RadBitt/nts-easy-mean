@@ -87,14 +87,13 @@ class App extends React.Component {
 					  {/* Dashboard Components */}
 					  <Match pattern="/dashboard/:location?" render={
 					  	(props) => (
-					  		<Dashboard 
-						  		uid={this.state.uid} 
-						  		authenticate={this.authenticate}
-						  		logout={this.logout}
-						  		{...props}
+				  		<Dashboard 
+					  		uid={this.state.uid} 
+					  		authenticate={this.authenticate}
+					  		logout={this.logout}
+					  		{...props}
 						  	/>
-					  	)
-					  } />
+					  )} />
 					</div>
 					<Footer />
 				</BrowserRouter>

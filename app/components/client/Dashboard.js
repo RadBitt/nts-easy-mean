@@ -15,14 +15,13 @@ class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.postRequest = this.postRequest.bind(this);
+		this.fetchRequest = this.fetchRequest.bind(this);
 		this.state = {
 			displayName: null,
 			requests: {},
 			lastRequestKey: {}
 		}
 	}
-
-
 
 	// Update State
 	componentWillMount() {
@@ -52,6 +51,11 @@ class Dashboard extends React.Component {
 	// Stop Syncing
 	componentWillUnmount() {
 		base.removeBinding(this.ref);
+	}
+
+	// Fetches request from state
+	fetchRequest(key) {
+		return this.state.requests[`request-${key}`];
 	}
 
 	// Add request to state/firebase
@@ -101,12 +105,18 @@ class Dashboard extends React.Component {
 			  		</div>
 	          <DashHeading path={pathname} loc={location} displayName={this.state.displayName} />
 		  			{/* New Requests */}
-		  			<Match pattern={`${pathname}/request/:key?`} render={(props) => (
-			    		<RequestForm postRequest={this.postRequest} />
+		  			<Match pattern={`${pathname}/request/:key?`} render={
+		  				(props) => (
+		    			<RequestForm 
+		    				postRequest={this.postRequest} 
+		    			/>
 			    	)} />
 			    	{/* Open Requests */}
-			    	<Match pattern={`${pathname}/active/:key?`} render={(props) => (
-			    		<RequestsActive requests={this.state.requests} />
+			    	<Match pattern={`${pathname}/active/:key?`} render={
+			    		(props) => (
+		    			<RequestsActive 
+		    				requests={this.state.requests} 
+		    			/>
 						)} />
 						{/* Invoices */}
 			    	<Match pattern={`${pathname}/invoices/:key?`} render={(props) => (
@@ -121,8 +131,12 @@ class Dashboard extends React.Component {
 							<Vessel />
 						)} />
 						{/* Request Status Information */}
-						<Match pattern={`${pathname}/status/:key?`} render={(props) => (
-			    		<RequestStatus details={this.state.requests[this.state.lastRequestKey]} />
+						<Match pattern={`${pathname}/status/:key?`} render={
+							(props) => (
+			    		<RequestStatus 
+			    			fetchRequest={this.fetchRequest}
+			    			{...props}
+			    		/>
 						)} />
 		  		</div>
 		  		<div className="hidden-sm hidden-xs col-md-3 btn-group client-nav-container">

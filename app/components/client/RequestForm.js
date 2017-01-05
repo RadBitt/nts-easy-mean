@@ -16,9 +16,8 @@ class RequestForm extends React.Component {
     }
 
     ntsReq['id'] = ntsReq.date;
-
     this.props.postRequest(ntsReq);
-    this.context.router.transitionTo('/dashboard/status');
+    this.context.router.transitionTo(`/dashboard/status/${ntsReq.id}`);
   }
 
   render () {
