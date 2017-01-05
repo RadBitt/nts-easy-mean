@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var path = require('path'); 
 
 module.exports = {
   entry: {
@@ -6,8 +7,8 @@ module.exports = {
     vendor: ['react', 'react-dom', 'react-router', 're-base']
   },
   output: {
-    // path: 'build',
-    filename: './public/scripts/nts.bundle.js'
+    // path: __dirname,
+    filename: './public/scripts/bundle.js'
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"./public/scripts/vendor.bundle.js")

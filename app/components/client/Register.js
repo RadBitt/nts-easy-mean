@@ -1,30 +1,23 @@
 import React from 'react';
 import base from '../../base';
 
-class Register extends React.Component {
-
-	render() {
-		return(
-	  	<div className="main-row">
-	    	<div className="col-md-12">
-					<nav className="login">
-		        <h2>Register / Log In</h2>
-		        <p>Sign in to manage your vessel's services</p>
-		        <button className="github" onClick={() => this.props.authenticate('google')}>Log In with Google</button>
-		        <button className="facebook" onClick={() => this.props.authenticate('facebook')} >Log In with Facebook</button>
-		        <button className="twitter" onClick={() => this.props.authenticate('twitter')} >Log In with Email</button>
-			    </nav>
-			  </div>
-			</div>
-		)
-	}
+const Register = (props) => {
+	return(
+  	<div className="main-row row">
+    	<div className="col-md-12">
+				<nav className="login">
+	        <h2>Register / Log In</h2>
+	        <p>Sign in to manage your vessel's services</p>
+	        <button className="github" onClick={() => props.authenticate('google')}>Log In with Google</button>
+	        <button className="facebook" onClick={() => props.authenticate('facebook')} >Log In with Facebook</button>
+	        <button className="twitter" onClick={() => props.authenticate('twitter')} >Log In with Email</button>
+		    </nav>
+		  </div>
+		</div>
+	)
 }
 
 export default Register; 
-
-Register.contextTypes = {
-  router: React.PropTypes.object
-};
 
 
 // 		<div className="container main-content">

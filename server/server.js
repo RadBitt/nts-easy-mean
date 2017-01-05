@@ -7,15 +7,19 @@ var parser = require('body-parser');
 var mailRouter = require('./mailer');
 
 var app = express();
+var port = 1000;
+var publicPath = path.resolve(__dirname, '../public');
+
+console.log(publicPath);
 
 app.use(parser.json()); 
 
-app.use('/', express.static('./public'));
+app.use(express.static(publicPath));
 
 // app.use('/api', apiRouter);
 
 app.use('/mailer', mailRouter);
 
-app.listen(1000, function() {
-	console.log('Server is running on port 3000');
+app.listen(port, function() {
+	console.log('Server is running on port ' + port);
 })

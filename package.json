@@ -2,7 +2,7 @@
   "name": "nts-easy-mean",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.js",
+  "main": "server/server.js",
   "devDependencies": {
     "autoprefixer-stylus": "0.10.0",
     "concurrently": "3.0.0",
@@ -31,7 +31,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "start": "webpack-dev-server --progress --inline --hot"
+    "build": "webpack --progress --colors --watch",
+    "dev": "webpack-dev-server --progress --colors",
+    "start": "node server/server.js"
   }
 }

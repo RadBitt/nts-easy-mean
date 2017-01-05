@@ -129,3 +129,7 @@ body {
 .dash-location {
 	text-transform: capitalize;
 }
+
+.login {
+	margin: 50px 0;
+}

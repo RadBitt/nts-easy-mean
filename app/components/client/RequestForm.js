@@ -14,13 +14,11 @@ class RequestForm extends React.Component {
       date: Date.now()
     }
 
-    this.props.postRequest(ntsReq); 
-
-    console.log('You changed the URL');
+    this.props.postRequest(ntsReq);
     this.context.router.transitionTo('/dashboard/status');
   }
 
-  render() {
+  render () {
     return(
       <div className="main-row">
         <h1><small>Request a service and recieve a response within 24 Hours</small></h1>

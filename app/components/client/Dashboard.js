@@ -3,6 +3,10 @@ import { Match, Miss, Link } from 'react-router';
 import RequestForm from './RequestForm';
 import RequestStatus from './RequestStatus'; 
 import Register from './Register';
+/* Client Components */
+	import ClientNavigation from './components/ClientNavigation';
+	import DashHeading from './components/DashHeading';
+
 import base from '../../base';
 
 class Dashboard extends React.Component {
@@ -66,23 +70,15 @@ class Dashboard extends React.Component {
   	}
 
 		// Logged In
-  	// Client Buttons
   	const pathname = '/dashboard';
   	let location = this.props.params.location;
   			location = location == undefined ? '' : location = location;
-  	const request = 					 <Link to={`${pathname}/request`}><button className="btn btn-lg btn-primary">New Request</button></Link>;
-  	const activeRequests =  	 <Link to={`${pathname}/active`}><button className="btn btn-lg btn-primary">Active Requests</button></Link>;
-  	const invoices = 					 <Link to={`${pathname}/invoices`}><button className="btn btn-lg btn-primary">Invoices</button></Link>;
-  	const accountInformation = <Link to={`${pathname}/account`}><button className="btn btn-lg btn-primary">Account Information</button></Link>;
-  	const vesselInformation =  <Link to={`${pathname}/vessel`}><button className="btn btn-lg btn-primary">Vessel Information</button></Link>;
-  	const logout = 						 <button className="btn btn-lg btn-primary" onClick={this.props.logout}>Log Out!</button>;
 
     return(
     	<div className="top-row">
 	    	<div className="row gradient-bg">
 	        <div className="col-md-12">
-	          <h1 className="dash-location">{`${pathname.slice(1)} > ${location = location == 'active' ? 'active requests' : location}`}</h1>
-	          <h3>Hello {this.state.displayName}</h3>
+	          <DashHeading path={pathname} loc={location} displayName={this.state.displayName} />
 	        </div>
 	      </div>
 		  	<div className="row no-border">
@@ -112,20 +108,9 @@ class Dashboard extends React.Component {
 			    		<RequestStatus ntsReq={this.state.requests[this.state.lastRequestKey]} />
 						)} />
 		  		</div>
-		    	<div className="col-md-2 btn-group">
-		        {/* NewRequest */}
-		        {request}
-		        {/* OpenRequests */}
-		        {activeRequests}
-		        {/* Invoices */}
-		        {invoices}
-	    			{/* Account Information */}
-		    		{accountInformation}
-		    		{/* Vessel Information */}
-		    		{vesselInformation}
-		    		{/* Logout */}
-		    		{logout}
-	    		</div>
+		  		<div className="col-md-2 btn-group">
+		  			<ClientNavigation path={pathname} logout={this.props.logout} />
+		  		</div>
 	    	</div> 	
 	    </div>
     )
