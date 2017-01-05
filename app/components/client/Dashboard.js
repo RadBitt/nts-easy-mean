@@ -1,7 +1,8 @@
 import React from 'react';
 import { Match, Miss, Link } from 'react-router';
 import RequestForm from './RequestForm';
-import RequestStatus from './RequestStatus'; 
+import RequestStatus from './RequestStatus';
+import RequestsActive from './RequestsActive';
 import Register from './Register';
 /* Client Components */
 	import ClientNavigation from './components/ClientNavigation';
@@ -15,15 +16,16 @@ class Dashboard extends React.Component {
 		super(props);
 		this.postRequest = this.postRequest.bind(this);
 		this.state = {
-			uid: null,
 			displayName: null,
 			requests: {},
 			lastRequestKey: {}
 		}
 	}
 
-	// Refresh component incase already logged in on request.
-	componentDidMount() {
+
+
+	// Update State
+	componentWillMount() {
 		// Set the state. 
 		const path = `users/${this.props.uid}`;
 		const ref = base.database().ref(path);
@@ -33,19 +35,35 @@ class Dashboard extends React.Component {
 				console.log('No display name set'); 
 			}
 			this.setState({
-			uid: this.props.uid,
-			displayName: data.displayName
+				displayName: data.displayName
 			});
 		});
+		this.ref = base.syncState(`users/${this.props.uid}/requests`, {
+			context: this,
+			state: 'requests'
+		})
+	}
+
+	// Sync State
+	componentDidMount() {
+		
+	}
+
+	// Stop Syncing
+	componentWillUnmount() {
+		base.removeBinding(this.ref);
 	}
 
 	// Add request to state/firebase
 	postRequest(ntsReq) {
-		const uid = this.state.uid;
+		const uid = this.props.uid;
 		const requests = this.state.requests;
 		const timestamp = Date.now();
 		const key = `request-${timestamp}`;
 		const path = `users/${uid}/requests/${key}`;
+		if (uid == null)
+			return;
+		
 		// push the request key and its data. 
 		const ref = base.post(path, {
     data: ntsReq,
@@ -88,7 +106,7 @@ class Dashboard extends React.Component {
 			    	)} />
 			    	{/* Open Requests */}
 			    	<Match pattern={`${pathname}/active/:key?`} render={(props) => (
-			    		<RequestsActive />
+			    		<RequestsActive requests={this.state.requests} />
 						)} />
 						{/* Invoices */}
 			    	<Match pattern={`${pathname}/invoices/:key?`} render={(props) => (
@@ -104,7 +122,7 @@ class Dashboard extends React.Component {
 						)} />
 						{/* Request Status Information */}
 						<Match pattern={`${pathname}/status/:key?`} render={(props) => (
-			    		<RequestStatus ntsReq={this.state.requests[this.state.lastRequestKey]} />
+			    		<RequestStatus details={this.state.requests[this.state.lastRequestKey]} />
 						)} />
 		  		</div>
 		  		<div className="hidden-sm hidden-xs col-md-3 btn-group client-nav-container">

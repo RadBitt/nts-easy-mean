@@ -59,12 +59,12 @@ class App extends React.Component {
 		// Query the DB for the user
 		userRef.once('value', (snapshot) => {
 			const data = snapshot.val() || {};
-
 			// If its the user's first time logging in.
-			if(!data.dispayName) {
+			// console.log(!data.displayName);
+			if(!data.displayName) {
 				userRef.set({
 					email: authData.user.email,
-					displayName: authData.user.displayName
+					displayName: authData.user.displayName,
 				});
 			}
 		});

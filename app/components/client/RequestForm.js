@@ -1,4 +1,5 @@
-import React from 'react'; 
+import React from 'react';
+import { getType, getLoc, getName, getDesc } from './components/helperData';
 
 class RequestForm extends React.Component {
 
@@ -14,6 +15,8 @@ class RequestForm extends React.Component {
       date: Date.now()
     }
 
+    ntsReq['id'] = ntsReq.date;
+
     this.props.postRequest(ntsReq);
     this.context.router.transitionTo('/dashboard/status');
   }
@@ -28,25 +31,25 @@ class RequestForm extends React.Component {
             <div className="form-group">
               <label htmlFor="boatName" className="sr-only">Boat Name</label>
               <div className="col-md-8 col-sm-8">
-                <input ref={(input)=> this.boatName = input} type="text" className="form-control" placeholder="Boat Name" />
+                <input ref={(input)=> this.boatName = input} type="text" className="form-control" defaultValue={getName()} placeholder="Boat Name" />
               </div>
             </div>
             <div className="form-group">
               <label htmlFor="boatType" className="sr-only">Boat Type</label>
               <div className="col-md-8 col-sm-8">
-                <input ref={(input)=> this.boatType = input} type="text" className="form-control" placeholder="Boat Model and Length" />
+                <input ref={(input)=> this.boatType = input} type="text" className="form-control" defaultValue={getType()} placeholder="Boat Model and Length" />
               </div>
             </div>
             <div className="form-group">
               <label htmlFor="boatLoc" className="sr-only">Boat Location</label>
               <div className="col-md-8 col-sm-8">
-                <input ref={(input)=> this.boatLoc = input} type="text" className="form-control" placeholder="Boat Location" />
+                <input ref={(input)=> this.boatLoc = input} type="text" className="form-control" defaultValue={getLoc()} placeholder="Boat Location" />
               </div>
             </div>
             <div className="form-group">
                 <label htmlFor="jobDesc" className="sr-only">Job Description</label>
                 <div className="col-md-8 col-sm-8">
-                  <textarea ref={(input)=> this.jobDesc = input} className="form-control" rows="6" placeholder="Job Description"></textarea>
+                  <textarea ref={(input)=> this.jobDesc = input} className="form-control" rows="6" defaultValue={getDesc()} placeholder="Job Description"></textarea>
                 </div>
             </div>
           </fieldset>

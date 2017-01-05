@@ -155,9 +155,9 @@ webpackJsonp([0],{
 				// Query the DB for the user
 				userRef.once('value', function (snapshot) {
 					var data = snapshot.val() || {};
-
 					// If its the user's first time logging in.
-					if (!data.dispayName) {
+					// console.log(!data.displayName);
+					if (!data.displayName) {
 						userRef.set({
 							email: authData.user.email,
 							displayName: authData.user.displayName
@@ -975,6 +975,10 @@ webpackJsonp([0],{
 
 	var _RequestStatus2 = _interopRequireDefault(_RequestStatus);
 
+	var _RequestsActive = __webpack_require__(229);
+
+	var _RequestsActive2 = _interopRequireDefault(_RequestsActive);
+
 	var _Register = __webpack_require__(226);
 
 	var _Register2 = _interopRequireDefault(_Register);
@@ -1011,7 +1015,6 @@ webpackJsonp([0],{
 
 			_this.postRequest = _this.postRequest.bind(_this);
 			_this.state = {
-				uid: null,
 				displayName: null,
 				requests: {},
 				lastRequestKey: {}
@@ -1019,12 +1022,12 @@ webpackJsonp([0],{
 			return _this;
 		}
 
-		// Refresh component incase already logged in on request.
+		// Update State
 
 
 		_createClass(Dashboard, [{
-			key: 'componentDidMount',
-			value: function componentDidMount() {
+			key: 'componentWillMount',
+			value: function componentWillMount() {
 				var _this2 = this;
 
 				// Set the state. 
@@ -1036,10 +1039,27 @@ webpackJsonp([0],{
 						console.log('No display name set');
 					}
 					_this2.setState({
-						uid: _this2.props.uid,
 						displayName: data.displayName
 					});
 				});
+				this.ref = _base2.default.syncState('users/' + this.props.uid + '/requests', {
+					context: this,
+					state: 'requests'
+				});
+			}
+
+			// Sync State
+
+		}, {
+			key: 'componentDidMount',
+			value: function componentDidMount() {}
+
+			// Stop Syncing
+
+		}, {
+			key: 'componentWillUnmount',
+			value: function componentWillUnmount() {
+				_base2.default.removeBinding(this.ref);
 			}
 
 			// Add request to state/firebase
@@ -1047,11 +1067,13 @@ webpackJsonp([0],{
 		}, {
 			key: 'postRequest',
 			value: function postRequest(ntsReq) {
-				var uid = this.state.uid;
+				var uid = this.props.uid;
 				var requests = this.state.requests;
 				var timestamp = Date.now();
 				var key = 'request-' + timestamp;
 				var path = 'users/' + uid + '/requests/' + key;
+				if (uid == null) return;
+
 				// push the request key and its data. 
 				var ref = _base2.default.post(path, {
 					data: ntsReq,
@@ -1106,7 +1128,7 @@ webpackJsonp([0],{
 									return _react2.default.createElement(_RequestForm2.default, { postRequest: _this3.postRequest });
 								} }),
 							_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/active/:key?', render: function render(props) {
-									return _react2.default.createElement(RequestsActive, null);
+									return _react2.default.createElement(_RequestsActive2.default, { requests: _this3.state.requests });
 								} }),
 							_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/invoices/:key?', render: function render(props) {
 									return _react2.default.createElement(Invoices, null);
@@ -1118,7 +1140,7 @@ webpackJsonp([0],{
 									return _react2.default.createElement(Vessel, null);
 								} }),
 							_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/status/:key?', render: function render(props) {
-									return _react2.default.createElement(_RequestStatus2.default, { ntsReq: _this3.state.requests[_this3.state.lastRequestKey] });
+									return _react2.default.createElement(_RequestStatus2.default, { details: _this3.state.requests[_this3.state.lastRequestKey] });
 								} })
 						),
 						_react2.default.createElement(
@@ -1157,6 +1179,8 @@ webpackJsonp([0],{
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _helperData = __webpack_require__(231);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1187,6 +1211,8 @@ webpackJsonp([0],{
 	        techy: 0,
 	        date: Date.now()
 	      };
+
+	      ntsReq['id'] = ntsReq.date;
 
 	      this.props.postRequest(ntsReq);
 	      this.context.router.transitionTo('/dashboard/status');
@@ -1234,7 +1260,7 @@ webpackJsonp([0],{
 	                { className: 'col-md-8 col-sm-8' },
 	                _react2.default.createElement('input', { ref: function ref(input) {
 	                    return _this2.boatName = input;
-	                  }, type: 'text', className: 'form-control', placeholder: 'Boat Name' })
+	                  }, type: 'text', className: 'form-control', defaultValue: (0, _helperData.getName)(), placeholder: 'Boat Name' })
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -1250,7 +1276,7 @@ webpackJsonp([0],{
 	                { className: 'col-md-8 col-sm-8' },
 	                _react2.default.createElement('input', { ref: function ref(input) {
 	                    return _this2.boatType = input;
-	                  }, type: 'text', className: 'form-control', placeholder: 'Boat Model and Length' })
+	                  }, type: 'text', className: 'form-control', defaultValue: (0, _helperData.getType)(), placeholder: 'Boat Model and Length' })
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -1266,7 +1292,7 @@ webpackJsonp([0],{
 	                { className: 'col-md-8 col-sm-8' },
 	                _react2.default.createElement('input', { ref: function ref(input) {
 	                    return _this2.boatLoc = input;
-	                  }, type: 'text', className: 'form-control', placeholder: 'Boat Location' })
+	                  }, type: 'text', className: 'form-control', defaultValue: (0, _helperData.getLoc)(), placeholder: 'Boat Location' })
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -1282,7 +1308,7 @@ webpackJsonp([0],{
 	                { className: 'col-md-8 col-sm-8' },
 	                _react2.default.createElement('textarea', { ref: function ref(input) {
 	                    return _this2.jobDesc = input;
-	                  }, className: 'form-control', rows: '6', placeholder: 'Job Description' })
+	                  }, className: 'form-control', rows: '6', defaultValue: (0, _helperData.getDesc)(), placeholder: 'Job Description' })
 	              )
 	            )
 	          ),
@@ -1343,81 +1369,77 @@ webpackJsonp([0],{
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var RequestStatus = function RequestStatus(props) {
-	  var ntsReq = props.ntsReq;
+	  var ntsReq = props.details;
 	  return _react2.default.createElement(
 	    'div',
-	    { className: 'main-row' },
+	    { className: 'main-row row no-border' },
 	    _react2.default.createElement(
 	      'div',
-	      { className: 'row' },
+	      { className: 'row no-border' },
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'row' },
+	        { className: 'col-md-12' },
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-12' },
+	          'h1',
+	          null,
+	          'Message about status',
 	          _react2.default.createElement(
-	            'h1',
+	            'small',
 	            null,
-	            'Message about status',
-	            _react2.default.createElement(
-	              'small',
-	              null,
-	              ' Kind words'
-	            )
+	            ' Kind words'
 	          )
 	        )
-	      ),
+	      )
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      { className: 'row no-border' },
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'row no-border' },
+	        { className: 'col-md-12' },
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-12' },
+	          'h1',
+	          null,
+	          'Request Information'
+	        ),
+	        _react2.default.createElement(
+	          'ul',
+	          null,
 	          _react2.default.createElement(
-	            'h1',
+	            'li',
 	            null,
-	            'Request Information'
+	            'Date Requested: ',
+	            ntsReq.date
 	          ),
 	          _react2.default.createElement(
-	            'ul',
+	            'li',
 	            null,
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              'Date Requested: ',
-	              ntsReq.date
-	            ),
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              'User Id: ',
-	              ntsReq.uid
-	            ),
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              'Boat Type: ',
-	              ntsReq.boatType
-	            ),
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              'Boat Name: ',
-	              ntsReq.boatName
-	            ),
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              'Boat Location: ',
-	              ntsReq.boatLoc
-	            ),
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              'Job Description: ',
-	              ntsReq.jobDesc
-	            )
+	            'User Id: ',
+	            ntsReq.uid
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            'Boat Type: ',
+	            ntsReq.boatType
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            'Boat Name: ',
+	            ntsReq.boatName
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            'Boat Location: ',
+	            ntsReq.boatLoc
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            'Job Description: ',
+	            ntsReq.jobDesc
 	          )
 	        )
 	      )
@@ -1680,6 +1702,196 @@ webpackJsonp([0],{
 	exports.default = DashHeading;
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "DashHeading.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+
+/***/ 229:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Request = __webpack_require__(230);
+
+	var _Request2 = _interopRequireDefault(_Request);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var RequestsActive = function RequestsActive(props) {
+		return _react2.default.createElement(
+			'table',
+			{ className: 'table table-striped' },
+			_react2.default.createElement(
+				'caption',
+				null,
+				'All Requests'
+			),
+			_react2.default.createElement(
+				'tbody',
+				null,
+				_react2.default.createElement(
+					'tr',
+					null,
+					_react2.default.createElement(
+						'th',
+						null,
+						'ID'
+					),
+					_react2.default.createElement(
+						'th',
+						null,
+						'Date'
+					),
+					_react2.default.createElement(
+						'th',
+						null,
+						'Tech'
+					),
+					_react2.default.createElement(
+						'th',
+						null,
+						'Status'
+					)
+				),
+				Object.keys(props.requests).map(function (key) {
+					return _react2.default.createElement(_Request2.default, { key: key, index: key, details: props.requests[key] });
+				})
+			)
+		);
+	};
+
+	exports.default = RequestsActive;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "RequestsActive.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+
+/***/ 230:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Request = function Request(props) {
+		var details = props.details;
+
+		return _react2.default.createElement(
+			'tr',
+			null,
+			_react2.default.createElement(
+				'td',
+				null,
+				details.id
+			),
+			_react2.default.createElement(
+				'td',
+				null,
+				details.date
+			),
+			_react2.default.createElement(
+				'td',
+				null,
+				details.techy
+			),
+			_react2.default.createElement(
+				'td',
+				null,
+				details.techy
+			)
+		);
+	};
+
+	exports.default = Request;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Request.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+
+/***/ 231:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.rando = rando;
+	exports.getFunName = getFunName;
+	exports.getLength = getLength;
+	exports.getType = getType;
+	exports.getLoc = getLoc;
+	exports.getDesc = getDesc;
+	exports.getName = getName;
+	function rando(arr) {
+		return arr[Math.floor(Math.random() * arr.length)];
+	}
+
+	function getFunName() {
+		var adjectives = ['adorable', 'beautiful', 'clean', 'drab', 'elegant', 'fancy', 'glamorous', 'handsome', 'long', 'magnificent', 'old-fashioned', 'plain', 'quaint', 'sparkling', 'ugliest', 'unsightly', 'angry', 'bewildered', 'clumsy', 'defeated', 'embarrassed', 'fierce', 'grumpy', 'helpless', 'itchy', 'jealous', 'lazy', 'mysterious', 'nervous', 'obnoxious', 'panicky', 'repulsive', 'scary', 'thoughtless', 'uptight', 'worried'];
+
+		var nouns = ['women', 'men', 'children', 'teeth', 'feet', 'people', 'leaves', 'mice', 'geese', 'halves', 'knives', 'wives', 'lives', 'elves', 'loaves', 'potatoes', 'tomatoes', 'cacti', 'foci', 'fungi', 'nuclei', 'syllabuses', 'analyses', 'diagnoses', 'oases', 'theses', 'crises', 'phenomena', 'criteria', 'data'];
+
+		return rando(adjectives) + '-' + rando(adjectives) + '-' + rando(nouns);
+	}
+
+	function getLength() {
+		return Math.floor(Math.random() * 100);
+	}
+
+	function getType() {
+
+		var type = ['Hunter', 'Piece-o-crap', 'Bucket', 'Sled', 'Log', 'Potato', 'Slick', 'Courage', 'Tub'];
+
+		return rando(type) + '-' + getLength();
+	}
+
+	function getLoc() {
+
+		var location = ['MDR'];
+		var slip = ['A', 'B', 'C', 'D', 'E', 'F'];
+		var number = Math.floor(Math.random() * 2000);
+
+		return rando(location) + '-' + rando(slip) + '-' + number;
+	}
+
+	function getDesc() {
+
+		var description = ['clogged my toilet', 'broke my boom', 'put a sock in my muffler', 'threw up in my fuel tank', 'thinks need a fuel change', 'thought i could use a turbo-charger'];
+
+		return getFunName() + ' ' + rando(description);
+	}
+
+	function getName() {
+		var prefixes = ["Buzz ", "Rock ", "Amazing ", "Bombastic ", "Chivalrous ", "Daring ", "Extraordinary ", "Fantastic ", "Gritty ", "Helpful ", "Incredible ", "Jaunty ", "Killer ", "Lowly ", "Quixotic ", "Savage ", "Unlikely ", "Vicious ", "Wild ", "Terrifying ", "Unlikely ", "Marvelous ", "Nefarious ", "Odious ", "Poisonous ", "Radioactive ", "Smarty ", "Mask ", "Powerhouse ", "Buzz ", "Smarty ", "Mask ", "Tough ", "Incredible ", "Firey ", "Toxic ", "Wind ", "Walker ", "Captain ", "Capetape ", "Major ", "Math ", "Super ", "Glitter ", "Crimson ", "Moon ", "Chaser ", "The Electric ", "Speeding ", "Magenta ", "Comet ", "Obsidian ", "Pink ", "Green ", "Sparkle ", "Jade ", "Jester ", "Thunder ", "Rapid ", "Duke ", "Whistle ", "Shadow ", "Wing ", "Arrow ", "Sapphire ", "Astro ", "Captain ", "The Glittering ", "The Outer Space ", "The Extraterrestrial ", "The Swift ", "Magic "];
+
+		var affixes = ["Flash ", "Imp", "Jaguar", "Lizard", "Nymph", "Ogre", "Python", "Queen", "Robot", "Spirit", "Thief", "Underdog", "Vampire", "Wizard", "Witch", "Alien ", "Beast", "Dragon", "Eagle", "Fairy", "Giant", "Hawk", "Wonder", "Atom", "Powerhouse ", "Protector ", "Pants", "Destroyer", "Crusher", "Defender", "Kid", "Wizard", "Falcon", "Phoenix", "Hurricane", "Hunter ", "Sleuth ", "Kitten", "Fluffball", "Dragon", "Pony", "Gazius ", "Magmamingo ", "Chimitar ", "Oysterminate ", "Discorpion ", "Unicorn", "Feather", "Lightning", "Thunder"];
+
+		return rando(prefixes) + ' ' + rando(affixes);
+	}
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-easy-mean\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "helperData.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 
