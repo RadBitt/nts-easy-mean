@@ -16,9 +16,13 @@ app.use(parser.json());
 
 app.use(express.static(publicPath));
 
+app.get('*', function(req, res) {
+	res.sendFile('index.html', {root: publicPath});
+})
+
 // app.use('/api', apiRouter);
 
-app.use('/mailer', mailRouter);
+// app.use('/mailer', mailRouter);
 
 app.listen(port, function() {
 	console.log('Server is running on port ' + port);

@@ -21,7 +21,7 @@ class RequestForm extends React.Component {
   render () {
     return(
       <div className="main-row">
-        <h1><small>Request a service and recieve a response within 24 Hours</small></h1>
+        <h1 className="hidden-xs"><small>Request a service and recieve a response within 24 Hours</small></h1>
         <form className="form-horizontal row no-border col-md-12" onSubmit={(e) => this.submitRequest(e)}>
           <fieldset>
             <legend>Vessel Information</legend>

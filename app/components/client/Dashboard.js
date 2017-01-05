@@ -77,12 +77,11 @@ class Dashboard extends React.Component {
     return(
     	<div className="top-row">
 	    	<div className="row gradient-bg">
-	        <div className="col-md-12">
+	        <div className="col-md-9 col-sm-12">
+		        <div className="visible-sm visible-xs col-sm-12 btn-group">
+			  			<ClientNavigation path={pathname} logout={this.props.logout} btnStyles={'sm'} />
+			  		</div>
 	          <DashHeading path={pathname} loc={location} displayName={this.state.displayName} />
-	        </div>
-	      </div>
-		  	<div className="row no-border">
-		  		<div className="col-md-10">
 		  			{/* New Requests */}
 		  			<Match pattern={`${pathname}/request/:key?`} render={(props) => (
 			    		<RequestForm postRequest={this.postRequest} />
@@ -108,11 +107,11 @@ class Dashboard extends React.Component {
 			    		<RequestStatus ntsReq={this.state.requests[this.state.lastRequestKey]} />
 						)} />
 		  		</div>
-		  		<div className="col-md-2 btn-group">
-		  			<ClientNavigation path={pathname} logout={this.props.logout} />
+		  		<div className="hidden-sm hidden-xs col-md-3 btn-group client-nav-container">
+		  			<ClientNavigation path={pathname} logout={this.props.logout} btnStyles={'md'} />
 		  		</div>
-	    	</div> 	
-	    </div>
+	    	</div> 
+	  	</div>
     )
   }
 }

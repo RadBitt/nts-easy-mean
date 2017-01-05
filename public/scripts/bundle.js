@@ -1095,16 +1095,13 @@ webpackJsonp([0],{
 						{ className: 'row gradient-bg' },
 						_react2.default.createElement(
 							'div',
-							{ className: 'col-md-12' },
-							_react2.default.createElement(_DashHeading2.default, { path: pathname, loc: location, displayName: this.state.displayName })
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'row no-border' },
-						_react2.default.createElement(
-							'div',
-							{ className: 'col-md-10' },
+							{ className: 'col-md-9 col-sm-12' },
+							_react2.default.createElement(
+								'div',
+								{ className: 'visible-sm visible-xs col-sm-12 btn-group' },
+								_react2.default.createElement(_ClientNavigation2.default, { path: pathname, logout: this.props.logout, btnStyles: 'sm' })
+							),
+							_react2.default.createElement(_DashHeading2.default, { path: pathname, loc: location, displayName: this.state.displayName }),
 							_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/request/:key?', render: function render(props) {
 									return _react2.default.createElement(_RequestForm2.default, { postRequest: _this3.postRequest });
 								} }),
@@ -1126,8 +1123,8 @@ webpackJsonp([0],{
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'col-md-2 btn-group' },
-							_react2.default.createElement(_ClientNavigation2.default, { path: pathname, logout: this.props.logout })
+							{ className: 'hidden-sm hidden-xs col-md-3 btn-group client-nav-container' },
+							_react2.default.createElement(_ClientNavigation2.default, { path: pathname, logout: this.props.logout, btnStyles: 'md' })
 						)
 					)
 				);
@@ -1204,7 +1201,7 @@ webpackJsonp([0],{
 	        { className: 'main-row' },
 	        _react2.default.createElement(
 	          'h1',
-	          null,
+	          { className: 'hidden-xs' },
 	          _react2.default.createElement(
 	            'small',
 	            null,
@@ -1562,13 +1559,16 @@ webpackJsonp([0],{
 	var ClientNavigation = function ClientNavigation(props) {
 
 	  var pathname = props.path;
+	  var btnStylesMd = 'btn btn-lg btn-primary btn-block client-nav-btn';
+	  var btnStylesSm = 'btn btn-md btn-primary client-nav-btn-sm';
+	  var btnStyles = btnStyles = props.btnStyles == 'md' ? btnStylesMd : btnStylesSm;
 
 	  var request = _react2.default.createElement(
 	    _reactRouter.Link,
 	    { to: pathname + '/request' },
 	    _react2.default.createElement(
 	      'button',
-	      { className: 'btn btn-lg btn-primary' },
+	      { className: btnStyles },
 	      'New Request'
 	    )
 	  );
@@ -1578,7 +1578,7 @@ webpackJsonp([0],{
 	    { to: pathname + '/active' },
 	    _react2.default.createElement(
 	      'button',
-	      { className: 'btn btn-lg btn-primary' },
+	      { className: btnStyles },
 	      'Active Requests'
 	    )
 	  );
@@ -1588,7 +1588,7 @@ webpackJsonp([0],{
 	    { to: pathname + '/invoices' },
 	    _react2.default.createElement(
 	      'button',
-	      { className: 'btn btn-lg btn-primary' },
+	      { className: btnStyles },
 	      'Invoices'
 	    )
 	  );
@@ -1598,7 +1598,7 @@ webpackJsonp([0],{
 	    { to: pathname + '/account' },
 	    _react2.default.createElement(
 	      'button',
-	      { className: 'btn btn-lg btn-primary' },
+	      { className: btnStyles },
 	      'Account Information'
 	    )
 	  );
@@ -1608,15 +1608,15 @@ webpackJsonp([0],{
 	    { to: pathname + '/vessel' },
 	    _react2.default.createElement(
 	      'button',
-	      { className: 'btn btn-lg btn-primary' },
+	      { className: btnStyles },
 	      'Vessel Information'
 	    )
 	  );
 
 	  var logout = _react2.default.createElement(
 	    'button',
-	    { className: 'btn btn-lg btn-primary', onClick: props.logout },
-	    'Log Out!'
+	    { className: btnStyles + ' btn-danger', onClick: props.logout },
+	    'Log Out'
 	  );
 
 	  return _react2.default.createElement(

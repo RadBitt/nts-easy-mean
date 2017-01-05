@@ -133,3 +133,15 @@ body {
 .login {
 	margin: 50px 0;
 }
+
+.client-nav-container {
+	padding: 20px 5px;
+}
+
+.client-nav-btn {
+	margin-bottom: 5px;
+}
+
+.client-nav-btn-sm {
+	margin: 10px 2px 5px 0;
+}
