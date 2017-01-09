@@ -7,8 +7,7 @@ class RequestForm extends React.Component {
     event.preventDefault();
 
     const ntsReq = {
-      boatName: this.boatName.value,
-      boatType: this.boatType.value,
+      vesselId: ntsVessel.id,
       boatLoc: this.boatLoc.value,
       jobDesc: this.jobDesc.value,
       techy: 0,

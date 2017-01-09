@@ -65,6 +65,9 @@ class App extends React.Component {
 				userRef.set({
 					email: authData.user.email,
 					displayName: authData.user.displayName,
+					firstName: 0,
+					lastName: 0,
+					phoneNumber: 0
 				});
 			}
 		});
@@ -74,8 +77,6 @@ class App extends React.Component {
 		return (
 				<BrowserRouter>
 					<Navigation uid={this.state.uid} />
-					<Carousel />
-					<div className="container main-content">
 						{/* Home Component */}
 						<Match exactly pattern="/" component={Home} />
 						{/* About Component */}
@@ -94,7 +95,6 @@ class App extends React.Component {
 					  		{...props}
 						  	/>
 					  )} />
-					</div>
 					<Footer />
 				</BrowserRouter>
 		)

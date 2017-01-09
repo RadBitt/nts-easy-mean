@@ -1,12 +1,14 @@
 import React from 'react';
 import { Match, Miss, Link } from 'react-router';
+import Account from './Account';
 import RequestForm from './RequestForm';
 import RequestStatus from './RequestStatus';
 import RequestsActive from './RequestsActive';
 import Register from './Register';
+import Vessels from './Vessels';
 /* Client Components */
-	import ClientNavigation from './components/ClientNavigation';
-	import DashHeading from './components/DashHeading';
+import ClientNavigation from './components/ClientNavigation';
+import DashHeading from './components/DashHeading';
 
 import base from '../../base';
 
@@ -18,39 +20,40 @@ class Dashboard extends React.Component {
 		this.fetchRequest = this.fetchRequest.bind(this);
 		this.state = {
 			displayName: null,
+			vessels: {},
 			requests: {},
-			lastRequestKey: {}
 		}
 	}
 
-	// Update State
+	// Update State & Sync
 	componentWillMount() {
 		// Set the state. 
 		const path = `users/${this.props.uid}`;
 		const ref = base.database().ref(path);
 		ref.once('value', (snapshot) => {
 			const data = snapshot.val() || {};
-			if (!data.displayName) {
-				console.log('No display name set'); 
-			}
 			this.setState({
 				displayName: data.displayName
 			});
 		});
 		this.ref = base.syncState(`users/${this.props.uid}/requests`, {
 			context: this,
-			state: 'requests'
+			state: 'requests',
 		})
-	}
-
-	// Sync State
-	componentDidMount() {
-		
+		this.ref2 = base.syncState(`vessels`, {
+			context: this,
+			state: 'vessels',
+			queries: {
+				orderByChild: 'owner',
+				equalTo: this.props.uid
+			}
+		})
 	}
 
 	// Stop Syncing
 	componentWillUnmount() {
 		base.removeBinding(this.ref);
+		base.removeBinding(this.ref2);
 	}
 
 	// Fetches request from state
@@ -62,12 +65,10 @@ class Dashboard extends React.Component {
 	postRequest(ntsReq) {
 		const uid = this.props.uid;
 		const requests = this.state.requests;
-		const timestamp = Date.now();
-		const key = `request-${timestamp}`;
+		const key = `request-${ntsReq.id}`;
 		const path = `users/${uid}/requests/${key}`;
 		if (uid == null)
 			return;
-		
 		// push the request key and its data. 
 		const ref = base.post(path, {
     data: ntsReq,
@@ -80,8 +81,29 @@ class Dashboard extends React.Component {
 		// set state
 		requests[key] = ntsReq;
 		this.setState({ 
-			requests: requests,
-			lastRequestKey: key
+			requests: requests
+		});
+	}
+
+	// Add vessel to state/firebase
+	postVessel(ntsVessel) {
+		// if vessel exists?
+		const vessels = this.state.vessels;
+		const key = `vessel-${ntsVessel.id}`;
+		const path = `vessels/${key}`;
+		// push the request key and its data. 
+		const ref = base.post(path, {
+    data: ntsVessel,
+	    then(err){
+	      if(!err){
+	      	console.log(err); 
+	      }
+	    }
+		});
+		// set state
+		vessels[key] = ntsVessel;
+		this.setState({ 
+			vessels: vessels
 		});
 	}
 
@@ -97,7 +119,7 @@ class Dashboard extends React.Component {
   			location = location == undefined ? '' : location = location;
 
     return(
-    	<div className="top-row">
+    	<div className="container main-content">
 	    	<div className="row gradient-bg">
 	        <div className="col-md-9 col-sm-12">
 		        <div className="visible-sm visible-xs col-sm-12 btn-group">
@@ -108,6 +130,7 @@ class Dashboard extends React.Component {
 		  			<Match pattern={`${pathname}/request/:key?`} render={
 		  				(props) => (
 		    			<RequestForm 
+		    				uid={this.state.uid}
 		    				postRequest={this.postRequest} 
 		    			/>
 			    	)} />
@@ -123,12 +146,15 @@ class Dashboard extends React.Component {
 			    		<Invoices />
 						)} />
 						{/* Account Information */}
-						<Match pattern={`${pathname}/account/:key?`} render={(props) => (
-							<Account />
+						<Match pattern={`${pathname}/account/:key?`} render={
+							(props) => (
+							<Account
+								uid={this.props.uid}
+							/>
 						)} />
 						{/* Vessel Information */}
-						<Match pattern={`${pathname}/vessel/:key?`} render={(props) => (
-							<Vessel />
+						<Match pattern={`${pathname}/vessels/:key?`} render={(props) => (
+							<Vessels />
 						)} />
 						{/* Request Status Information */}
 						<Match pattern={`${pathname}/status/:key?`} render={

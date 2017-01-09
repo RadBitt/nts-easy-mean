@@ -16,7 +16,7 @@ const ClientNavigation = (props) => {
 
 	const accountInformation = <Link to={`${pathname}/account`}><button className={btnStyles}>Account Information</button></Link>;
 
-	const vesselInformation =  <Link to={`${pathname}/vessel`}><button className={btnStyles}>Vessel Information</button></Link>;
+	const vesselInformation =  <Link to={`${pathname}/vessels`}><button className={btnStyles}>Vessel Information</button></Link>;
 
 	const logout = 						 <button className={`${btnStyles} btn-danger`} onClick={props.logout}>Log Out</button>;
 
