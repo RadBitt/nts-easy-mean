@@ -55,9 +55,9 @@ body {
 }
 
 /* For Login / Dashboard Button */
-	.nav-st-btn {
-		margin: 8px 15px;
-	}
+.nav-st-btn {
+	margin: 8px 15px;
+}
 
 #navbar ul li a, .navbar-header a{
 	color: #FFF;
@@ -68,6 +68,39 @@ body {
 #navbar ul li a:active, 
 #navbar ul li a:visited {
 	background-color: #000;
+}
+
+.login {
+	margin-top: 50px;
+	margin-bottom: 200px
+}
+
+.login button {
+	border: none;
+	display: block;
+}
+
+.login .g-login, .login .fb-login {
+	margin-top: 50px;
+}
+
+.g-login button {
+	width: 300px;
+	margin: 0 auto;
+	background-color: #EA4335;
+}
+
+.fb-login button {
+	margin: 0 auto;
+	width: 300px;
+	background-color:  #3B5998;
+}
+
+.login-btn-text {
+	font-size: 24px;
+	position: relative;
+	bottom: 12px;
+	margin-left: 10px;
 }
 
 /* Carousel Styles */
@@ -130,10 +163,6 @@ body {
 	text-transform: capitalize;
 }
 
-.login {
-	margin: 50px 0;
-}
-
 .client-nav-container {
 	padding: 20px 5px;
 }
@@ -145,3 +174,9 @@ body {
 .client-nav-btn-sm {
 	margin: 10px 2px 5px 0;
 }
+
+.estimate-heading {
+	list-style-type: none;
+	text-align: left;
+}
+

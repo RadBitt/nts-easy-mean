@@ -26,21 +26,16 @@ class Navigation extends React.Component {
 			      <span className="icon-bar"></span>
 			      <span className="icon-bar"></span>
 			    </button>
-			    <a className="navbar-brand hidden-sm hidden-xs" href="#">Nautical Tech Services</a>
-			    <a className="navbar-brand visible-sm visible-xs" href="#">NTS</a>
+			    <a className="navbar-brand hidden-sm hidden-xs" href="/">Nautical Tech Services</a>
+			    <a className="navbar-brand visible-sm visible-xs" href="/">NTS</a>
 			    <p className="navbar-text"><strong>Call: (310) 333-3548</strong></p> 
-			    <span className="hidden-xs">
+			    {/*<span className="hidden-xs">
 			    	<NavStateBtn uid={this.state.uid} />
-			    </span>
+			    	</span>*/}
 			  </div>
 			  <div id="navbar" className="collapse navbar-collapse">
-			    <ul className="nav navbar-nav navbar-right">
-			      <li className="active"><Link to="/">Home</Link></li>
-			      <li><Link to="/dashboard/request">Request Service</Link></li>
-			      <li><Link to="/about">About</Link></li>
-			      <li className="visible-xs">
-			      	<NavStateBtn uid={this.state.uid} />
-			      </li>
+			    <ul className="nav navbar-nav navbar-right">			     	
+			      <li><NavStateBtn uid={this.state.uid} /></li>
 			    </ul>
 			  </div>
 				{/* nav-collapse */}

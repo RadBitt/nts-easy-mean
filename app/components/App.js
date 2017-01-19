@@ -4,7 +4,6 @@ import Navigation from './Navigation';
 import Carousel from './Carousel';
 import Footer from './Footer';
 import Home from './Home';
-import About from './About';
 import base from '../base';
 // Client Imports
 	import Dashboard from './client/Dashboard';
@@ -17,10 +16,12 @@ class App extends React.Component {
 		super();
 		this.authenticate = this.authenticate.bind(this);
 		this.authHandler = this.authHandler.bind(this);
+		this.isAdmin = this.isAdmin.bind(this);
 		this.logout = this.logout.bind(this); 
 		// Initial state
 		this.state = {
-			uid: null
+			uid: null,
+			admin: false
 		};
 	}
 
@@ -55,14 +56,14 @@ class App extends React.Component {
 		this.setState({ uid: authData.user.uid });
 		const uid = this.state.uid;
 		// Ref nts-easy-mean/users/:uid
-		const userRef = base.database().ref(`users/${uid}`);
+		const ref = base.database().ref(`users/${uid}`);
 		// Query the DB for the user
-		userRef.once('value', (snapshot) => {
+		ref.once('value', (snapshot) => {
 			const data = snapshot.val() || {};
 			// If its the user's first time logging in.
 			// console.log(!data.displayName);
 			if(!data.displayName) {
-				userRef.set({
+				ref.set({
 					email: authData.user.email,
 					displayName: authData.user.displayName,
 					firstName: 0,
@@ -71,34 +72,55 @@ class App extends React.Component {
 				});
 			}
 		});
+		// Set admin state if the admin is logging in.
+		this.isAdmin(uid);
+		this.context.router.transitionTo(`/dashboard`);
+	}
+
+	// Admin?
+	isAdmin(uid) {
+		const path = 'admin/';
+		const ref = base.database().ref(path);
+		ref.once('value', (snapshot) => {
+			const data = snapshot.val() || {};
+			if (data.uid == uid) {
+				this.setState({admin: true})
+			}
+		});
 	}
 
 	render() {
 		return (
-				<BrowserRouter>
-					<Navigation uid={this.state.uid} />
-						{/* Home Component */}
-						<Match exactly pattern="/" component={Home} />
-						{/* About Component */}
-					  <Match exactly pattern="/about" component={About} />
-						{/* Register Component */}
-					  <Match exactly pattern="/register" render={
-					  	() => (<Register authenticate={this.authenticate} />)
-					  } />
-					  {/* Dashboard Components */}
-					  <Match pattern="/dashboard/:location?" render={
-					  	(props) => (
-				  		<Dashboard 
-					  		uid={this.state.uid} 
-					  		authenticate={this.authenticate}
-					  		logout={this.logout}
-					  		{...props}
-						  	/>
-					  )} />
-					<Footer />
-				</BrowserRouter>
+			<BrowserRouter>
+				<Navigation uid={this.state.uid} />
+					{/* Home Component */}
+					<Match exactly pattern="/" component={Home} />
+					{/* Register Component */}
+				  <Match exactly pattern="/register" render={
+				  	() => (
+				  		<div className="container main-content">
+								<Register authenticate={this.authenticate} />
+							</div>
+				  )} />
+				  {/* Dashboard Components */}
+				  <Match pattern="/dashboard/:location?" render={
+				  	(props) => (
+			  		<Dashboard 
+			  			admin={this.state.admin}
+				  		uid={this.state.uid} 
+				  		authenticate={this.authenticate}
+				  		logout={this.logout}
+				  		{...props}
+					  	/>
+				  )} />
+				<Footer />
+			</BrowserRouter>
 		)
 	}
 }
+
+App.contextTypes = {
+  router: React.PropTypes.object
+};
 
 export default App;

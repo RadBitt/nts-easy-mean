@@ -4,21 +4,25 @@ import base from '../../base';
 
 const Register = (props) => {
 	return(
-		<div>
-			<Carousel />
-			<div className="container main-content">
-		  	<div className="main-row row">
-		    	<div className="col-md-12">
-						<nav className="login">
-			        <h2>Register / Log In</h2>
-			        <p>Sign in to manage your vessel's services</p>
-			        <button className="github" onClick={() => props.authenticate('google')}>Log In with Google</button>
-			        <button className="facebook" onClick={() => props.authenticate('facebook')} >Log In with Facebook</button>
-			        <button className="twitter" onClick={() => props.authenticate('twitter')} >Log In with Email</button>
-				    </nav>
-				  </div>
-				</div>
-			</div>
+  	<div className="main-row row">
+    	<div className="col-md-12">
+				<nav className="login">
+	        <h2>Register / Log In</h2>
+	        <p>Sign in to manage your vessel's services</p>
+	        <div className="g-login">
+		        <button className="github" onClick={() => props.authenticate('google')}>
+		        	<i className="fa fa-google-plus-official fa-4x" aria-hidden="true"></i>
+		        	<span className="login-btn-text">Log In with Google</span>
+		        </button>
+	        </div>
+	        <div className="fb-login">
+		        <button className="facebook" onClick={() => props.authenticate('facebook')} >
+		        	<i className="fa fa-facebook-official fa-4x" aria-hidden="true"></i>
+		        	<span className="login-btn-text">Log In with Facebook</span>
+		        </button>
+	        </div>
+		    </nav>
+		  </div>
 		</div>
 	)
 }
