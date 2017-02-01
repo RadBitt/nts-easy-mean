@@ -10,7 +10,7 @@ const ClientNavigation = (props) => {
 
 	const request = 					 <Link to={`${pathname}/request`}><button className={btnStyles}>New Request</button></Link>;
 
-	const activeRequests =  	 <Link to={`${pathname}/active`}><button className={btnStyles}>Active Requests</button></Link>;
+	const activeRequests =  	 <Link to={`${pathname}/requests`}><button className={btnStyles}>Active Requests</button></Link>;
 
 	const invoices = 					 <Link to={`${pathname}/invoices`}><button className={btnStyles}>Invoices</button></Link>;
 

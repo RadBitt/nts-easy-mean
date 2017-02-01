@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router'; 
 
-const RequestStatus = (props) => {
+const Request = (props) => {
 
   const ntsReq = props.fetchRequest(props.params.key);
   const vesselInfo = props.fetchVessel(ntsReq.vesselId);
@@ -138,4 +138,4 @@ AdminRequestTools.contextTypes = {
   router: React.PropTypes.object
 };
 
-export default RequestStatus;
+export default Request;

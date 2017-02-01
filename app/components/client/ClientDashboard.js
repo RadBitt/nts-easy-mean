@@ -4,10 +4,10 @@ import Account from './Account';
 import ClientNavigation from './ClientNavigation';
 import DashHeading from '../DashHeading';
 import Invoices from './Invoices';
-import RequestForm from './RequestForm';
-import RequestStatus from './RequestStatus';
-import RequestsActive from './RequestsActive';
 import Register from './Register';
+import Request from './Request';
+import Requests from './Requests';
+import RequestsForm from './RequestsForm';
 import Vessels from './Vessels';
 import base from '../../base';
 
@@ -169,32 +169,32 @@ class ClientDashboard extends React.Component {
 		    			fetchVessel={this.fetchVessel}
 		    		/>
 					)} />
-					{/* Requests Active */}
-		    	<Match pattern={`${pathname}/active/:key?`} render={
+					{/* Requests All */}
+		    	<Match exactly pattern={`${pathname}/requests`} render={
 		    		(props) => (
-	    			<RequestsActive
+	    			<Requests
 	    				fetchVessel={this.fetchVessel}
 	    				requests={this.state.requests} 
 	    			/>
 					)} />
-	  			{/* Request Form */}
-	  			<Match pattern={`${pathname}/request/:key?`} render={
-	  				(props) => (
-	    			<RequestForm 
-	    				uid={this.props.uid}
-	    				postRequest={this.postRequest}
-	    				vessels={this.state.vessels}
-	    			/>
-		    	)} />
-					{/* Request Status  */}
-					<Match pattern={`${pathname}/status/:key?`} render={
+					{/* Request Info  */}
+					<Match exactly pattern={`${pathname}/requests/:key`} render={
 						(props) => (
-		    		<RequestStatus 
+		    		<Request 
 		    			fetchRequest={this.fetchRequest}
 		    			fetchVessel={this.fetchVessel}
 		    			{...props}
 		    		/>
 					)} />
+	  			{/* Request Form */}
+	  			<Match pattern={`${pathname}/request/:key?`} render={
+	  				(props) => (
+	    			<RequestsForm 
+	    				uid={this.props.uid}
+	    				postRequest={this.postRequest}
+	    				vessels={this.state.vessels}
+	    			/>
+		    	)} />
 					{/* Vessel Information */}
 					<Match pattern={`${pathname}/vessels/:key?`} render={
 						(props) => (

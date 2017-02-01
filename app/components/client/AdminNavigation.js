@@ -10,7 +10,7 @@ const AdminNavigation = (props) => {
 
 	// const request = 					 <Link to={`${pathname}/request`}><button className={btnStyles}>New Request</button></Link>;
 
-	const activeRequests =  	 <Link to={`${pathname}/active`}><button className={btnStyles}>Active Requests</button></Link>;
+	const activeRequests =  	 <Link to={`${pathname}/requests`}><button className={btnStyles}>Active Requests</button></Link>;
 
   const estimates =           <Link to={`${pathname}/estimates`}><button className={btnStyles}>Estimates</button></Link>;
 

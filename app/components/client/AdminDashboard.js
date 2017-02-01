@@ -4,8 +4,8 @@ import AdminNavigation from './AdminNavigation';
 import DashHeading from '../DashHeading';
 import Estimate from './Estimate';
 import Estimates from './Estimates';
-import RequestStatus from './RequestStatus';
-import RequestsActive from './RequestsActive';
+import Request from './Request';
+import Requests from './Requests';
 import base from '../../base';
 
 class AdminDashboard extends React.Component {
@@ -168,18 +168,18 @@ class AdminDashboard extends React.Component {
 	    				{...props}
 	    			/>
 					)} />
-		    	{/* Requests Active */}
-		    	<Match pattern={`${pathname}/active`} render={
+		    	{/* Requests */}
+		    	<Match exactly pattern={`${pathname}/requests`} render={
 		    		(props) => (
-	    			<RequestsActive 
+	    			<Requests
 	    				requests={this.state.requests}
 	    				fetchVessel={this.fetchVessel}
 	    			/>
 					)} />
-					{/* Request Status */}
-					<Match pattern={`${pathname}/status/:key`} render={
+					{/* Request Info */}
+					<Match exactly pattern={`${pathname}/requests/:key`} render={
 						(props) => (
-		    		<RequestStatus
+		    		<Request
 		    			admin={true}	
 		    			fetchEstimate={this.fetchEstimate}
 		    			fetchRequest={this.fetchRequest}

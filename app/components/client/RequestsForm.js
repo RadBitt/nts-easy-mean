@@ -2,7 +2,7 @@ import React from 'react';
 import SelectVessel from './child-components/SelectVessel';
 import { getType, getLoc, getName, getDesc } from './child-components/helperData';
 
-class RequestForm extends React.Component {
+class RequestsForm extends React.Component {
 
   constructor(props) {
     super(props);
@@ -47,7 +47,7 @@ class RequestForm extends React.Component {
 
     ntsReq['id'] = ntsReq.date;
     this.props.postRequest(ntsReq);
-    this.context.router.transitionTo(`/dashboard/status/${ntsReq.id}`);
+    this.context.router.transitionTo(`/dashboard/requests/${ntsReq.id}`);
   }
 
   render () {
@@ -113,8 +113,8 @@ class RequestForm extends React.Component {
   }
 }
 
-RequestForm.contextTypes = {
+RequestsForm.contextTypes = {
   router: React.PropTypes.object
 };
 
-export default RequestForm;
+export default RequestsForm;

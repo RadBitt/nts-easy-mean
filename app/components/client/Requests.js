@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-const RequestsActive = (props) => {
+const Requests = (props) => {
 	return(
 		<table className="table table-striped">
 			<caption>All Requests</caption>
@@ -33,7 +33,7 @@ const Request = (props) => {
 
 	return(
 		<tr>
-			<td><Link to={`/dashboard/status/${request.id}`}>{request.id}</Link></td>
+			<td><Link to={`/dashboard/requests/${request.id}`}>{request.id}</Link></td>
 			<td>{new Date(request.date).toLocaleDateString()}</td>
 			<td>{vesselName}</td>
 			<td>{request.status}</td>
@@ -41,4 +41,4 @@ const Request = (props) => {
 	)
 }
 
-export default RequestsActive;
+export default Requests;
