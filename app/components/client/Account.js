@@ -36,17 +36,17 @@ class Account extends React.Component {
       	<div className="col-md-12">
       		<h2><small>Account Settings</small></h2>
         </div>
-      <div className="row no-border">
-      	<div className="col-md-12">
-      		<ul>
-      			<li>Display Name: {user.displayName}</li>
-            <li>First Name: {user.firstName}</li>
-      			<li>Last Name: {user.lastName}</li>
-      			<li>Contact Email: {user.email}</li>
-      			<li>Contact Phone: {user.phone}</li>
-      		</ul>
-        </div>
-      </div>
+	      <div className="row no-border">
+	      	<div className="col-md-12">
+	      		<ul>
+	      			<li>Display Name: {user.displayName}</li>
+	            <li>First Name: {user.firstName}</li>
+	      			<li>Last Name: {user.lastName}</li>
+	      			<li>Contact Email: {user.email}</li>
+	      			<li>Contact Phone: {user.phone}</li>
+	      		</ul>
+	        </div>
+	      </div>
     </div>
 		)
 	}

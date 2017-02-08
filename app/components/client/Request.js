@@ -25,7 +25,7 @@ const Request = (props) => {
   }
   // Display the request info, as well as its vessels info.
   return(
-    <div className="main-row row no-border">
+    <div className="main-row">
       <div className="row no-border">
       	<div className="col-md-12">
       		<h2><small>Request ID: {ntsReq.id}</small></h2>

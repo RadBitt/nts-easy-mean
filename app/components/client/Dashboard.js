@@ -23,7 +23,7 @@ class Dashboard extends React.Component {
   			location = location == undefined ? '' : location = location;
 
   	{/* Admin DashBaord */} 
-  	if (this.props.admin) {
+  	if (localStorage.admin == true) {
   		return (
 	  		<div className="container main-content">
 		  			<AdminDashboard

@@ -1,6 +1,5 @@
 import React from 'react';
 import VesselForm from './child-components/VesselForm';
-import Vessel from './child-components/Vessel';
 import base from '../../base';
 
 class Vessels extends React.Component {
@@ -43,7 +42,7 @@ class Vessels extends React.Component {
 		}
 
 		return(
-			<div className="main-row row no-border">
+			<div className="main-row">
       <div className="row no-border">
       	<div className="col-md-12">
       		<button onClick={this.addForm} className={`${btnStyles} btn-success`}>Add a vessel</button>
@@ -64,7 +63,7 @@ class Vessels extends React.Component {
 						{
 							Object
 								.keys(this.props.vessels)
-								.map(key => <Vessel key={key} index={key} details={this.props.vessels[key]} />)
+								.map(key => <VesselTd key={key} index={key} details={this.props.vessels[key]} />)
 						}				
 						</tbody>
 					</table>
@@ -76,3 +75,16 @@ class Vessels extends React.Component {
 }
 
 export default Vessels 
+
+const VesselTd = (props) => {
+	const {details} = props;
+	return(
+		<tr>
+			<td>Default</td>
+			<td>Default</td>
+			<td>{details.boatName}</td>
+			<td>{details.boatType}</td>
+			<td>default</td>
+		</tr>
+	)
+}

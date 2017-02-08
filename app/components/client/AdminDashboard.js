@@ -4,6 +4,8 @@ import AdminNavigation from './AdminNavigation';
 import DashHeading from '../DashHeading';
 import Estimate from './Estimate';
 import Estimates from './Estimates';
+import Invoice from './Invoice';
+import Invoices from './Invoices';
 import Request from './Request';
 import Requests from './Requests';
 import base from '../../base';
@@ -17,6 +19,7 @@ class AdminDashboard extends React.Component {
 		this.fetchRequest = this.fetchRequest.bind(this);
 		this.fetchVessel = this.fetchVessel.bind(this);
 		this.postEstimate = this.postEstimate.bind(this);
+		this.postInvoice = this.postInvoice.bind(this);
 		this.updateRequest = this.updateRequest.bind(this);
 		this.state = {
 			displayName: null,
@@ -137,6 +140,36 @@ class AdminDashboard extends React.Component {
 		return newEstimate.id;
 	}
 
+	// Creats a new invoice record from an estimate record
+	// and updates the estimate it came from .
+	// returns the new invoice parameter
+	postInvoice(estimate) {
+		const date = Date.now();
+		const newInvoice = {
+			date: date,
+			estimateId: estimate.id,
+			id: date,
+			items: estimate.items,
+			owner: estimate.owner,
+			requestId: estimate.requestId,
+			status: 'Pending',
+			vesselId: estimate.vesselId
+		}
+		const key = `invoice-${newInvoice.id}`;
+		const path = `invoices/${key}`;
+		base.post(path, {
+			data: newInvoice,
+				then(err) {
+					if(!err) {
+						console.log(err);
+					}
+				}
+		});
+		this.updateEstimate(estimate.id, 'invoiceId', newInvoice.id);
+		this.updateEstimate(estimate.id, 'status', 'Invoiced');
+		return newInvoice.id;
+	}
+
 	render() {
 
 		const pathname = '/dashboard';
@@ -158,15 +191,34 @@ class AdminDashboard extends React.Component {
 	    				{...props}
 	    			/>
 					)} />
-		    	{/* Estimates */}
+		    	{/* Estimate */}
 		    	<Match exactly pattern={`${pathname}/estimates/:key`} render={
 		    		(props) => (
 	    			<Estimate
+	    				admin={true}
 	    				fetchEstimate={this.fetchEstimate}
 	    				fetchRequest={this.fetchRequest}
 	    				fetchVessel={this.fetchVessel}
+	    				postInvoice={this.postInvoice}
+	    				updateEstimate={this.updateEstimate}
 	    				{...props}
 	    			/>
+					)} />
+		    	{/* Invoices */}
+		    	<Match exactly pattern={`${pathname}/invoices`} render={(props) => (
+		    		<Invoices
+		    			invoices={this.state.invoices}
+		    			fetchVessel={this.fetchVessel}
+		    		/>
+					)} />
+					{/* Invoice */}
+		    	<Match exactly pattern={`${pathname}/invoices/:key`} render={(props) => (
+		    		<Invoice
+		    			admin={true}
+	    				fetchInvoice={this.fetchInvoice}
+	    				fetchVessel={this.fetchVessel}
+	    				{...props}
+		    		/>
 					)} />
 		    	{/* Requests */}
 		    	<Match exactly pattern={`${pathname}/requests`} render={
@@ -190,14 +242,6 @@ class AdminDashboard extends React.Component {
 		    			{...props}
 		    		/>
 					)} />
-					{/* Invoices 
-		    	<Match pattern={`${pathname}/invoices/:key?`} render={(props) => (
-		    		<Invoices
-		    			invoices={this.state.invoices}
-		    			fetchInvoice={this.fetchInvoice}
-		    			fetchVessel={this.fetchVessel}
-		    		/>
-					)} />*/}
 				</div>
 				<div className="hidden-sm hidden-xs col-md-3 btn-group client-nav-container">
 			  	<AdminNavigation 

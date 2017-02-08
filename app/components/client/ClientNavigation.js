@@ -8,24 +8,28 @@ const ClientNavigation = (props) => {
   const btnStylesSm = 'btn btn-md btn-primary client-nav-btn-sm';
   let btnStyles = btnStyles = props.btnStyles == 'md' ? btnStylesMd : btnStylesSm; 
 
-	const request = 					 <Link to={`${pathname}/request`}><button className={btnStyles}>New Request</button></Link>;
+  const accountInformation = <Link to={`${pathname}/account`}><button className={btnStyles}>Account Information</button></Link>;
 
-	const activeRequests =  	 <Link to={`${pathname}/requests`}><button className={btnStyles}>Active Requests</button></Link>;
+  const estimates =          <Link to={`${pathname}/estimates`}><button className={btnStyles}>Estimates</button></Link>;
 
 	const invoices = 					 <Link to={`${pathname}/invoices`}><button className={btnStyles}>Invoices</button></Link>;
 
-	const accountInformation = <Link to={`${pathname}/account`}><button className={btnStyles}>Account Information</button></Link>;
+	const logout =             <button className={`${btnStyles} btn-danger`} onClick={props.logout}>Log Out</button>;
+
+  const request =            <Link to={`${pathname}/request`}><button className={btnStyles}>New Request</button></Link>;
+
+  const requestsActive =     <Link to={`${pathname}/requests`}><button className={btnStyles}>Active Requests</button></Link>;
 
 	const vesselInformation =  <Link to={`${pathname}/vessels`}><button className={btnStyles}>Vessel Information</button></Link>;
-
-	const logout = 						 <button className={`${btnStyles} btn-danger`} onClick={props.logout}>Log Out</button>;
 
 	return(
 		<span>
       {/* NewRequest */}
       {request}
       {/* OpenRequests */}
-      {activeRequests}
+      {requestsActive}
+      {/* Estimates */}
+      {estimates}
       {/* Invoices */}
       {invoices}
 			{/* Account Information */}

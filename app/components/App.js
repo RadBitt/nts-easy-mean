@@ -5,7 +5,7 @@ import Carousel from './Carousel';
 import Footer from './Footer';
 import Home from './Home';
 import base from '../base';
-// Client Imports
+	// Client Imports
 	import Dashboard from './client/Dashboard';
 	import Register from './client/Register'; 
 
@@ -21,11 +21,17 @@ class App extends React.Component {
 		// Initial state
 		this.state = {
 			uid: null,
-			admin: false
+			admin: 0
 		};
 	}
 
 	componentDidMount() {
+		if (localStorage.uid) {
+			this.setState({uid: localStorage.uid});
+			if (localStorage.admin) {
+				this.isAdmin(localStorage.uid);
+			}
+		}
     base.onAuth((user) => {
       if(user) {
         this.authHandler(null, { user });
@@ -35,8 +41,11 @@ class App extends React.Component {
 
   // Logout 
   logout() {
+  	delete localStorage.uid;
+  	delete localStorage.admin; 
     base.unauth();
     this.setState({ uid: null });
+    this.context.router.transitionTo('/');
   }
 
 	// Auth via provider
@@ -54,6 +63,7 @@ class App extends React.Component {
 		}
 		// Set user ID State
 		this.setState({ uid: authData.user.uid });
+		localStorage.setItem('uid', authData.user.uid);
 		const uid = this.state.uid;
 		// Ref nts-easy-mean/users/:uid
 		const ref = base.database().ref(`users/${uid}`);
@@ -84,7 +94,11 @@ class App extends React.Component {
 		ref.once('value', (snapshot) => {
 			const data = snapshot.val() || {};
 			if (data.uid == uid) {
-				this.setState({admin: true})
+				localStorage.setItem('admin', 1); 
+				this.setState({admin: 1});
+			} else {
+				localStorage.setItem('admin', 0); 
+				this.setState({admin: 0});
 			}
 		});
 	}

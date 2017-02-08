@@ -3,8 +3,8 @@
 var express = require('express'); 
 var path = require('path');
 var parser = require('body-parser'); 
-// var apiRouter = require('./api');
 var mailRouter = require('./mailer');
+// var apiRouter = require('./api');
 
 var app = express();
 var port = 1000;
@@ -20,9 +20,9 @@ app.get('*', function(req, res) {
 	res.sendFile('index.html', {root: publicPath});
 })
 
-// app.use('/api', apiRouter);
+app.use('/mailer', mailRouter);
 
-// app.use('/mailer', mailRouter);
+// app.use('/api', apiRouter);
 
 app.listen(port, function() {
 	console.log('Server is running on port ' + port);

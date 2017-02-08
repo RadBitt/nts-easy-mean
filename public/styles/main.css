@@ -17,6 +17,11 @@ body {
   max-width: 1900px;
 }
 
+ul {
+	padding-left: 0;
+	list-style-type: none;
+}
+
 .container-fluid {
 	padding: 0;
 }
@@ -40,6 +45,13 @@ body {
 	background-size: 100%;
 }
 
+.totals-table, .price-td, .totals-table th {
+	text-align: right;
+}
+
+.price-td {
+	text-align: right;
+}
 
 /* Navbar Styles */
 .navbar {
