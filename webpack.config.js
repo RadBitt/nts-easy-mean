@@ -8,10 +8,10 @@ module.exports = {
   },
   output: {
     // path: __dirname,
-    filename: './public/scripts/bundle.js'
+    filename: './html/scripts/bundle.js'
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"./public/scripts/vendor.bundle.js")
+    new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"./html/scripts/vendor.bundle.js")
   ],
   module: {
     loaders: [
