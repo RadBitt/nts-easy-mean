@@ -27,6 +27,7 @@ class ClientDashboard extends React.Component {
 	this.updateEstimate = this.updateEstimate.bind(this);
 	this.state = {
 		displayName: null,
+		email: null,
 		estimates: {},
 		invoices: {},
 		requests: {},
@@ -42,7 +43,8 @@ componentWillMount() {
 	ref.once('value', (snapshot) => {
 		const data = snapshot.val() || {};
 		this.setState({
-			displayName: data.displayName
+			displayName: data.displayName,
+			email: data.email
 		});
 	});
 	this.ref = base.syncState('/requests', {
@@ -149,11 +151,15 @@ postRequest(ntsReq) {
       }
     }
 	});
+	// Send Request Email Confirmation
+	ntsReq['email'] = this.state.email;
+	ntsReq['displayName'] = this.state.displayName;
 	$.ajax({
     url: '/mailer/request-submitted',
     dataType: 'json',
+    contentType: "application/json",
     type: 'POST',
-    data: ntsReq,
+    data: JSON.stringify(ntsReq),
     success: function(data) {
       console.log(ntsReq)
     }.bind(this),

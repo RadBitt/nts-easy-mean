@@ -39,7 +39,7 @@ class Dashboard extends React.Component {
     return(
     	<div className="container main-content">
 	  			<ClientDashboard 
-		  			uid={this.props.uid} 
+		  			uid={this.props.uid}
 		  			location={location}
 		  			logout={this.props.logout}
 	  			/>

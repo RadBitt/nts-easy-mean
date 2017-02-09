@@ -62,7 +62,10 @@ class App extends React.Component {
 			return;
 		}
 		// Set user ID State
-		this.setState({ uid: authData.user.uid });
+		this.setState({ 
+			uid: authData.user.uid,
+			email: authData.user.email
+		 });
 		localStorage.setItem('uid', authData.user.uid);
 		const uid = this.state.uid;
 		// Ref nts-easy-mean/users/:uid
@@ -121,7 +124,7 @@ class App extends React.Component {
 				  	(props) => (
 			  		<Dashboard 
 			  			admin={this.state.admin}
-				  		uid={this.state.uid} 
+				  		uid={this.state.uid}
 				  		authenticate={this.authenticate}
 				  		logout={this.logout}
 				  		{...props}

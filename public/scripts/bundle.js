@@ -324,7 +324,10 @@ webpackJsonp([0],[
 					return;
 				}
 				// Set user ID State
-				this.setState({ uid: authData.user.uid });
+				this.setState({
+					uid: authData.user.uid,
+					email: authData.user.email
+				});
 				localStorage.setItem('uid', authData.user.uid);
 				var uid = this.state.uid;
 				// Ref nts-easy-mean/users/:uid
@@ -21892,6 +21895,7 @@ webpackJsonp([0],[
 			_this.updateEstimate = _this.updateEstimate.bind(_this);
 			_this.state = {
 				displayName: null,
+				email: null,
 				estimates: {},
 				invoices: {},
 				requests: {},
@@ -21914,7 +21918,8 @@ webpackJsonp([0],[
 				ref.once('value', function (snapshot) {
 					var data = snapshot.val() || {};
 					_this2.setState({
-						displayName: data.displayName
+						displayName: data.displayName,
+						email: data.email
 					});
 				});
 				this.ref = _base2.default.syncState('/requests', {
@@ -22034,11 +22039,15 @@ webpackJsonp([0],[
 						}
 					}
 				});
+				// Send Request Email Confirmation
+				ntsReq['email'] = this.state.email;
+				ntsReq['displayName'] = this.state.displayName;
 				$.ajax({
 					url: '/mailer/request-submitted',
 					dataType: 'json',
+					contentType: "application/json",
 					type: 'POST',
-					data: ntsReq,
+					data: JSON.stringify(ntsReq),
 					success: function (data) {
 						console.log(ntsReq);
 					}.bind(this),
