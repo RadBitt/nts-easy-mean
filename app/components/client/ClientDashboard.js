@@ -24,6 +24,7 @@ class ClientDashboard extends React.Component {
 	this.fetchVessel = this.fetchVessel.bind(this);
 	this.postRequest = this.postRequest.bind(this);
 	this.postVessel = this.postVessel.bind(this);
+	this.sendJSONEmail = this.sendJSONEmail.bind(this);
 	this.updateEstimate = this.updateEstimate.bind(this);
 	this.state = {
 		displayName: null,
@@ -112,7 +113,13 @@ updateEstimate(key, prop, value) {
 	estimate[prop] = value; 
 	this.setState({
 		estimates: estimates
-	})
+	});
+	if (prop == 'viewed') {
+		this.sendJSONEmail('/mailer/estimate-viewed', {}); 
+	}
+	if (prop == 'approved') {
+		this.sendJSONEmail('/mailer/estimate-approved', {}); 
+	}
 }
 
 updateRequest(key, prop, value) {
@@ -121,7 +128,7 @@ updateRequest(key, prop, value) {
 	request[prop] = value; 
 	this.setState({
 		requests: requests
-	})
+	});
 }
 
 /* ============== Client Functions ================ */
@@ -154,19 +161,7 @@ postRequest(ntsReq) {
 	// Send Request Email Confirmation
 	ntsReq['email'] = this.state.email;
 	ntsReq['displayName'] = this.state.displayName;
-	$.ajax({
-    url: '/mailer/request-submitted',
-    dataType: 'json',
-    contentType: "application/json",
-    type: 'POST',
-    data: JSON.stringify(ntsReq),
-    success: function(data) {
-      console.log(ntsReq)
-    }.bind(this),
-    error: function(xhr, status, err) {
-      console.error(err.toString());
-    }.bind(this)
-   });
+	this.sendJSONEmail('mailer/request-submitted', ntsReq);
 }
 
 // Add vessel to state/firebase
@@ -183,6 +178,23 @@ postVessel(ntsVes) {
 	      }
 	    }
 	});
+	this.sendJSONEmail('/mailer/vessel-created', ntsVes);
+}
+
+sendJSONEmail(path, object) {
+	$.ajax({
+    url: path,
+    dataType: 'json',
+    contentType: "application/json",
+    type: 'POST',
+    data: JSON.stringify(object),
+    success: function(data) {
+      console.log(object)
+    }.bind(this),
+    error: function(xhr, status, err) {
+      console.error(err.toString());
+    }.bind(this)
+  });
 }
 
 render() {

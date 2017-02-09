@@ -14,7 +14,12 @@ const Estimate = (props) => {
   for(key in items) {
     price = (items[key].itemRate * items[key].itemQuant) * ( 1 + items[key].itemTax) + price;
   }
-  price = '$' + price.format(2);
+
+  if (isNaN(price)) {
+    price = '$0.00'; 
+  } else {
+    price = '$' + price.format(2);
+  }
 
   // If the estimate is empty.
   if (!estimate.items) {
@@ -39,8 +44,10 @@ const Estimate = (props) => {
      />
   } else {
     userTools = <EstimateClientTools 
-      updateEstimate={props.updateEstimate} 
-      status={estimate.status} id={estimate.id} 
+      approved={estimate.approved}
+      id={estimate.id}
+      updateEstimate={props.updateEstimate}
+      viewed={estimate.viewed}
     />
   }
 
@@ -99,7 +106,13 @@ export default Estimate;
 const EstimateItem = (props) => {
   const items = props.estimate;
   let price = (items.itemRate * items.itemQuant) * ( 1 + items.itemTax);
-      price = '$' + price.format(2);
+
+  if (isNaN(price)) {
+    price = '$0.00'; 
+  } else {
+    price = '$' + price.format(2);
+  }
+
   return(
     <tr>
       <td>{items.itemName}</td>
@@ -118,20 +131,20 @@ const EstimateClientTools = (props) => {
 
   const estimate = props.estimate;
 
-  let button = '';
-  if (props.status == 'Pending') {
-    // Has viewed?
-    button = <Button
+  let button = <Button
       bsStyle="success"
       bsSize="sm"
-      onClick={() => props.updateEstimate(props.id, 'status', 'Approved')}>
+      onClick={() => props.updateEstimate(props.id, 'approved', '1')}>
       Approve Estimate
     </Button>
+  if (props.approved == '1') {
+    button = 'You have approved this estimate';
   }
-  if (props.status == 'Approved') {
-    button = 'You have approved this estimate'; 
+  // Check if this estimate has not been viewed.
+  if (props.viewed == '0') {
+    props.updateEstimate(props.id, 'viewed', '1');
   }
-  
+
   return(
     <span>{button}</span>
   )
@@ -165,6 +178,10 @@ class EstimateAdminTools extends React.Component {
     this.context.router.transitionTo(`/dashboard/invoices/${param}`);
   }
 
+  goToInvoice() {
+    this.context.router.transitionTo(`/dashboard/invoices/${this.props.estimate.invoiceId}`)
+  }
+
   handleClose() {
     this.setState({show: false}); 
   }
@@ -186,6 +203,23 @@ class EstimateAdminTools extends React.Component {
   }
 
   render() {
+    let invoiceButton = <Button
+      bsStyle="success"
+      bsSize="sm"
+      onClick={() => this.createInvoice()}
+      >
+      Create Invoice
+    </Button>;
+    if (this.state.estimate.status == 'Invoiced') {
+      invoiceButton = <Button
+        bsStyle="success"
+        bsSize="sm"
+        onClick={() => this.goToInvoice()}
+      >
+        View Invoice
+      </Button>
+    } 
+
     return(
       <div>
         {/*MODAL*/}
@@ -196,14 +230,7 @@ class EstimateAdminTools extends React.Component {
         >
           Add Line Item
         </Button>
-        <Button
-          bsStyle="success"
-          bsSize="sm"
-          onClick={() => this.createInvoice()}
-        >
-          Create Invoice
-        </Button>
-
+        {invoiceButton}
         {/*MODAL*/}
         <Modal
           show={this.state.show}
@@ -244,7 +271,6 @@ class EstimateAdminTools extends React.Component {
       </div>
     );
   }
-
 }
 
 EstimateAdminTools.contextTypes = {

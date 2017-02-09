@@ -20,6 +20,7 @@ class AdminDashboard extends React.Component {
 		this.fetchVessel = this.fetchVessel.bind(this);
 		this.postEstimate = this.postEstimate.bind(this);
 		this.postInvoice = this.postInvoice.bind(this);
+		this.sendJSONEmail = this.sendJSONEmail.bind(this);
 		this.updateRequest = this.updateRequest.bind(this);
 		this.state = {
 			displayName: null,
@@ -118,16 +119,18 @@ class AdminDashboard extends React.Component {
 	// returns the new estimate parameter
 	postEstimate(ntsReq) {
 		const date = Date.now();
-		const newEstimate = {
+		let newEstimate = {
+			approved: 0,
 			date: date,
 			id: date,
 			owner: ntsReq.owner,
 			requestId: ntsReq.id,
 			status: 'Pending',
+			viewed: 0,
 			vesselId: ntsReq.vesselId
 		}
 		const key = `estimate-${newEstimate.id}`;
-		const path = `estimates/${key}`;
+		let path = `estimates/${key}`;
 		base.post(path, {
 			data: newEstimate,
 				then(err) {
@@ -137,6 +140,16 @@ class AdminDashboard extends React.Component {
 				}
 		});
 		this.updateRequest(ntsReq.id, 'estimateId', newEstimate.id);
+		// Send Estimate Initialization Confirmation
+		path = `users/${ntsReq.owner}`;
+		const ref = base.database().ref(path);
+		ref.once('value', (snapshot) => {
+			const data = snapshot.val() || {};
+			newEstimate['email'] = data.email;
+			newEstimate['displayName'] = data.displayName;
+			this.sendJSONEmail('/mailer/estimate-created', newEstimate);
+		});
+		
 		return newEstimate.id;
 	}
 
@@ -145,7 +158,7 @@ class AdminDashboard extends React.Component {
 	// returns the new invoice parameter
 	postInvoice(estimate) {
 		const date = Date.now();
-		const newInvoice = {
+		let newInvoice = {
 			date: date,
 			estimateId: estimate.id,
 			id: date,
@@ -153,10 +166,11 @@ class AdminDashboard extends React.Component {
 			owner: estimate.owner,
 			requestId: estimate.requestId,
 			status: 'Pending',
+			viewed: 0,
 			vesselId: estimate.vesselId
 		}
 		const key = `invoice-${newInvoice.id}`;
-		const path = `invoices/${key}`;
+		let path = `invoices/${key}`;
 		base.post(path, {
 			data: newInvoice,
 				then(err) {
@@ -167,7 +181,31 @@ class AdminDashboard extends React.Component {
 		});
 		this.updateEstimate(estimate.id, 'invoiceId', newInvoice.id);
 		this.updateEstimate(estimate.id, 'status', 'Invoiced');
+		path = `users/${estimate.owner}`;
+		const ref = base.database().ref(path);
+		ref.once('value', (snapshot) => {
+			const data = snapshot.val() || {};
+			newInvoice['email'] = data.email;
+			newInvoice['displayName'] = data.displayName;
+			this.sendJSONEmail('/mailer/invoice-created', newInvoice);
+		});
 		return newInvoice.id;
+	}
+
+	sendJSONEmail(path, object) {
+		$.ajax({
+		    url: path,
+		    dataType: 'json',
+		    contentType: "application/json",
+		    type: 'POST',
+		    data: JSON.stringify(object),
+		    success: function(data) {
+		      console.log(object)
+		    }.bind(this),
+		    error: function(xhr, status, err) {
+		      console.error(err.toString());
+		    }.bind(this)
+	   });
 	}
 
 	render() {

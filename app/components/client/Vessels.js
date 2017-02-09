@@ -19,7 +19,6 @@ class Vessels extends React.Component {
     this.setState({numForms: oldState});
 	}
 
-	
 	removeForm() {
 		// Cancels all open forms
 		let oldState = this.state.numForms;

@@ -14,7 +14,12 @@ const Invoice = (props) => {
   for(key in items) {
     price = (items[key].itemRate * items[key].itemQuant) * ( 1 + items[key].itemTax) + price;
   }
-  price = '$' + price.format(2);
+
+  if (isNaN(price)) {
+    price = '$0.00'; 
+  } else {
+    price = '$' + price.format(2);
+  }
 
   // If the invoice is empty.
   if (!invoice.items) {
@@ -28,6 +33,8 @@ const Invoice = (props) => {
       }
     }
   }
+
+  // If client is viewing
 
 	return(
 		<div className="main-row">
@@ -78,11 +85,17 @@ const Invoice = (props) => {
 
 export default Invoice;
 
-/* ============== Estimate Table Items ================ */
+/* ============== Invoice Table Items ================ */
 const InvoiceItem = (props) => {
   const items = props.invoice;
   let price = (items.itemRate * items.itemQuant) * ( 1 + items.itemTax);
-      price = '$' + price.format(2);
+
+  if (isNaN(price)) {
+    price = '$0.00'; 
+  } else {
+    price = '$' + price.format(2);
+  }
+  
   return(
     <tr>
       <td>{items.itemName}</td>
