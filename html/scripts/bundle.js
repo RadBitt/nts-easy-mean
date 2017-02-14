@@ -363,7 +363,8 @@ webpackJsonp([0],[
 				var ref = _base2.default.database().ref(path);
 				ref.once('value', function (snapshot) {
 					var data = snapshot.val() || {};
-					if (data.uid == uid) {
+					console.log(data.dev == uid);
+					if (data.uid == uid || data.dev == uid) {
 						localStorage.setItem('admin', 1);
 						_this3.setState({ admin: 1 });
 					} else {
@@ -1239,6 +1240,10 @@ webpackJsonp([0],[
 
 	  return Dashboard;
 	}(_react2.default.Component);
+
+	Dashboard.contextTypes = {
+	  router: _react2.default.PropTypes.object
+	};
 
 	exports.default = Dashboard;
 
@@ -22572,9 +22577,12 @@ webpackJsonp([0],[
 	    }
 
 	    if (!vesselsArray[0]) {
-	      vesselsArray[0].boatName = '';
-	      vesselsArray[0].boatType = '';
-	      vesselsArray[0].boatLoc = '';
+	      var vessel = {
+	        boatName: '',
+	        boatType: '',
+	        boatLoc: ''
+	      };
+	      vesselsArray.push(vessel);
 	    }
 
 	    _this.state = {
@@ -22950,8 +22958,19 @@ webpackJsonp([0],[
 			value: function render() {
 				var _this2 = this;
 
+				var vessels = this.props.vessels;
 				var btnStyles = 'btn btn-sm';
 				var forms = [];
+
+				if (!this.props.vessels) {
+					vessels = {
+						vessel: {
+							boatName: '-',
+							boatType: '-'
+						}
+					};
+				}
+
 				for (var i = 0; i < this.state.numForms; i++) {
 					forms.push(_react2.default.createElement(_VesselForm2.default, {
 						key: i, index: i,
@@ -23016,8 +23035,8 @@ webpackJsonp([0],[
 											'Verified'
 										)
 									),
-									Object.keys(this.props.vessels).map(function (key) {
-										return _react2.default.createElement(VesselTd, { key: key, index: key, details: _this2.props.vessels[key] });
+									Object.keys(vessels).map(function (key) {
+										return _react2.default.createElement(VesselTd, { key: key, index: key, vessel: _this2.props.vessels[key] });
 									})
 								)
 							)
@@ -23034,35 +23053,34 @@ webpackJsonp([0],[
 
 
 	var VesselTd = function VesselTd(props) {
-		var details = props.details;
-
+		var vessel = props.vessel;
 		return _react2.default.createElement(
 			'tr',
 			null,
 			_react2.default.createElement(
 				'td',
 				null,
-				'Default'
+				'-'
 			),
 			_react2.default.createElement(
 				'td',
 				null,
-				'Default'
+				'-'
 			),
 			_react2.default.createElement(
 				'td',
 				null,
-				details.boatName
+				vessel.boatName
 			),
 			_react2.default.createElement(
 				'td',
 				null,
-				details.boatType
+				vessel.boatType
 			),
 			_react2.default.createElement(
 				'td',
 				null,
-				'default'
+				'1'
 			)
 		);
 	};

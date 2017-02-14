@@ -7,7 +7,7 @@ var mailRouter = require('./mailer');
 // var apiRouter = require('./api');
 
 var app = express();
-var port = 1000;
+var port = 8080;
 var publicPath = path.resolve(__dirname, '../html');
 
 console.log(publicPath);

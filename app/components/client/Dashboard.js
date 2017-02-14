@@ -48,4 +48,9 @@ class Dashboard extends React.Component {
   }
 }
 
+Dashboard.contextTypes = {
+  router: React.PropTypes.object
+};
+
+
 export default Dashboard;

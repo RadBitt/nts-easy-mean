@@ -4,6 +4,14 @@ var express = require('express');
 var nodemailer = require('nodemailer');
 var router = express.Router();
 
+var transporter = nodemailer.createTransport({
+	service: 'Gmail',
+	auth: {
+	  user: 'leonardo.117h@gmail.com', // Your email id
+	  pass: 'gmai802L' // Your password
+	}
+ });
+
 /* ============== Request Created by Client ================ */
 router.post('/request-submitted', function(req, res) { // handle the route at yourdomain.com/sayHello
 
@@ -26,14 +34,6 @@ router.post('/request-submitted', function(req, res) { // handle the route at yo
 	    html: 'Your request has been recieved by Nautical Tech Services. Thank you'
 	};
 
-	var transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'leonardo.117h@gmail.com', // Your email id
-            pass: 'gmai802L' // Your password
-        }
-    });
-
 	transporter.sendMail(clientOptions, function(error, info){
 	  if(error){
 	      console.log(error);
@@ -49,9 +49,9 @@ router.post('/request-submitted', function(req, res) { // handle the route at yo
 	        res.json({yo: 'error'});
 	    }else{
 	        console.log('Message sent: ' + info.response);
-	        res.sendStatus(200);
 	    };
 	});
+	res.sendStatus(200);
 });
 
 /* ============== Estimate Created by Admin ================ */
@@ -75,21 +75,12 @@ router.post('/estimate-created', function(req, res) { // handle the route at you
     html: estimate.displayName + '<br>An estimate has been created based on your request.'
 	};
 
-	var transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'leonardo.117h@gmail.com', // Your email id
-            pass: 'gmai802L' // Your password
-        }
-    });
-
 	transporter.sendMail(clientOptions, function(error, info){
 	  if(error){
 	      console.log(error);
 	      res.json({yo: 'error'});
 	  }else{
 	      console.log('Message sent: ' + info.response);
-	      res.sendStatus(200);
 	  };
 	});
 
@@ -99,9 +90,9 @@ router.post('/estimate-created', function(req, res) { // handle the route at you
 	        res.json({yo: 'error'});
 	    }else{
 	        console.log('Message sent: ' + info.response);
-	        res.sendStatus(200);
 	    };
 	});
+	res.sendStatus(200);
 }); 
 
 /* ============== Invoice Created by Admin ================ */
@@ -125,21 +116,12 @@ router.post('/invoice-created', function(req, res) { // handle the route at your
     html: vessel.displayName + '<br>An invoice has been created based on your estimate.'
 	};
 
-	var transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'leonardo.117h@gmail.com', // Your email id
-            pass: 'gmai802L' // Your password
-        }
-    });
-
 	transporter.sendMail(clientOptions, function(error, info){
 	  if(error){
 	      console.log(error);
 	      res.json({yo: 'error'});
 	  }else{
 	      console.log('Message sent: ' + info.response);
-	      res.sendStatus(200);
 	  };
 	});
 
@@ -149,9 +131,9 @@ router.post('/invoice-created', function(req, res) { // handle the route at your
 	        res.json({yo: 'error'});
 	    }else{
 	        console.log('Message sent: ' + info.response);
-	        res.sendStatus(200);
 	    };
 	});
+	res.sendStatus(200);
 }); 
 
 /* ============== Vessel Created by Client ================ */
@@ -168,24 +150,15 @@ router.post('/vessel-created', function(req, res) { // handle the route at yourd
     html: 'Your client has created a new vessel.'
 	}
 
-
-	var transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'leonardo.117h@gmail.com', // Your email id
-            pass: 'gmai802L' // Your password
-        }
-    });
-
 	transporter.sendMail(adminOptions, function(error, info){
 	    if(error){
 	        console.log(error);
 	        res.json({yo: 'error'});
 	    }else{
 	        console.log('Message sent: ' + info.response);
-	        res.sendStatus(200);
 	    };
 	});
+	res.sendStatus(200);
 });
 
 /* ============== Estimate viewed by Client ================ */
@@ -194,27 +167,19 @@ router.post('/estimate-viewed', function(req, res) { // handle the route at your
 	var adminOptions = {
 		from: 'leonardo.117h@gmail.com', // sender address
     to: 'leo@radbitt.com', // list of receivers
-    subject: 'Estimate Approved - Nautical Tech Services', // Subject line
+    subject: 'Estimate Viewed - Nautical Tech Services', // Subject line
     html: 'Your client has viewed the estimate.'
 	}
-
-	var transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'leonardo.117h@gmail.com', // Your email id
-            pass: 'gmai802L' // Your password
-        }
-    });
 
 	transporter.sendMail(adminOptions, function(error, info){
 	    if(error){
 	        console.log(error);
 	        res.json({yo: 'error'});
 	    }else{
-	        console.log('Message sent: ' + info.response);
-	        res.sendStatus(200);
+	        console.log('Message sent: ' + info.response);        
 	    };
 	});
+	res.sendStatus(200);
 }); 
 
 /* ============== Estimate approved by Client ================ */
@@ -227,23 +192,15 @@ router.post('/estimate-approved', function(req, res) { // handle the route at yo
     html: 'Your client has approved the estimate.'
 	}
 
-	var transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'leonardo.117h@gmail.com', // Your email id
-            pass: 'gmai802L' // Your password
-        }
-    });
-
 	transporter.sendMail(adminOptions, function(error, info){
 	    if(error){
 	        console.log(error);
 	        res.json({yo: 'error'});
 	    }else{
 	        console.log('Message sent: ' + info.response);
-	        res.sendStatus(200);
 	    };
 	});
+	res.sendStatus(200);
 }); 
 
 

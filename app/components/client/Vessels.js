@@ -26,9 +26,19 @@ class Vessels extends React.Component {
 	}
 
 	render() {
-
+		let vessels = this.props.vessels;
 		const btnStyles = 'btn btn-sm';
 		const forms = [];
+
+		if (!this.props.vessels) {
+			vessels = {
+				vessel: {
+					boatName: '-',
+					boatType: '-'
+				}
+			}	
+		}
+
 		for (let i = 0; i < this.state.numForms; i++) {
 			forms.push(
 				<VesselForm 
@@ -39,6 +49,8 @@ class Vessels extends React.Component {
 				/>
 			);
 		}
+
+		
 
 		return(
 			<div className="main-row">
@@ -61,8 +73,8 @@ class Vessels extends React.Component {
 						</tr>		
 						{
 							Object
-								.keys(this.props.vessels)
-								.map(key => <VesselTd key={key} index={key} details={this.props.vessels[key]} />)
+								.keys(vessels)
+								.map(key => <VesselTd key={key} index={key} vessel={this.props.vessels[key]} />)
 						}				
 						</tbody>
 					</table>
@@ -76,14 +88,14 @@ class Vessels extends React.Component {
 export default Vessels 
 
 const VesselTd = (props) => {
-	const {details} = props;
+	const vessel = props.vessel;
 	return(
 		<tr>
-			<td>Default</td>
-			<td>Default</td>
-			<td>{details.boatName}</td>
-			<td>{details.boatType}</td>
-			<td>default</td>
+			<td>-</td>
+			<td>-</td>
+			<td>{vessel.boatName}</td>
+			<td>{vessel.boatType}</td>
+			<td>1</td>
 		</tr>
 	)
 }

@@ -14,9 +14,12 @@ class RequestsForm extends React.Component {
     }
 
     if (!vesselsArray[0]) {
-      vesselsArray[0].boatName = '';
-      vesselsArray[0].boatType = '';
-      vesselsArray[0].boatLoc = '';
+      const vessel = {
+        boatName: '',
+        boatType: '',
+        boatLoc: ''
+      }
+      vesselsArray.push(vessel);
     }
 
     this.state = {

@@ -96,7 +96,8 @@ class App extends React.Component {
 		const ref = base.database().ref(path);
 		ref.once('value', (snapshot) => {
 			const data = snapshot.val() || {};
-			if (data.uid == uid) {
+			console.log(data.dev == uid);
+			if (data.uid == uid || data.dev == uid) {
 				localStorage.setItem('admin', 1); 
 				this.setState({admin: 1});
 			} else {
