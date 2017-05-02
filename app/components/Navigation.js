@@ -28,7 +28,8 @@ class Navigation extends React.Component {
 			    </button>
 			    <a className="navbar-brand hidden-sm hidden-xs" href="/">Nautical Tech Services</a>
 			    <a className="navbar-brand visible-sm visible-xs" href="/">NTS</a>
-			    <p className="navbar-text"><strong>Call: (310) 333-3548</strong></p> 
+			    <a style={{display: 'inline-block'}} href="tel:+1-310-309-9440" className="navbar-text"><i className="fa fa-envelope-o fa-1x" aria-hidden="true"></i></a>
+			    <a style={{display: 'inline-block'}} href="tel:+1-310-309-9440" className="navbar-text"><i className="fa fa-phone-square fa-1x" aria-hidden="true"></i></a>
 			    {/*<span className="hidden-xs">
 			    	<NavStateBtn uid={this.state.uid} />
 			    	</span>*/}

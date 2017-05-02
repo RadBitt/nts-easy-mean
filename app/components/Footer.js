@@ -4,13 +4,16 @@ const Footer = (props) => {
   return(
     <div id="footer" className="container-fluid">
       <div className="container">
-        <div className="col-md-4">
-            <ul className="info-list">
-                <li>List Item 1</li>
-                <li>List Item 2</li>
-                <li>List Item 3</li>
-                <li>List Item 4</li>
-            </ul>
+        <div className="row">
+            <div className="col-md-5">
+              <address>
+                <strong>Nautical Tech Services</strong><br />
+                Marine Del Rey, CA 90292
+              </address>
+              <a style={{display: 'block'}} href="tel:+1-310-309-9440" className="btn btn-primary">
+              <i className="fa fa-phone-square" style={{fontSize: 1.6+'em', marginLeft: 10+'px'}} aria-hidden="true"></i> 
+              <strong style={{fontSize: 25.6+'px', marginLeft: 10+'px'}}>310-309-9440</strong></a>
+            </div>
         </div>
       </div>
     </div>

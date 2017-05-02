@@ -349,7 +349,7 @@ webpackJsonp([0],[
 				});
 				// Set admin state if the admin is logging in.
 				this.isAdmin(uid);
-				this.context.router.transitionTo('/dashboard');
+				// this.context.router.transitionTo(`/dashboard`);
 			}
 
 			// Admin?
@@ -363,7 +363,6 @@ webpackJsonp([0],[
 				var ref = _base2.default.database().ref(path);
 				ref.once('value', function (snapshot) {
 					var data = snapshot.val() || {};
-					console.log(data.dev == uid);
 					if (data.uid == uid || data.dev == uid) {
 						localStorage.setItem('admin', 1);
 						_this3.setState({ admin: 1 });
@@ -535,13 +534,14 @@ webpackJsonp([0],[
 								'NTS'
 							),
 							_react2.default.createElement(
-								'p',
-								{ className: 'navbar-text' },
-								_react2.default.createElement(
-									'strong',
-									null,
-									'Call: (310) 333-3548'
-								)
+								'a',
+								{ style: { display: 'inline-block' }, href: 'tel:+1-310-309-9440', className: 'navbar-text' },
+								_react2.default.createElement('i', { className: 'fa fa-envelope-o fa-1x', 'aria-hidden': 'true' })
+							),
+							_react2.default.createElement(
+								'a',
+								{ style: { display: 'inline-block' }, href: 'tel:+1-310-309-9440', className: 'navbar-text' },
+								_react2.default.createElement('i', { className: 'fa fa-phone-square fa-1x', 'aria-hidden': 'true' })
 							)
 						),
 						_react2.default.createElement(
@@ -625,7 +625,7 @@ webpackJsonp([0],[
 					{ className: 'nav-st-btn', to: '/register' },
 					_react2.default.createElement(
 						'button',
-						{ className: 'btn btn-default navbar-btn navbar-left', type: 'button' },
+						{ className: 'btn btn-default navbar-btn navbar-left disabled', type: 'button', disabled: 'disabled' },
 						'Login'
 					)
 				);
@@ -633,14 +633,18 @@ webpackJsonp([0],[
 		}, {
 			key: 'render',
 			value: function render() {
-				// Not logged in
-				if (!this.state.uid) {
+				if (true) {
 					return _react2.default.createElement(
 						'span',
 						null,
 						this.renderRegisterButton()
 					);
 				}
+				// Not logged in, Delete above and uncomment below to restore.
+				// if (!this.state.uid) {
+				// 	return <span>{this.renderRegisterButton()}</span>
+				// }
+
 				// Logged In
 				return _react2.default.createElement(
 					'span',
@@ -650,7 +654,7 @@ webpackJsonp([0],[
 						{ className: 'nav-st-btn', to: '/dashboard' },
 						_react2.default.createElement(
 							'button',
-							{ className: 'btn btn-success navbar-btn navbar-left', type: 'button' },
+							{ className: 'btn btn-success navbar-btn navbar-left disabled', type: 'button' },
 							'Dashboard'
 						)
 					)
@@ -693,8 +697,7 @@ webpackJsonp([0],[
 	      _react2.default.createElement("li", { "data-target": "#carousel", "data-slide-to": "0", className: "active" }),
 	      _react2.default.createElement("li", { "data-target": "#carousel", "data-slide-to": "1" }),
 	      _react2.default.createElement("li", { "data-target": "#carousel", "data-slide-to": "2" }),
-	      _react2.default.createElement("li", { "data-target": "#carousel", "data-slide-to": "3" }),
-	      _react2.default.createElement("li", { "data-target": "#carousel", "data-slide-to": "4" })
+	      _react2.default.createElement("li", { "data-target": "#carousel", "data-slide-to": "3" })
 	    ),
 	    _react2.default.createElement(
 	      "div",
@@ -709,7 +712,13 @@ webpackJsonp([0],[
 	          _react2.default.createElement(
 	            "h3",
 	            null,
-	            "Nautical Tech Services will be there whenever you want. We specialize in everything."
+	            "Our services ",
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "exceed imagination"
+	            ),
+	            "."
 	          )
 	        )
 	      ),
@@ -723,21 +732,7 @@ webpackJsonp([0],[
 	          _react2.default.createElement(
 	            "h3",
 	            null,
-	            "Nautical Tech Services will be there whenever you want. We specialize in everything."
-	          )
-	        )
-	      ),
-	      _react2.default.createElement(
-	        "div",
-	        { className: "item" },
-	        _react2.default.createElement("img", { src: "img/helm-outside.jpg", alt: "boat-helm" }),
-	        _react2.default.createElement(
-	          "div",
-	          { className: "carousel-caption" },
-	          _react2.default.createElement(
-	            "h3",
-	            null,
-	            "Nautical Tech Services works weekends."
+	            "Bear the instruments and communications your vessel needs."
 	          )
 	        )
 	      ),
@@ -751,7 +746,7 @@ webpackJsonp([0],[
 	          _react2.default.createElement(
 	            "h3",
 	            null,
-	            "Fuel system deliver for diesel engins and engine services."
+	            "Plot your next course with Nautical Tech Services."
 	          )
 	        )
 	      ),
@@ -765,7 +760,7 @@ webpackJsonp([0],[
 	          _react2.default.createElement(
 	            "h3",
 	            null,
-	            "Nautical Tech Services takes pride in its wiring"
+	            "Your vessels limited space isn't getting any bigger. Our wiring is the cleanest in the business."
 	          )
 	        )
 	      )
@@ -804,29 +799,30 @@ webpackJsonp([0],[
 	      { className: "container" },
 	      _react2.default.createElement(
 	        "div",
-	        { className: "col-md-4" },
+	        { className: "row" },
 	        _react2.default.createElement(
-	          "ul",
-	          { className: "info-list" },
+	          "div",
+	          { className: "col-md-5" },
 	          _react2.default.createElement(
-	            "li",
+	            "address",
 	            null,
-	            "List Item 1"
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "Nautical Tech Services"
+	            ),
+	            _react2.default.createElement("br", null),
+	            "Marine Del Rey, CA 90292"
 	          ),
 	          _react2.default.createElement(
-	            "li",
-	            null,
-	            "List Item 2"
-	          ),
-	          _react2.default.createElement(
-	            "li",
-	            null,
-	            "List Item 3"
-	          ),
-	          _react2.default.createElement(
-	            "li",
-	            null,
-	            "List Item 4"
+	            "a",
+	            { style: { display: 'block' }, href: "tel:+1-310-309-9440", className: "btn btn-primary" },
+	            _react2.default.createElement("i", { className: "fa fa-phone-square", style: { fontSize: 1.6 + 'em', marginLeft: 10 + 'px' }, "aria-hidden": "true" }),
+	            _react2.default.createElement(
+	              "strong",
+	              { style: { fontSize: 25.6 + 'px', marginLeft: 10 + 'px' } },
+	              "310-309-9440"
+	            )
 	          )
 	        )
 	      )
@@ -867,236 +863,357 @@ webpackJsonp([0],[
 	    _react2.default.createElement(_Carousel2.default, null),
 	    _react2.default.createElement(
 	      'div',
-	      { className: 'container main-content' },
+	      { className: 'container-fluid fluid-row-bg2' },
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'row gradient-bg' },
+	        { className: 'container-fluid fluid-row-color2' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'col-md-6' },
-	          _react2.default.createElement(
-	            'h2',
-	            null,
-	            'What our clients have to say:'
-	          ),
-	          _react2.default.createElement(
-	            'blockquote',
-	            null,
-	            _react2.default.createElement(
-	              'p',
-	              null,
-	              '"Tony showed up on time and totally fixed my boat this weekend" -@Boaterfan'
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'blockquote',
-	            null,
-	            _react2.default.createElement(
-	              'p',
-	              null,
-	              '"I was about to head out to Catalina when I found my steering stopped working. Tony sent a tech out to at an instant and the weekend was saved." -@Boaterfan2'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-6' },
-	          _react2.default.createElement(
-	            'h1',
-	            null,
-	            'Serving Serving the hood'
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi.'
-	          )
-	        )
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'row no-border' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-12 text-center' },
-	          _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Factory trained in all leading systems.'
-	          )
-	        )
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'row text-center specialties-row no-border' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-4' },
+	          { id: 'services1', className: 'container' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'thumbnail' },
-	            _react2.default.createElement('img', { src: 'img/garmin-logo.gif' }),
+	            { className: 'row ' },
 	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Garmin Authorized Technition'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-4' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'thumbnail' },
-	            _react2.default.createElement('img', { src: 'img/furino-logo.gif' }),
+	              'div',
+	              { className: 'col-md-12 text-center' },
+	              _react2.default.createElement(
+	                'p',
+	                { className: 'lead' },
+	                ' The ',
+	                _react2.default.createElement(
+	                  'em',
+	                  null,
+	                  'constant'
+	                ),
+	                ' area of engine rooms, storage spaces, and service spaces is our work space. Our work is an application of our seafaring philosophy. A vessels\' ',
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'success exists in a zenith '
+	                ),
+	                'between performance and compromise. Working within this margin ',
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'is our specialty'
+	                ),
+	                '.'
+	              )
+	            ),
 	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Furino Authorized Technition'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-4' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'thumbnail' },
-	            _react2.default.createElement('img', { src: 'img/raymarine-logo.jpg' }),
+	              'div',
+	              { className: 'col-md-4 col-sm-4' },
+	              _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Communications'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'thumbnail' },
+	                _react2.default.createElement('img', { src: 'img/icons/radar.png', alt: 'Communications Service' })
+	              )
+	            ),
 	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Raymarine Authorized Technition'
+	              'div',
+	              { className: 'col-md-4 col-sm-4' },
+	              _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Custom Panels'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'thumbnail' },
+	                _react2.default.createElement('img', {
+	                  src: 'img/icons/dashboard.png', alt: 'Custom Panel Service' })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-md-4 col-sm-4' },
+	              _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Instruments'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'thumbnail' },
+	                _react2.default.createElement('img', { src: 'img/icons/speed.png', alt: 'Instrument Service' })
+	              )
 	            )
 	          )
 	        )
-	      ),
+	      )
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      { id: 'about', className: 'container-fluid fluid-row-bg1' },
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'row no-border text-center specialties-row' },
+	        { className: 'container-fluid fluid-row-color1' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'col-md-4' },
+	          { className: 'container' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'thumbnail' },
-	            _react2.default.createElement('img', { src: 'img/yanmar-logo.jpeg' }),
+	            { className: 'row' },
 	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Yanmar Authorized Mechanic'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-4' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'thumbnail' },
-	            _react2.default.createElement('img', { src: 'img/cummins-logo.png' }),
-	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Cummins Authorized Mechanic'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-4' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'thumbnail' },
-	            _react2.default.createElement('img', { src: 'img/volvo-logo.gif' }),
-	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Volvo Authorized Mechanic'
+	              'div',
+	              { className: 'col-md-8 col-md-offset-2' },
+	              _react2.default.createElement(
+	                'p',
+	                null,
+	                'Nautical Tech Services(NTS) is ',
+	                _react2.default.createElement(
+	                  'i',
+	                  null,
+	                  'the'
+	                ),
+	                ' up and coming vessel repair and maintenance service in Santa Monica Bay. Whether your vessel is on the hard or in the slip, NTS offers professional mobile services to maintain, repair, or upgrade your vessels. Our services bring years of experience and solutions to your vessels\' peripheral instruments, communication systems, and powerplants. If you place your ear to the ground, you may not realize what so many boaters in Santa Monica Bay have been talking about:',
+	                _react2.default.createElement('br', null),
+	                ' Nautical Tech Services.'
+	              )
 	            )
 	          )
 	        )
-	      ),
+	      )
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      { className: 'container-fluid fluid-row-bg2' },
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'row' },
+	        { className: 'container-fluid fluid-row-color2' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: ' jumbotron col-md-12' },
+	          { id: 'services2', className: 'container' },
 	          _react2.default.createElement(
-	            'h2',
-	            null,
-	            'October Special:'
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'Request a service this month and recieve 5% off.'
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            { className: 'btn-lg btn-primary', type: 'button' },
-	            'Request Service'
-	          )
-	        )
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'row' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-8' },
-	          _react2.default.createElement(
-	            'h1',
-	            null,
-	            'Serving The Hood'
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi.'
-	          ),
-	          _react2.default.createElement(
-	            'h1',
-	            null,
-	            'Never Take Second'
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi.'
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi.'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-4' },
-	          _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Tetestimonials'
-	          ),
-	          _react2.default.createElement(
-	            'blockquote',
-	            null,
+	            'div',
+	            { className: 'row' },
 	            _react2.default.createElement(
-	              'p',
-	              null,
-	              '"Tony showed up on time and totally fixed my boat this weekend" -@Boaterfan'
+	              'div',
+	              { className: 'col-md-12 jumbotron' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row no-margin-tb' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-md-10 col-md-offset-1 text-center' },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'row alert alert-info' },
+	                    _react2.default.createElement(
+	                      'div',
+	                      { className: 'col-md-8' },
+	                      _react2.default.createElement(
+	                        'p',
+	                        { className: 'lead' },
+	                        'Before your next adventure, schedule one or more of the periodical services below.'
+	                      )
+	                    ),
+	                    _react2.default.createElement(
+	                      'div',
+	                      { className: 'col-md-4' },
+	                      _react2.default.createElement(
+	                        'a',
+	                        { style: { display: 'block' }, href: 'tel:+1-310-309-9440', className: 'btn btn-primary' },
+	                        _react2.default.createElement('i', { className: 'fa fa-phone-square', style: { fontSize: 1.6 + 'em', marginLeft: 10 + 'px' }, 'aria-hidden': 'true' }),
+	                        _react2.default.createElement(
+	                          'strong',
+	                          { style: { fontSize: 25.6 + 'px', marginLeft: 10 + 'px' } },
+	                          '310-309-9440'
+	                        )
+	                      )
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row no-margin-t' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-md-3 col-md-offset-0 col-sm-10 col-sm-offset-1' },
+	                  _react2.default.createElement(
+	                    'h2',
+	                    { className: 'text-center' },
+	                    'Engine Service'
+	                  ),
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'thumbnail' },
+	                    _react2.default.createElement('img', { src: 'img/icons/engine.png', alt: 'Engine Service' })
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-md-9 col-sm-10' },
+	                  _react2.default.createElement(
+	                    'dl',
+	                    { className: 'dl-horizontal' },
+	                    _react2.default.createElement(
+	                      'dt',
+	                      null,
+	                      'Cooling'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dd',
+	                      null,
+	                      'Sea strainers and raw water pumps need inspection to maintain the proper operating temperature of your engine. Old heat exchangers may need internal repairs as well. A quick and painless inspection can verify it is all in working order.'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dt',
+	                      null,
+	                      'Fuel & Oil'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dd',
+	                      null,
+	                      'Change your fuel filters during your routine oil changes to save on labor costs. We also order a spare set of oil and fuel filters for those extended trips.'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dt',
+	                      null,
+	                      'Intakes'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dd',
+	                      null,
+	                      'Clean filters and coolers are necessary for an engine\'s peak performance.'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dt',
+	                      null,
+	                      'Exhaust'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dd',
+	                      null,
+	                      'The hot exhaust will eventually win a battle against efforts to direct its flow. We will inspect this system and make sure everything is ',
+	                      _react2.default.createElement(
+	                        'em',
+	                        null,
+	                        'cool'
+	                      ),
+	                      '.'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dt',
+	                      null,
+	                      'Fuel Delivery'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dd',
+	                      null,
+	                      'One bad injector could leave you without the power to maneuver as needed. The parts needed to repair problems caused from faulty fuel delivery are found and replaced for you.'
+	                    )
+	                  )
+	                )
+	              )
 	            )
 	          ),
 	          _react2.default.createElement(
-	            'blockquote',
-	            null,
+	            'div',
+	            { className: 'row' },
 	            _react2.default.createElement(
-	              'p',
-	              null,
-	              '"I was about to head out to Catalina when I found my steering stopped working. Tony sent a tech out to at an instant and the weekend was saved." -@Boaterfan2'
+	              'div',
+	              { className: 'col-md-3 col-md-offset-0 col-sm-10 col-sm-offset-1' },
+	              _react2.default.createElement(
+	                'h2',
+	                { className: 'text-center' },
+	                'Battery Service'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'thumbnail' },
+	                _react2.default.createElement('img', { src: 'img/icons/battery.png', alt: 'Battery Service' })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-md-9 col-sm-10' },
+	              _react2.default.createElement(
+	                'dl',
+	                { className: 'dl-horizontal' },
+	                _react2.default.createElement(
+	                  'dt',
+	                  null,
+	                  'Deep Cycle'
+	                ),
+	                _react2.default.createElement(
+	                  'dd',
+	                  null,
+	                  'We understand the electrical needs of many classes of vessels.'
+	                ),
+	                _react2.default.createElement(
+	                  'dt',
+	                  null,
+	                  'Full service'
+	                ),
+	                _react2.default.createElement(
+	                  'dd',
+	                  null,
+	                  'The heavy lifting is up to us. Moving these behemoths is a skill in itself. The delicate systems and finishes of your yacht are not an afterthought.'
+	                ),
+	                _react2.default.createElement(
+	                  'dt',
+	                  null,
+	                  'One Stop'
+	                ),
+	                _react2.default.createElement(
+	                  'dd',
+	                  null,
+	                  'From start to finish, a full service installation or replacement is always standard.'
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-md-3 col-md-offset-0 col-sm-10 col-sm-offset-1' },
+	              _react2.default.createElement(
+	                'h2',
+	                { className: 'text-center' },
+	                'Electrical Service'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'thumbnail' },
+	                _react2.default.createElement('img', { src: 'img/icons/generator.png', alt: 'Generator Service' })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-md-9 col-sm-10' },
+	              _react2.default.createElement(
+	                'dl',
+	                { className: 'dl-horizontal' },
+	                _react2.default.createElement(
+	                  'dt',
+	                  null,
+	                  'Generators'
+	                ),
+	                _react2.default.createElement(
+	                  'dd',
+	                  null,
+	                  'Even if they aren\'t used, generators need the same amount of attention as engines do.'
+	                ),
+	                _react2.default.createElement(
+	                  'dt',
+	                  null,
+	                  'Electrical'
+	                ),
+	                _react2.default.createElement(
+	                  'dd',
+	                  null,
+	                  'We can troubleshoot strange and intermittent problems within your DC or AC circuits.'
+	                )
+	              )
 	            )
 	          )
 	        )
@@ -1449,8 +1566,13 @@ webpackJsonp([0],[
 			_this.fetchVessel = _this.fetchVessel.bind(_this);
 			_this.postEstimate = _this.postEstimate.bind(_this);
 			_this.postInvoice = _this.postInvoice.bind(_this);
+			_this.postDraftEstimate = _this.postDraftEstimate.bind(_this);
+			_this.postDraftInvoice = _this.postDraftInvoice.bind(_this);
 			_this.sendJSONEmail = _this.sendJSONEmail.bind(_this);
+			_this.updateEstimate = _this.updateEstimate.bind(_this);
+			_this.updateInvoice = _this.updateInvoice.bind(_this);
 			_this.updateRequest = _this.updateRequest.bind(_this);
+
 			_this.state = {
 				displayName: null,
 				estimates: {},
@@ -1513,6 +1635,7 @@ webpackJsonp([0],[
 				_base2.default.removeBinding(this.ref);
 				_base2.default.removeBinding(this.ref2);
 				_base2.default.removeBinding(this.ref3);
+				_base2.default.removeBinding(this.ref4);
 			}
 		}, {
 			key: 'fetchEstimate',
@@ -1551,6 +1674,19 @@ webpackJsonp([0],[
 				});
 			}
 
+			// Updates an invoice
+
+		}, {
+			key: 'updateInvoice',
+			value: function updateInvoice(key, prop, value) {
+				var invoices = this.state.invoices;
+				var invoice = invoices['invoice-' + key];
+				invoice[prop] = value;
+				this.setState({
+					invoices: invoices
+				});
+			}
+
 			// Updates a request
 
 		}, {
@@ -1564,23 +1700,21 @@ webpackJsonp([0],[
 				});
 			}
 
-			// Creats a new estimate record from a request record
+			// Creats a new draft estimate record from a request record
 			// and updates the request it came from to own it.
 			// returns the new estimate parameter
 
 		}, {
-			key: 'postEstimate',
-			value: function postEstimate(ntsReq) {
-				var _this3 = this;
-
+			key: 'postDraftEstimate',
+			value: function postDraftEstimate(ntsReq) {
 				var date = Date.now();
 				var newEstimate = {
 					approved: 0,
 					date: date,
 					id: date,
-					owner: ntsReq.owner,
+					owner: 'draft-' + ntsReq.owner,
 					requestId: ntsReq.id,
-					status: 'Pending',
+					status: 'Draft',
 					viewed: 0,
 					vesselId: ntsReq.vesselId
 				};
@@ -1595,16 +1729,6 @@ webpackJsonp([0],[
 					}
 				});
 				this.updateRequest(ntsReq.id, 'estimateId', newEstimate.id);
-				// Send Estimate Initialization Confirmation
-				path = 'users/' + ntsReq.owner;
-				var ref = _base2.default.database().ref(path);
-				ref.once('value', function (snapshot) {
-					var data = snapshot.val() || {};
-					newEstimate['email'] = data.email;
-					newEstimate['displayName'] = data.displayName;
-					_this3.sendJSONEmail('/mailer/estimate-created', newEstimate);
-				});
-
 				return newEstimate.id;
 			}
 
@@ -1613,19 +1737,17 @@ webpackJsonp([0],[
 			// returns the new invoice parameter
 
 		}, {
-			key: 'postInvoice',
-			value: function postInvoice(estimate) {
-				var _this4 = this;
-
+			key: 'postDraftInvoice',
+			value: function postDraftInvoice(estimate) {
 				var date = Date.now();
 				var newInvoice = {
 					date: date,
 					estimateId: estimate.id,
 					id: date,
 					items: estimate.items,
-					owner: estimate.owner,
+					owner: 'draft-' + estimate.owner,
 					requestId: estimate.requestId,
-					status: 'Pending',
+					status: 'Draft',
 					viewed: 0,
 					vesselId: estimate.vesselId
 				};
@@ -1640,16 +1762,36 @@ webpackJsonp([0],[
 					}
 				});
 				this.updateEstimate(estimate.id, 'invoiceId', newInvoice.id);
-				this.updateEstimate(estimate.id, 'status', 'Invoiced');
-				path = 'users/' + estimate.owner;
-				var ref = _base2.default.database().ref(path);
-				ref.once('value', function (snapshot) {
-					var data = snapshot.val() || {};
-					newInvoice['email'] = data.email;
-					newInvoice['displayName'] = data.displayName;
-					_this4.sendJSONEmail('/mailer/invoice-created', newInvoice);
-				});
+				this.updateEstimate(estimate.id, 'status', 'Final');
+				// path = `users/${estimate.owner}`;
+				// const ref = base.database().ref(path);
+				// ref.once('value', (snapshot) => {
+				// 	const data = snapshot.val() || {};
+				// 	newInvoice['email'] = data.email;
+				// 	newInvoice['displayName'] = data.displayName;
+				// 	this.sendJSONEmail('/mailer/invoice-created', newInvoice);
+				// });
 				return newInvoice.id;
+			}
+
+			// Creats a new estimate record from an estimate draft record
+			// and updates the ownder from admin only to user and admin. 
+
+		}, {
+			key: 'postEstimate',
+			value: function postEstimate(estimateDraft) {
+				var ownerString = estimateDraft.owner;
+				var newOwnerString = ownerString.slice(6, ownerString.length); //6 is the length of the prefix 'draft-' 
+				this.updateEstimate(estimateDraft.id, 'owner', newOwnerString);
+				this.updateEstimate(estimateDraft.id, 'status', 'Pending Approval');
+			}
+		}, {
+			key: 'postInvoice',
+			value: function postInvoice(invoiceDraft) {
+				var ownerString = invoiceDraft.owner;
+				var newOwnerString = ownerString.slice(6, ownerString.length); //6 is the length of the prefix 'draft-' 
+				this.updateInvoice(invoiceDraft.id, 'owner', newOwnerString);
+				this.updateInvoice(invoiceDraft.id, 'status', 'Final');
 			}
 		}, {
 			key: 'sendJSONEmail',
@@ -1671,7 +1813,7 @@ webpackJsonp([0],[
 		}, {
 			key: 'render',
 			value: function render() {
-				var _this5 = this;
+				var _this3 = this;
 
 				var pathname = '/dashboard';
 				var location = this.props.location;
@@ -1690,48 +1832,49 @@ webpackJsonp([0],[
 						),
 						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/estimates', render: function render(props) {
 								return _react2.default.createElement(_Estimates2.default, _extends({
-									estimates: _this5.state.estimates,
-									fetchVessel: _this5.fetchVessel
+									estimates: _this3.state.estimates,
+									fetchVessel: _this3.fetchVessel
 								}, props));
 							} }),
 						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/estimates/:key', render: function render(props) {
 								return _react2.default.createElement(_Estimate2.default, _extends({
 									admin: true,
-									fetchEstimate: _this5.fetchEstimate,
-									fetchRequest: _this5.fetchRequest,
-									fetchVessel: _this5.fetchVessel,
-									postInvoice: _this5.postInvoice,
-									updateEstimate: _this5.updateEstimate
+									fetchEstimate: _this3.fetchEstimate,
+									fetchRequest: _this3.fetchRequest,
+									fetchVessel: _this3.fetchVessel,
+									postEstimate: _this3.postEstimate,
+									postDraftInvoice: _this3.postDraftInvoice,
+									updateEstimate: _this3.updateEstimate
 								}, props));
 							} }),
 						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/invoices', render: function render(props) {
 								return _react2.default.createElement(_Invoices2.default, {
-									invoices: _this5.state.invoices,
-									fetchVessel: _this5.fetchVessel
+									invoices: _this3.state.invoices,
+									fetchVessel: _this3.fetchVessel
 								});
 							} }),
 						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/invoices/:key', render: function render(props) {
 								return _react2.default.createElement(_Invoice2.default, _extends({
 									admin: true,
-									fetchInvoice: _this5.fetchInvoice,
-									fetchVessel: _this5.fetchVessel
+									fetchInvoice: _this3.fetchInvoice,
+									fetchVessel: _this3.fetchVessel,
+									postInvoice: _this3.postInvoice
 								}, props));
 							} }),
 						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/requests', render: function render(props) {
 								return _react2.default.createElement(_Requests2.default, {
-									requests: _this5.state.requests,
-									fetchVessel: _this5.fetchVessel
+									requests: _this3.state.requests,
+									fetchVessel: _this3.fetchVessel
 								});
 							} }),
 						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/requests/:key', render: function render(props) {
 								return _react2.default.createElement(_Request2.default, _extends({
 									admin: true,
-									fetchEstimate: _this5.fetchEstimate,
-									fetchRequest: _this5.fetchRequest,
-									fetchVessel: _this5.fetchVessel,
-									postEstimate: _this5.postEstimate,
-									updateEstimate: _this5.updateEstimate,
-									updateRequest: _this5.updateRequest
+									fetchEstimate: _this3.fetchEstimate,
+									fetchRequest: _this3.fetchRequest,
+									fetchVessel: _this3.fetchVessel,
+									postDraftEstimate: _this3.postDraftEstimate,
+									updateRequest: _this3.updateRequest
 								}, props));
 							} })
 					),
@@ -1947,7 +2090,8 @@ webpackJsonp([0],[
 	    userTools = _react2.default.createElement(EstimateAdminTools, {
 	      endpoint: 'estimate-' + props.params.key,
 	      estimate: estimate,
-	      postInvoice: props.postInvoice
+	      postEstimate: props.postEstimate,
+	      postDraftInvoice: props.postDraftInvoice
 	    });
 	  } else {
 	    userTools = _react2.default.createElement(EstimateClientTools, {
@@ -2184,7 +2328,8 @@ webpackJsonp([0],[
 	    _this.handleClose = _this.handleClose.bind(_this);
 	    _this.postLineItem = _this.postLineItem.bind(_this);
 	    _this.state = {
-	      show: false
+	      show: false,
+	      button: _this.props.estimate.status
 	    };
 	    return _this;
 	  }
@@ -2202,7 +2347,7 @@ webpackJsonp([0],[
 	    key: 'createInvoice',
 	    value: function createInvoice() {
 	      var estimate = this.props.estimate;
-	      var param = this.props.postInvoice(estimate);
+	      var param = this.props.postDraftInvoice(estimate);
 	      this.context.router.transitionTo('/dashboard/invoices/' + param);
 	    }
 	  }, {
@@ -2237,18 +2382,34 @@ webpackJsonp([0],[
 	    value: function render() {
 	      var _this2 = this;
 
-	      var invoiceButton = _react2.default.createElement(
-	        _reactBootstrap.Button,
-	        {
-	          bsStyle: 'success',
-	          bsSize: 'sm',
-	          onClick: function onClick() {
-	            return _this2.createInvoice();
-	          }
-	        },
-	        'Create Invoice'
-	      );
-	      if (this.state.estimate.status == 'Invoiced') {
+	      var invoiceButton = void 0;
+	      if (this.state.estimate.status == 'Approved') {
+	        invoiceButton = _react2.default.createElement(
+	          _reactBootstrap.Button,
+	          {
+	            bsStyle: 'success',
+	            bsSize: 'sm',
+	            onClick: function onClick() {
+	              return _this2.createInvoice();
+	            }
+	          },
+	          'Create Invoice'
+	        );
+	      }
+	      if (this.state.estimate.status == 'Draft') {
+	        invoiceButton = _react2.default.createElement(
+	          _reactBootstrap.Button,
+	          {
+	            bsStyle: 'success',
+	            bsSize: 'sm',
+	            onClick: function onClick() {
+	              return _this2.props.postEstimate(_this2.state.estimate);
+	            }
+	          },
+	          'Finilize Estimate'
+	        );
+	      }
+	      if (this.state.estimate.status == 'Final') {
 	        invoiceButton = _react2.default.createElement(
 	          _reactBootstrap.Button,
 	          {
@@ -21205,6 +21366,8 @@ webpackJsonp([0],[
 	  value: true
 	});
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -21216,6 +21379,12 @@ webpackJsonp([0],[
 	var _base2 = _interopRequireDefault(_base);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Invoice = function Invoice(props) {
 
@@ -21249,7 +21418,23 @@ webpackJsonp([0],[
 	    };
 	  }
 
-	  // If client is viewing
+	  var userTools = '';
+
+	  if (props.admin) {
+	    userTools = _react2.default.createElement(InvoiceAdminTools, {
+	      endpoint: 'invoice-' + props.params.key,
+	      invoice: invoice,
+	      postInvoice: props.postInvoice
+	    });
+	  }
+	  // else {
+	  //   userTools = <InvoiceClientTools 
+	  //     approved={estimate.approved}
+	  //     id={estimate.id}
+	  //     updateEstimate={props.updateEstimate}
+	  //     viewed={estimate.viewed}
+	  //   />
+	  // }
 
 	  return _react2.default.createElement(
 	    'div',
@@ -21294,6 +21479,7 @@ webpackJsonp([0],[
 	            invoice.status
 	          )
 	        ),
+	        userTools,
 	        _react2.default.createElement(
 	          'table',
 	          { className: 'table table-striped' },
@@ -21411,6 +21597,11 @@ webpackJsonp([0],[
 	    ),
 	    _react2.default.createElement(
 	      'td',
+	      null,
+	      items.itemTax
+	    ),
+	    _react2.default.createElement(
+	      'td',
 	      { className: 'price-td' },
 	      items.itemRate
 	    ),
@@ -21421,6 +21612,227 @@ webpackJsonp([0],[
 	    )
 	  );
 	};
+
+	/* ============== Client Tools ================ */
+	// const EstimateClientTools = (props) => {
+
+	//   const estimate = props.estimate;
+
+	//   let button = <Button
+	//       bsStyle="success"
+	//       bsSize="sm"
+	//       onClick={() => props.updateEstimate(props.id, 'approved', '1')}>
+	//       Approve Estimate
+	//     </Button>
+	//   if (props.approved == '1') {
+	//     button = 'You have approved this estimate';
+	//   }
+	//   // Check if this estimate has not been viewed.
+	//   if (props.viewed == '0') {
+	//     props.updateEstimate(props.id, 'viewed', '1');
+	//   }
+
+	//   return(
+	//     <span>{button}</span>
+	//   )
+	// }
+
+	/* ============== Admin Tools ================ */
+
+	var InvoiceAdminTools = function (_React$Component) {
+	  _inherits(InvoiceAdminTools, _React$Component);
+
+	  function InvoiceAdminTools(props) {
+	    _classCallCheck(this, InvoiceAdminTools);
+
+	    var _this = _possibleConstructorReturn(this, (InvoiceAdminTools.__proto__ || Object.getPrototypeOf(InvoiceAdminTools)).call(this, props));
+
+	    _this.handleClose = _this.handleClose.bind(_this);
+	    _this.postLineItem = _this.postLineItem.bind(_this);
+	    _this.state = {
+	      show: false,
+	      button: _this.props.invoice.status
+	    };
+	    return _this;
+	  }
+
+	  _createClass(InvoiceAdminTools, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      this.setState({ invoice: this.props.invoice });
+	      this.ref = _base2.default.syncState('/invoices/' + this.props.endpoint, {
+	        context: this,
+	        state: 'invoice'
+	      });
+	    }
+	  }, {
+	    key: 'handleClose',
+	    value: function handleClose() {
+	      this.setState({ show: false });
+	    }
+	  }, {
+	    key: 'postLineItem',
+	    value: function postLineItem(event) {
+	      event.preventDefault();
+	      var invoice = this.state.invoice;
+	      var item = {};
+	      item[this.itemName.value] = {
+	        itemName: this.itemName.value,
+	        itemDesc: this.itemDesc.value,
+	        itemQuant: this.itemQuant.value,
+	        itemRate: this.itemRate.value,
+	        itemTax: this.itemTax.value
+	      };
+	      invoice['items'] = item;
+	      this.setState({ invoice: invoice });
+	      this.handleClose();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      var invoiceButton = void 0;
+	      if (this.state.invoice.status == 'Draft') {
+	        invoiceButton = _react2.default.createElement(
+	          _reactBootstrap.Button,
+	          {
+	            bsStyle: 'success',
+	            bsSize: 'sm',
+	            onClick: function onClick() {
+	              return _this2.props.postInvoice(_this2.state.invoice);
+	            }
+	          },
+	          'Finilize Invoice'
+	        );
+	      }
+	      if (this.state.invoice.status == 'Final') {
+	        invoiceButton = _react2.default.createElement(
+	          'p',
+	          null,
+	          'Invoice is Final'
+	        );
+	      }
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          _reactBootstrap.Button,
+	          {
+	            bsStyle: 'success',
+	            bsSize: 'sm',
+	            onClick: function onClick() {
+	              return _this2.setState({ show: true });
+	            }
+	          },
+	          'Add Line Item'
+	        ),
+	        invoiceButton,
+	        _react2.default.createElement(
+	          _reactBootstrap.Modal,
+	          {
+	            show: this.state.show,
+	            onHide: this.handleClose,
+	            container: this,
+	            'aria-labelledby': 'Add Line Item'
+	          },
+	          _react2.default.createElement(
+	            _reactBootstrap.Modal.Header,
+	            { closeButton: true },
+	            _react2.default.createElement(
+	              _reactBootstrap.Modal.Title,
+	              { id: 'contained-modal-title' },
+	              'Add Line Item'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _reactBootstrap.Modal.Body,
+	            null,
+	            _react2.default.createElement(
+	              'form',
+	              { onSubmit: function onSubmit(e) {
+	                  return _this2.postLineItem(e);
+	                } },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { className: 'sr-only', htmlFor: 'boatName' },
+	                  'Item Name'
+	                ),
+	                _react2.default.createElement('input', { ref: function ref(input) {
+	                    return _this2.itemName = input;
+	                  }, type: 'text', className: 'form-control', placeholder: 'Item Name' })
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { className: 'sr-only', htmlFor: 'boatType' },
+	                  'Description'
+	                ),
+	                _react2.default.createElement('input', { ref: function ref(input) {
+	                    return _this2.itemDesc = input;
+	                  }, type: 'text', className: 'form-control', placeholder: 'Description' })
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { className: 'sr-only', htmlFor: 'boatLoc' },
+	                  'Quantity'
+	                ),
+	                _react2.default.createElement('input', { ref: function ref(input) {
+	                    return _this2.itemQuant = input;
+	                  }, type: 'text', className: 'form-control', placeholder: 'Quantity' })
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { className: 'sr-only', htmlFor: 'boatLoc' },
+	                  'Rate'
+	                ),
+	                _react2.default.createElement('input', { ref: function ref(input) {
+	                    return _this2.itemRate = input;
+	                  }, type: 'text', className: 'form-control', placeholder: 'Rate' })
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { className: 'sr-only', htmlFor: 'boatLoc' },
+	                  'Tax'
+	                ),
+	                _react2.default.createElement('input', { ref: function ref(input) {
+	                    return _this2.itemTax = input;
+	                  }, type: 'text', className: 'form-control', placeholder: 'Tax' })
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'submit', className: 'btn btn-success' },
+	                'Submit'
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { onClick: this.handleClose, className: 'btn btn-danger' },
+	                'Cancel'
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return InvoiceAdminTools;
+	}(_react2.default.Component);
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Invoice.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
@@ -21569,13 +21981,14 @@ webpackJsonp([0],[
 	      // Estimate Does Not Exists
 	      adminTools = _react2.default.createElement(AdminRequestTools, {
 	        ntsReq: ntsReq,
-	        postEstimate: props.postEstimate,
+	        postDraftEstimate: props.postDraftEstimate,
 	        updateRequest: props.updateRequest
 	      });
 	    } else {
 	      // Estimate Exists
 	      adminTools = _react2.default.createElement(AdminRequestTools, {
 	        ntsReq: ntsReq,
+	        postEstimate: props.postEstimate,
 	        updateEstimate: props.updateEstimate,
 	        updateRequest: props.updateRequest
 	      });
@@ -21675,7 +22088,8 @@ webpackJsonp([0],[
 	    var _this = _possibleConstructorReturn(this, (AdminRequestTools.__proto__ || Object.getPrototypeOf(AdminRequestTools)).call(this, props));
 
 	    _this.handleChange = _this.handleChange.bind(_this);
-	    _this.createEstimate = _this.createEstimate.bind(_this);
+	    _this.createDraftEstimate = _this.createDraftEstimate.bind(_this);
+	    // this.createEstimate = this.createEstimate.bind(this);
 	    _this.updateEstimate = _this.updateEstimate.bind(_this);
 	    return _this;
 	  }
@@ -21691,12 +22105,20 @@ webpackJsonp([0],[
 
 	    // posts the new estimate to the db and returns its id.
 	    // transitions to estimate editor.
+	    // createEstimate() {
+	    //   const ntsReq = this.props.ntsReq
+	    //   const param = this.props.postEstimate(ntsReq);
+	    //   this.context.router.transitionTo(`/dashboard/estimates/${param}`);
+	    // }
+
+	    // posts the new draft estimate to the db and returns its id.
+	    // transitions to estimate editor.
 
 	  }, {
-	    key: 'createEstimate',
-	    value: function createEstimate() {
+	    key: 'createDraftEstimate',
+	    value: function createDraftEstimate() {
 	      var ntsReq = this.props.ntsReq;
-	      var param = this.props.postEstimate(ntsReq);
+	      var param = this.props.postDraftEstimate(ntsReq);
 	      this.context.router.transitionTo('/dashboard/estimates/' + param);
 	    }
 	  }, {
@@ -21723,7 +22145,7 @@ webpackJsonp([0],[
 	        ));
 	      }
 
-	      if (!this.props.postEstimate) {
+	      if (!this.props.postDraftEstimate) {
 	        // If estimate does exist
 	        estimateButton = _react2.default.createElement(EstimateButton, {
 	          classString: 'btn btn-md btn-primary',
@@ -21734,8 +22156,8 @@ webpackJsonp([0],[
 	        // If estimate does not exist
 	        estimateButton = _react2.default.createElement(EstimateButton, {
 	          classString: 'btn btn-md btn-success',
-	          estimateFunction: this.createEstimate,
-	          text: 'Create Estimate'
+	          estimateFunction: this.createDraftEstimate,
+	          text: 'Create Estimate Draft'
 	        });
 	      }
 
@@ -22097,6 +22519,7 @@ webpackJsonp([0],[
 					this.sendJSONEmail('/mailer/estimate-viewed', {});
 				}
 				if (prop == 'approved') {
+					this.updateEstimate(key, 'status', 'Approved');
 					this.sendJSONEmail('/mailer/estimate-approved', {});
 				}
 			}

@@ -39,8 +39,9 @@ const Estimate = (props) => {
   if (props.admin) {
     userTools = <EstimateAdminTools
       endpoint={`estimate-${props.params.key}`}
-      estimate={estimate} 
-      postInvoice={props.postInvoice}
+      estimate={estimate}
+      postEstimate={props.postEstimate}
+      postDraftInvoice={props.postDraftInvoice}
      />
   } else {
     userTools = <EstimateClientTools 
@@ -160,7 +161,8 @@ class EstimateAdminTools extends React.Component {
     this.handleClose = this.handleClose.bind(this);
     this.postLineItem = this.postLineItem.bind(this);
     this.state = {
-      show: false
+      show: false,
+      button: this.props.estimate.status
     }
   }
 
@@ -171,10 +173,10 @@ class EstimateAdminTools extends React.Component {
       state: 'estimate'
     });
   }
-  
+
   createInvoice() {
     const estimate = this.props.estimate
-    const param = this.props.postInvoice(estimate);
+    const param = this.props.postDraftInvoice(estimate);
     this.context.router.transitionTo(`/dashboard/invoices/${param}`);
   }
 
@@ -203,14 +205,26 @@ class EstimateAdminTools extends React.Component {
   }
 
   render() {
-    let invoiceButton = <Button
+    let invoiceButton;
+    if(this.state.estimate.status == 'Approved') {
+      invoiceButton = <Button
       bsStyle="success"
       bsSize="sm"
       onClick={() => this.createInvoice()}
       >
       Create Invoice
-    </Button>;
-    if (this.state.estimate.status == 'Invoiced') {
+      </Button>;
+    }
+    if (this.state.estimate.status == 'Draft') {
+      invoiceButton = <Button
+        bsStyle="success"
+        bsSize="sm"
+        onClick={() => this.props.postEstimate(this.state.estimate)}
+      >
+        Finilize Estimate
+      </Button>
+    } 
+    if (this.state.estimate.status == 'Final') {
       invoiceButton = <Button
         bsStyle="success"
         bsSize="sm"

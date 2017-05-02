@@ -20,8 +20,13 @@ class AdminDashboard extends React.Component {
 		this.fetchVessel = this.fetchVessel.bind(this);
 		this.postEstimate = this.postEstimate.bind(this);
 		this.postInvoice = this.postInvoice.bind(this);
+		this.postDraftEstimate = this.postDraftEstimate.bind(this);
+		this.postDraftInvoice = this.postDraftInvoice.bind(this);
 		this.sendJSONEmail = this.sendJSONEmail.bind(this);
+		this.updateEstimate = this.updateEstimate.bind(this);
+		this.updateInvoice = this.updateInvoice.bind(this);
 		this.updateRequest = this.updateRequest.bind(this);
+
 		this.state = {
 			displayName: null,
 			estimates: {},
@@ -75,6 +80,7 @@ class AdminDashboard extends React.Component {
 		base.removeBinding(this.ref);
 		base.removeBinding(this.ref2);
 		base.removeBinding(this.ref3);
+		base.removeBinding(this.ref4);
 	}
 
 	fetchEstimate(key) {
@@ -104,6 +110,16 @@ class AdminDashboard extends React.Component {
 		})
 	}
 
+	// Updates an invoice
+	updateInvoice(key, prop, value) {
+		const invoices = this.state.invoices;
+		const invoice = invoices[`invoice-${key}`];
+		invoice[prop] = value; 
+		this.setState({
+			invoices: invoices
+		})
+	}
+
 	// Updates a request
 	updateRequest(key, prop, value) {
 		const requests = this.state.requests;
@@ -114,18 +130,18 @@ class AdminDashboard extends React.Component {
 		})
 	}
 
-	// Creats a new estimate record from a request record
+	// Creats a new draft estimate record from a request record
 	// and updates the request it came from to own it.
 	// returns the new estimate parameter
-	postEstimate(ntsReq) {
+	postDraftEstimate(ntsReq) {
 		const date = Date.now();
 		let newEstimate = {
 			approved: 0,
 			date: date,
 			id: date,
-			owner: ntsReq.owner,
+			owner: 'draft-' + ntsReq.owner,
 			requestId: ntsReq.id,
-			status: 'Pending',
+			status: 'Draft',
 			viewed: 0,
 			vesselId: ntsReq.vesselId
 		}
@@ -140,32 +156,22 @@ class AdminDashboard extends React.Component {
 				}
 		});
 		this.updateRequest(ntsReq.id, 'estimateId', newEstimate.id);
-		// Send Estimate Initialization Confirmation
-		path = `users/${ntsReq.owner}`;
-		const ref = base.database().ref(path);
-		ref.once('value', (snapshot) => {
-			const data = snapshot.val() || {};
-			newEstimate['email'] = data.email;
-			newEstimate['displayName'] = data.displayName;
-			this.sendJSONEmail('/mailer/estimate-created', newEstimate);
-		});
-		
 		return newEstimate.id;
 	}
 
 	// Creats a new invoice record from an estimate record
 	// and updates the estimate it came from .
 	// returns the new invoice parameter
-	postInvoice(estimate) {
+	postDraftInvoice(estimate) {
 		const date = Date.now();
 		let newInvoice = {
 			date: date,
 			estimateId: estimate.id,
 			id: date,
 			items: estimate.items,
-			owner: estimate.owner,
+			owner: 'draft-' + estimate.owner,
 			requestId: estimate.requestId,
-			status: 'Pending',
+			status: 'Draft',
 			viewed: 0,
 			vesselId: estimate.vesselId
 		}
@@ -180,16 +186,32 @@ class AdminDashboard extends React.Component {
 				}
 		});
 		this.updateEstimate(estimate.id, 'invoiceId', newInvoice.id);
-		this.updateEstimate(estimate.id, 'status', 'Invoiced');
-		path = `users/${estimate.owner}`;
-		const ref = base.database().ref(path);
-		ref.once('value', (snapshot) => {
-			const data = snapshot.val() || {};
-			newInvoice['email'] = data.email;
-			newInvoice['displayName'] = data.displayName;
-			this.sendJSONEmail('/mailer/invoice-created', newInvoice);
-		});
+		this.updateEstimate(estimate.id, 'status', 'Final');
+		// path = `users/${estimate.owner}`;
+		// const ref = base.database().ref(path);
+		// ref.once('value', (snapshot) => {
+		// 	const data = snapshot.val() || {};
+		// 	newInvoice['email'] = data.email;
+		// 	newInvoice['displayName'] = data.displayName;
+		// 	this.sendJSONEmail('/mailer/invoice-created', newInvoice);
+		// });
 		return newInvoice.id;
+	}
+
+	// Creats a new estimate record from an estimate draft record
+	// and updates the ownder from admin only to user and admin. 
+	postEstimate(estimateDraft) {
+		const ownerString = estimateDraft.owner
+		const newOwnerString = ownerString.slice(6, ownerString.length); //6 is the length of the prefix 'draft-' 
+		this.updateEstimate(estimateDraft.id, 'owner', newOwnerString);
+		this.updateEstimate(estimateDraft.id, 'status', 'Pending Approval'); 
+	}
+
+	postInvoice(invoiceDraft) {
+		const ownerString = invoiceDraft.owner
+		const newOwnerString = ownerString.slice(6, ownerString.length); //6 is the length of the prefix 'draft-' 
+		this.updateInvoice(invoiceDraft.id, 'owner', newOwnerString);
+		this.updateInvoice(invoiceDraft.id, 'status', 'Final');
 	}
 
 	sendJSONEmail(path, object) {
@@ -237,7 +259,8 @@ class AdminDashboard extends React.Component {
 	    				fetchEstimate={this.fetchEstimate}
 	    				fetchRequest={this.fetchRequest}
 	    				fetchVessel={this.fetchVessel}
-	    				postInvoice={this.postInvoice}
+	    				postEstimate={this.postEstimate}
+	    				postDraftInvoice={this.postDraftInvoice}
 	    				updateEstimate={this.updateEstimate}
 	    				{...props}
 	    			/>
@@ -255,6 +278,7 @@ class AdminDashboard extends React.Component {
 		    			admin={true}
 	    				fetchInvoice={this.fetchInvoice}
 	    				fetchVessel={this.fetchVessel}
+	    				postInvoice={this.postInvoice}
 	    				{...props}
 		    		/>
 					)} />
@@ -274,8 +298,7 @@ class AdminDashboard extends React.Component {
 		    			fetchEstimate={this.fetchEstimate}
 		    			fetchRequest={this.fetchRequest}
 		    			fetchVessel={this.fetchVessel}
-		    			postEstimate={this.postEstimate}
-		    			updateEstimate={this.updateEstimate}
+		    			postDraftEstimate={this.postDraftEstimate}
 		    			updateRequest={this.updateRequest}
 		    			{...props}
 		    		/>

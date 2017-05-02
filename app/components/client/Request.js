@@ -12,12 +12,13 @@ const Request = (props) => {
     if (!ntsReq.estimateId) { // Estimate Does Not Exists
       adminTools = <AdminRequestTools
         ntsReq={ntsReq} 
-        postEstimate={props.postEstimate}
+        postDraftEstimate={props.postDraftEstimate}
         updateRequest={props.updateRequest} 
       />
     } else { // Estimate Exists
       adminTools = <AdminRequestTools
-        ntsReq={ntsReq} 
+        ntsReq={ntsReq}
+        postEstimate={props.postEstimate}
         updateEstimate={props.updateEstimate}
         updateRequest={props.updateRequest} 
       />
@@ -60,7 +61,8 @@ class AdminRequestTools extends React.Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.createEstimate = this.createEstimate.bind(this);
+    this.createDraftEstimate = this.createDraftEstimate.bind(this);
+    // this.createEstimate = this.createEstimate.bind(this);
     this.updateEstimate = this.updateEstimate.bind(this);
   }
 
@@ -73,11 +75,20 @@ class AdminRequestTools extends React.Component {
 
   // posts the new estimate to the db and returns its id.
   // transitions to estimate editor.
-  createEstimate() {
+  // createEstimate() {
+  //   const ntsReq = this.props.ntsReq
+  //   const param = this.props.postEstimate(ntsReq);
+  //   this.context.router.transitionTo(`/dashboard/estimates/${param}`);
+  // }
+
+  // posts the new draft estimate to the db and returns its id.
+  // transitions to estimate editor.
+  createDraftEstimate() {
     const ntsReq = this.props.ntsReq
-    const param = this.props.postEstimate(ntsReq);
+    const param = this.props.postDraftEstimate(ntsReq);
     this.context.router.transitionTo(`/dashboard/estimates/${param}`);
   }
+
 
   updateEstimate() {
     const estimateId = this.props.ntsReq.estimateId;
@@ -96,7 +107,7 @@ class AdminRequestTools extends React.Component {
       options.push(<option key={i} value={statusOptions[i]}>{statusOptions[i]}</option>)
     }
 
-    if(!this.props.postEstimate) { // If estimate does exist
+    if(!this.props.postDraftEstimate) { // If estimate does exist
       estimateButton = <EstimateButton
         classString="btn btn-md btn-primary" 
         estimateFunction={this.updateEstimate}
@@ -105,8 +116,8 @@ class AdminRequestTools extends React.Component {
     } else { // If estimate does not exist
       estimateButton = <EstimateButton
         classString="btn btn-md btn-success" 
-        estimateFunction={this.createEstimate}
-        text="Create Estimate"
+        estimateFunction={this.createDraftEstimate}
+        text="Create Estimate Draft"
       />
     }
 

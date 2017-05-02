@@ -87,7 +87,7 @@ class App extends React.Component {
 		});
 		// Set admin state if the admin is logging in.
 		this.isAdmin(uid);
-		this.context.router.transitionTo(`/dashboard`);
+		// this.context.router.transitionTo(`/dashboard`);
 	}
 
 	// Admin?
@@ -96,7 +96,6 @@ class App extends React.Component {
 		const ref = base.database().ref(path);
 		ref.once('value', (snapshot) => {
 			const data = snapshot.val() || {};
-			console.log(data.dev == uid);
 			if (data.uid == uid || data.dev == uid) {
 				localStorage.setItem('admin', 1); 
 				this.setState({admin: 1});

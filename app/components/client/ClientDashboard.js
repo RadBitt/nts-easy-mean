@@ -118,6 +118,7 @@ updateEstimate(key, prop, value) {
 		this.sendJSONEmail('/mailer/estimate-viewed', {}); 
 	}
 	if (prop == 'approved') {
+		this.updateEstimate(key, 'status', 'Approved');
 		this.sendJSONEmail('/mailer/estimate-approved', {}); 
 	}
 }
