@@ -22,14 +22,18 @@ class NavStateBtnr extends React.Component {
 	}
 
 	render() {
-		// Not logged in
+		if (true) {
+			return <span>{this.renderRegisterButton()}</span>
+		}
+		// Not logged in, Delete above and uncomment below to restore.
 		if (!this.state.uid) {
 			return <span>{this.renderRegisterButton()}</span>
 		}
+
 		// Logged In
 		return (
 			<span>
-				<Link className="nav-st-btn" to="/dashboard"><button className="btn btn-success navbar-btn navbar-left" type="button">Dashboard</button></Link>
+				<Link className="nav-st-btn" to="/dashboard"><button className="btn btn-success navbar-btn navbar-left disabled" type="button">Dashboard</button></Link>
 			</span>
 		)
 	}

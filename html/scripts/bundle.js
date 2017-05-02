@@ -205,8 +205,6 @@ webpackJsonp([0],[
 		value: true
 	});
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _reactRouter = __webpack_require__(173);
@@ -223,13 +221,13 @@ webpackJsonp([0],[
 
 	var _Carousel2 = _interopRequireDefault(_Carousel);
 
-	var _Footer = __webpack_require__(211);
-
-	var _Footer2 = _interopRequireDefault(_Footer);
-
 	var _Home = __webpack_require__(212);
 
 	var _Home2 = _interopRequireDefault(_Home);
+
+	var _Footer = __webpack_require__(211);
+
+	var _Footer2 = _interopRequireDefault(_Footer);
 
 	var _base = __webpack_require__(213);
 
@@ -266,7 +264,6 @@ webpackJsonp([0],[
 			_this.authHandler = _this.authHandler.bind(_this);
 			_this.isAdmin = _this.isAdmin.bind(_this);
 			_this.logout = _this.logout.bind(_this);
-			// Initial state
 			_this.state = {
 				uid: null,
 				admin: 0
@@ -275,64 +272,28 @@ webpackJsonp([0],[
 		}
 
 		_createClass(App, [{
-			key: 'componentDidMount',
-			value: function componentDidMount() {
-				var _this2 = this;
-
-				if (localStorage.uid) {
-					this.setState({ uid: localStorage.uid });
-					if (localStorage.admin) {
-						this.isAdmin(localStorage.uid);
-					}
-				}
-				_base2.default.onAuth(function (user) {
-					if (user) {
-						_this2.authHandler(null, { user: user });
-					}
-				});
-			}
-
-			// Logout 
-
-		}, {
-			key: 'logout',
-			value: function logout() {
-				delete localStorage.uid;
-				delete localStorage.admin;
-				_base2.default.unauth();
-				this.setState({ uid: null });
-				this.context.router.transitionTo('/');
-			}
-
-			// Auth via provider
-
-		}, {
 			key: 'authenticate',
-			value: function authenticate(provider) {
+			value: function authenticate(provider, emailUserData) {
 				console.log('Logging in with ' + provider);
-				_base2.default.authWithOAuthPopup(provider, this.authHandler);
+				if (provider == 'google' || provider == 'facebook') _base2.default.authWithOAuthPopup(provider, this.authHandler);else _base2.default.authWithPassword(emailUserData, authHandler);
 			}
-
-			// Handle Auth
-
 		}, {
 			key: 'authHandler',
-			value: function authHandler(err, authData) {
-				console.log(authData);
-				if (err) {
-					console.log(err);
+			value: function authHandler(error, authData) {
+				var _this2 = this;
+
+				console.log('User Data:' + authData);
+				if (error) {
+					console.log(error);
 					return;
 				}
-				// Set user ID State
 				this.setState({
 					uid: authData.user.uid,
 					email: authData.user.email
 				});
 				localStorage.setItem('uid', authData.user.uid);
 				var uid = this.state.uid;
-				// Ref nts-easy-mean/users/:uid
 				var ref = _base2.default.database().ref('users/' + uid);
-				// Query the DB for the user
 				ref.once('value', function (snapshot) {
 					var data = snapshot.val() || {};
 					// If its the user's first time logging in.
@@ -346,14 +307,9 @@ webpackJsonp([0],[
 							phoneNumber: 0
 						});
 					}
+					_this2.isAdmin(uid);
 				});
-				// Set admin state if the admin is logging in.
-				this.isAdmin(uid);
-				this.context.router.transitionTo('/dashboard');
 			}
-
-			// Admin?
-
 		}, {
 			key: 'isAdmin',
 			value: function isAdmin(uid) {
@@ -363,7 +319,6 @@ webpackJsonp([0],[
 				var ref = _base2.default.database().ref(path);
 				ref.once('value', function (snapshot) {
 					var data = snapshot.val() || {};
-					console.log(data.dev == uid);
 					if (data.uid == uid || data.dev == uid) {
 						localStorage.setItem('admin', 1);
 						_this3.setState({ admin: 1 });
@@ -374,6 +329,15 @@ webpackJsonp([0],[
 				});
 			}
 		}, {
+			key: 'logout',
+			value: function logout() {
+				delete localStorage.uid;
+				delete localStorage.admin;
+				_base2.default.unauth();
+				this.setState({ uid: null });
+				this.context.router.transitionTo('/');
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				var _this4 = this;
@@ -381,22 +345,14 @@ webpackJsonp([0],[
 				return _react2.default.createElement(
 					_reactRouter.BrowserRouter,
 					null,
-					_react2.default.createElement(_Navigation2.default, { uid: this.state.uid }),
+					_react2.default.createElement(_Navigation2.default, { uid: null }),
 					_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: '/', component: _Home2.default }),
 					_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: '/register', render: function render() {
 							return _react2.default.createElement(
 								'div',
-								{ className: 'container main-content' },
+								{ className: 'container-fluid' },
 								_react2.default.createElement(_Register2.default, { authenticate: _this4.authenticate })
 							);
-						} }),
-					_react2.default.createElement(_reactRouter.Match, { pattern: '/dashboard/:location?', render: function render(props) {
-							return _react2.default.createElement(_Dashboard2.default, _extends({
-								admin: _this4.state.admin,
-								uid: _this4.state.uid,
-								authenticate: _this4.authenticate,
-								logout: _this4.logout
-							}, props));
 						} }),
 					_react2.default.createElement(_Footer2.default, null)
 				);
@@ -535,13 +491,14 @@ webpackJsonp([0],[
 								'NTS'
 							),
 							_react2.default.createElement(
-								'p',
-								{ className: 'navbar-text' },
-								_react2.default.createElement(
-									'strong',
-									null,
-									'Call: (310) 333-3548'
-								)
+								'a',
+								{ style: { display: 'inline-block' }, href: 'mailto:info@nauticaltechservices.com', className: 'navbar-text' },
+								_react2.default.createElement('i', { className: 'fa fa-envelope-o fa-1x', 'aria-hidden': 'true' })
+							),
+							_react2.default.createElement(
+								'a',
+								{ style: { display: 'inline-block' }, href: 'tel:+1-310-309-9440', className: 'navbar-text' },
+								_react2.default.createElement('i', { className: 'fa fa-phone-square fa-1x', 'aria-hidden': 'true' })
 							)
 						),
 						_react2.default.createElement(
@@ -633,7 +590,14 @@ webpackJsonp([0],[
 		}, {
 			key: 'render',
 			value: function render() {
-				// Not logged in
+				if (true) {
+					return _react2.default.createElement(
+						'span',
+						null,
+						this.renderRegisterButton()
+					);
+				}
+				// Not logged in, Delete above and uncomment below to restore.
 				if (!this.state.uid) {
 					return _react2.default.createElement(
 						'span',
@@ -641,6 +605,7 @@ webpackJsonp([0],[
 						this.renderRegisterButton()
 					);
 				}
+
 				// Logged In
 				return _react2.default.createElement(
 					'span',
@@ -650,7 +615,7 @@ webpackJsonp([0],[
 						{ className: 'nav-st-btn', to: '/dashboard' },
 						_react2.default.createElement(
 							'button',
-							{ className: 'btn btn-success navbar-btn navbar-left', type: 'button' },
+							{ className: 'btn btn-success navbar-btn navbar-left disabled', type: 'button' },
 							'Dashboard'
 						)
 					)
@@ -693,8 +658,7 @@ webpackJsonp([0],[
 	      _react2.default.createElement("li", { "data-target": "#carousel", "data-slide-to": "0", className: "active" }),
 	      _react2.default.createElement("li", { "data-target": "#carousel", "data-slide-to": "1" }),
 	      _react2.default.createElement("li", { "data-target": "#carousel", "data-slide-to": "2" }),
-	      _react2.default.createElement("li", { "data-target": "#carousel", "data-slide-to": "3" }),
-	      _react2.default.createElement("li", { "data-target": "#carousel", "data-slide-to": "4" })
+	      _react2.default.createElement("li", { "data-target": "#carousel", "data-slide-to": "3" })
 	    ),
 	    _react2.default.createElement(
 	      "div",
@@ -709,7 +673,13 @@ webpackJsonp([0],[
 	          _react2.default.createElement(
 	            "h3",
 	            null,
-	            "Nautical Tech Services will be there whenever you want. We specialize in everything."
+	            "Our services ",
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "exceed imagination"
+	            ),
+	            "."
 	          )
 	        )
 	      ),
@@ -723,21 +693,7 @@ webpackJsonp([0],[
 	          _react2.default.createElement(
 	            "h3",
 	            null,
-	            "Nautical Tech Services will be there whenever you want. We specialize in everything."
-	          )
-	        )
-	      ),
-	      _react2.default.createElement(
-	        "div",
-	        { className: "item" },
-	        _react2.default.createElement("img", { src: "img/helm-outside.jpg", alt: "boat-helm" }),
-	        _react2.default.createElement(
-	          "div",
-	          { className: "carousel-caption" },
-	          _react2.default.createElement(
-	            "h3",
-	            null,
-	            "Nautical Tech Services works weekends."
+	            "Bear the instruments and communications your vessel needs."
 	          )
 	        )
 	      ),
@@ -751,7 +707,7 @@ webpackJsonp([0],[
 	          _react2.default.createElement(
 	            "h3",
 	            null,
-	            "Fuel system deliver for diesel engins and engine services."
+	            "Plot your next course with Nautical Tech Services."
 	          )
 	        )
 	      ),
@@ -765,7 +721,7 @@ webpackJsonp([0],[
 	          _react2.default.createElement(
 	            "h3",
 	            null,
-	            "Nautical Tech Services takes pride in its wiring"
+	            "Your vessels limited space isn't getting any bigger. Our wiring is the cleanest in the business."
 	          )
 	        )
 	      )
@@ -804,29 +760,30 @@ webpackJsonp([0],[
 	      { className: "container" },
 	      _react2.default.createElement(
 	        "div",
-	        { className: "col-md-4" },
+	        { className: "row" },
 	        _react2.default.createElement(
-	          "ul",
-	          { className: "info-list" },
+	          "div",
+	          { className: "col-md-5" },
 	          _react2.default.createElement(
-	            "li",
+	            "address",
 	            null,
-	            "List Item 1"
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "Nautical Tech Services"
+	            ),
+	            _react2.default.createElement("br", null),
+	            "Marine Del Rey, CA 90292"
 	          ),
 	          _react2.default.createElement(
-	            "li",
-	            null,
-	            "List Item 2"
-	          ),
-	          _react2.default.createElement(
-	            "li",
-	            null,
-	            "List Item 3"
-	          ),
-	          _react2.default.createElement(
-	            "li",
-	            null,
-	            "List Item 4"
+	            "a",
+	            { style: { display: 'block' }, href: "tel:+1-310-309-9440", className: "btn btn-primary" },
+	            _react2.default.createElement("i", { className: "fa fa-phone-square", style: { fontSize: 1.6 + 'em', marginLeft: 10 + 'px' }, "aria-hidden": "true" }),
+	            _react2.default.createElement(
+	              "strong",
+	              { style: { fontSize: 25.6 + 'px', marginLeft: 10 + 'px' } },
+	              "310-309-9440"
+	            )
 	          )
 	        )
 	      )
@@ -867,236 +824,357 @@ webpackJsonp([0],[
 	    _react2.default.createElement(_Carousel2.default, null),
 	    _react2.default.createElement(
 	      'div',
-	      { className: 'container main-content' },
+	      { className: 'container-fluid fluid-row-bg2' },
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'row gradient-bg' },
+	        { className: 'container-fluid fluid-row-color2' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'col-md-6' },
-	          _react2.default.createElement(
-	            'h2',
-	            null,
-	            'What our clients have to say:'
-	          ),
-	          _react2.default.createElement(
-	            'blockquote',
-	            null,
-	            _react2.default.createElement(
-	              'p',
-	              null,
-	              '"Tony showed up on time and totally fixed my boat this weekend" -@Boaterfan'
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'blockquote',
-	            null,
-	            _react2.default.createElement(
-	              'p',
-	              null,
-	              '"I was about to head out to Catalina when I found my steering stopped working. Tony sent a tech out to at an instant and the weekend was saved." -@Boaterfan2'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-6' },
-	          _react2.default.createElement(
-	            'h1',
-	            null,
-	            'Serving Serving the hood'
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi.'
-	          )
-	        )
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'row no-border' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-12 text-center' },
-	          _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Factory trained in all leading systems.'
-	          )
-	        )
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'row text-center specialties-row no-border' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-4' },
+	          { id: 'services1', className: 'container' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'thumbnail' },
-	            _react2.default.createElement('img', { src: 'img/garmin-logo.gif' }),
+	            { className: 'row ' },
 	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Garmin Authorized Technition'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-4' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'thumbnail' },
-	            _react2.default.createElement('img', { src: 'img/furino-logo.gif' }),
+	              'div',
+	              { className: 'col-md-12 text-center' },
+	              _react2.default.createElement(
+	                'p',
+	                { className: 'lead' },
+	                ' The ',
+	                _react2.default.createElement(
+	                  'em',
+	                  null,
+	                  'constant'
+	                ),
+	                ' area of engine rooms, storage spaces, and service spaces is our work space. Our work is an application of our seafaring philosophy. A vessels\' ',
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'success exists in a zenith '
+	                ),
+	                'between performance and compromise. Working within this margin ',
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'is our specialty'
+	                ),
+	                '.'
+	              )
+	            ),
 	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Furino Authorized Technition'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-4' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'thumbnail' },
-	            _react2.default.createElement('img', { src: 'img/raymarine-logo.jpg' }),
+	              'div',
+	              { className: 'col-md-4 col-sm-4' },
+	              _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Communications'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'thumbnail' },
+	                _react2.default.createElement('img', { src: 'img/icons/radar.png', alt: 'Communications Service' })
+	              )
+	            ),
 	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Raymarine Authorized Technition'
+	              'div',
+	              { className: 'col-md-4 col-sm-4' },
+	              _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Custom Panels'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'thumbnail' },
+	                _react2.default.createElement('img', {
+	                  src: 'img/icons/dashboard.png', alt: 'Custom Panel Service' })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-md-4 col-sm-4' },
+	              _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Instruments'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'thumbnail' },
+	                _react2.default.createElement('img', { src: 'img/icons/speed.png', alt: 'Instrument Service' })
+	              )
 	            )
 	          )
 	        )
-	      ),
+	      )
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      { id: 'about', className: 'container-fluid fluid-row-bg1' },
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'row no-border text-center specialties-row' },
+	        { className: 'container-fluid fluid-row-color1' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'col-md-4' },
+	          { className: 'container' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'thumbnail' },
-	            _react2.default.createElement('img', { src: 'img/yanmar-logo.jpeg' }),
+	            { className: 'row' },
 	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Yanmar Authorized Mechanic'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-4' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'thumbnail' },
-	            _react2.default.createElement('img', { src: 'img/cummins-logo.png' }),
-	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Cummins Authorized Mechanic'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-4' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'thumbnail' },
-	            _react2.default.createElement('img', { src: 'img/volvo-logo.gif' }),
-	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Volvo Authorized Mechanic'
+	              'div',
+	              { className: 'col-md-8 col-md-offset-2' },
+	              _react2.default.createElement(
+	                'p',
+	                null,
+	                'Nautical Tech Services(NTS) is ',
+	                _react2.default.createElement(
+	                  'i',
+	                  null,
+	                  'the'
+	                ),
+	                ' up and coming vessel repair and maintenance service in Santa Monica Bay. Whether your vessel is on the hard or in the slip, NTS offers professional mobile services to maintain, repair, or upgrade your vessels. Our services bring years of experience and solutions to your vessels\' peripheral instruments, communication systems, and powerplants. If you place your ear to the ground, you may not realize what so many boaters in Santa Monica Bay have been talking about:',
+	                _react2.default.createElement('br', null),
+	                ' Nautical Tech Services.'
+	              )
 	            )
 	          )
 	        )
-	      ),
+	      )
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      { className: 'container-fluid fluid-row-bg2' },
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'row' },
+	        { className: 'container-fluid fluid-row-color2' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: ' jumbotron col-md-12' },
+	          { id: 'services2', className: 'container' },
 	          _react2.default.createElement(
-	            'h2',
-	            null,
-	            'October Special:'
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'Request a service this month and recieve 5% off.'
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            { className: 'btn-lg btn-primary', type: 'button' },
-	            'Request Service'
-	          )
-	        )
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'row' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-8' },
-	          _react2.default.createElement(
-	            'h1',
-	            null,
-	            'Serving The Hood'
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi.'
-	          ),
-	          _react2.default.createElement(
-	            'h1',
-	            null,
-	            'Never Take Second'
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi.'
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'Authentic seitan swag taxidermy. Ugh pork belly craft beer, letterpress salvia messenger bag drinking vinegar 8-bit. Cray sustainable venmo, actually single-origin coffee tumeric snackwave readymade squid lomo chia skateboard humblebrag waistcoat cronut. Food truck gastropub cardigan cronut pitchfork. Literally wayfarers sriracha, art party schlitz artisan prism truffaut banh mi yr microdosing venmo. Venmo yuccie four dollar toast viral banjo, heirloom tote bag aesthetic woke +1. Activated charcoal pour-over tattooed synth aesthetic, hammock live-edge four loko banh mi.'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-4' },
-	          _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Tetestimonials'
-	          ),
-	          _react2.default.createElement(
-	            'blockquote',
-	            null,
+	            'div',
+	            { className: 'row' },
 	            _react2.default.createElement(
-	              'p',
-	              null,
-	              '"Tony showed up on time and totally fixed my boat this weekend" -@Boaterfan'
+	              'div',
+	              { className: 'col-md-12 jumbotron' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row no-margin-tb' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-md-10 col-md-offset-1 text-center' },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'row alert alert-info' },
+	                    _react2.default.createElement(
+	                      'div',
+	                      { className: 'col-md-8' },
+	                      _react2.default.createElement(
+	                        'p',
+	                        { className: 'lead' },
+	                        'Before your next adventure, schedule one or more of the periodical services below.'
+	                      )
+	                    ),
+	                    _react2.default.createElement(
+	                      'div',
+	                      { className: 'col-md-4' },
+	                      _react2.default.createElement(
+	                        'a',
+	                        { style: { display: 'block' }, href: 'tel:+1-310-309-9440', className: 'btn btn-primary' },
+	                        _react2.default.createElement('i', { className: 'fa fa-phone-square', style: { fontSize: 1.6 + 'em', marginLeft: 10 + 'px' }, 'aria-hidden': 'true' }),
+	                        _react2.default.createElement(
+	                          'strong',
+	                          { style: { fontSize: 25.6 + 'px', marginLeft: 10 + 'px' } },
+	                          '310-309-9440'
+	                        )
+	                      )
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row no-margin-t' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-md-3 col-md-offset-0 col-sm-10 col-sm-offset-1' },
+	                  _react2.default.createElement(
+	                    'h2',
+	                    { className: 'text-center' },
+	                    'Engine Service'
+	                  ),
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'thumbnail' },
+	                    _react2.default.createElement('img', { src: 'img/icons/engine.png', alt: 'Engine Service' })
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-md-9 col-sm-10' },
+	                  _react2.default.createElement(
+	                    'dl',
+	                    { className: 'dl-horizontal' },
+	                    _react2.default.createElement(
+	                      'dt',
+	                      null,
+	                      'Cooling'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dd',
+	                      null,
+	                      'Sea strainers and raw water pumps need inspection to maintain the proper operating temperature of your engine. Old heat exchangers may need internal repairs as well. A quick and painless inspection can verify it is all in working order.'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dt',
+	                      null,
+	                      'Fuel & Oil'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dd',
+	                      null,
+	                      'Change your fuel filters during your routine oil changes to save on labor costs. We also order a spare set of oil and fuel filters for those extended trips.'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dt',
+	                      null,
+	                      'Intakes'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dd',
+	                      null,
+	                      'Clean filters and coolers are necessary for an engine\'s peak performance.'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dt',
+	                      null,
+	                      'Exhaust'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dd',
+	                      null,
+	                      'The hot exhaust will eventually win a battle against efforts to direct its flow. We will inspect this system and make sure everything is ',
+	                      _react2.default.createElement(
+	                        'em',
+	                        null,
+	                        'cool'
+	                      ),
+	                      '.'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dt',
+	                      null,
+	                      'Fuel Delivery'
+	                    ),
+	                    _react2.default.createElement(
+	                      'dd',
+	                      null,
+	                      'One bad injector could leave you without the power to maneuver as needed. The parts needed to repair problems caused from faulty fuel delivery are found and replaced for you.'
+	                    )
+	                  )
+	                )
+	              )
 	            )
 	          ),
 	          _react2.default.createElement(
-	            'blockquote',
-	            null,
+	            'div',
+	            { className: 'row' },
 	            _react2.default.createElement(
-	              'p',
-	              null,
-	              '"I was about to head out to Catalina when I found my steering stopped working. Tony sent a tech out to at an instant and the weekend was saved." -@Boaterfan2'
+	              'div',
+	              { className: 'col-md-3 col-md-offset-0 col-sm-10 col-sm-offset-1' },
+	              _react2.default.createElement(
+	                'h2',
+	                { className: 'text-center' },
+	                'Battery Service'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'thumbnail' },
+	                _react2.default.createElement('img', { src: 'img/icons/battery.png', alt: 'Battery Service' })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-md-9 col-sm-10' },
+	              _react2.default.createElement(
+	                'dl',
+	                { className: 'dl-horizontal' },
+	                _react2.default.createElement(
+	                  'dt',
+	                  null,
+	                  'Deep Cycle'
+	                ),
+	                _react2.default.createElement(
+	                  'dd',
+	                  null,
+	                  'We understand the electrical needs of many classes of vessels.'
+	                ),
+	                _react2.default.createElement(
+	                  'dt',
+	                  null,
+	                  'Full service'
+	                ),
+	                _react2.default.createElement(
+	                  'dd',
+	                  null,
+	                  'The heavy lifting is up to us. Moving these behemoths is a skill in itself. The delicate systems and finishes of your yacht are not an afterthought.'
+	                ),
+	                _react2.default.createElement(
+	                  'dt',
+	                  null,
+	                  'One Stop'
+	                ),
+	                _react2.default.createElement(
+	                  'dd',
+	                  null,
+	                  'From start to finish, a full service installation or replacement is always standard.'
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-md-3 col-md-offset-0 col-sm-10 col-sm-offset-1' },
+	              _react2.default.createElement(
+	                'h2',
+	                { className: 'text-center' },
+	                'Electrical Service'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'thumbnail' },
+	                _react2.default.createElement('img', { src: 'img/icons/generator.png', alt: 'Generator Service' })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-md-9 col-sm-10' },
+	              _react2.default.createElement(
+	                'dl',
+	                { className: 'dl-horizontal' },
+	                _react2.default.createElement(
+	                  'dt',
+	                  null,
+	                  'Generators'
+	                ),
+	                _react2.default.createElement(
+	                  'dd',
+	                  null,
+	                  'Even if they aren\'t used, generators need the same amount of attention as engines do.'
+	                ),
+	                _react2.default.createElement(
+	                  'dt',
+	                  null,
+	                  'Electrical'
+	                ),
+	                _react2.default.createElement(
+	                  'dd',
+	                  null,
+	                  'We can troubleshoot strange and intermittent problems within your DC or AC circuits.'
+	                )
+	              )
 	            )
 	          )
 	        )
@@ -1167,14 +1245,6 @@ webpackJsonp([0],[
 
 	var _Register2 = _interopRequireDefault(_Register);
 
-	var _AdminDashboard = __webpack_require__(224);
-
-	var _AdminDashboard2 = _interopRequireDefault(_AdminDashboard);
-
-	var _ClientDashboard = __webpack_require__(483);
-
-	var _ClientDashboard2 = _interopRequireDefault(_ClientDashboard);
-
 	var _base = __webpack_require__(213);
 
 	var _base2 = _interopRequireDefault(_base);
@@ -1199,51 +1269,17 @@ webpackJsonp([0],[
 	  _createClass(Dashboard, [{
 	    key: 'render',
 	    value: function render() {
-	      // If not logged in
-	      if (!this.props.uid) {
-	        return _react2.default.createElement(
-	          'div',
-	          { className: 'container main-content' },
-	          _react2.default.createElement(_Register2.default, { authenticate: this.props.authenticate })
-	        );
-	      }
-
-	      // Logged In
-	      var location = this.props.params.location;
-	      location = location == undefined ? '' : location = location;
 
 	      {/* Admin DashBaord */}
-	      if (localStorage.admin == true) {
-	        return _react2.default.createElement(
-	          'div',
-	          { className: 'container main-content' },
-	          _react2.default.createElement(_AdminDashboard2.default, {
-	            uid: this.props.uid,
-	            location: location,
-	            logout: this.props.logout
-	          })
-	        );
-	      }
+	      if (localStorage.admin == true) {}
 
 	      {/* Client DashBaord */}
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'container main-content' },
-	        _react2.default.createElement(_ClientDashboard2.default, {
-	          uid: this.props.uid,
-	          location: location,
-	          logout: this.props.logout
-	        })
-	      );
+	      return _react2.default.createElement('div', null);
 	    }
 	  }]);
 
 	  return Dashboard;
 	}(_react2.default.Component);
-
-	Dashboard.contextTypes = {
-	  router: _react2.default.PropTypes.object
-	};
 
 	exports.default = Dashboard;
 
@@ -1261,6 +1297,8 @@ webpackJsonp([0],[
 		value: true
 	});
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -1268,632 +1306,6 @@ webpackJsonp([0],[
 	var _Carousel = __webpack_require__(210);
 
 	var _Carousel2 = _interopRequireDefault(_Carousel);
-
-	var _base = __webpack_require__(213);
-
-	var _base2 = _interopRequireDefault(_base);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Register = function Register(props) {
-		return _react2.default.createElement(
-			'div',
-			{ className: 'main-row row' },
-			_react2.default.createElement(
-				'div',
-				{ className: 'col-md-12' },
-				_react2.default.createElement(
-					'nav',
-					{ className: 'login' },
-					_react2.default.createElement(
-						'h2',
-						null,
-						'Register / Log In'
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'Sign in to manage your vessel\'s services'
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'g-login' },
-						_react2.default.createElement(
-							'button',
-							{ className: 'github', onClick: function onClick() {
-									return props.authenticate('google');
-								} },
-							_react2.default.createElement('i', { className: 'fa fa-google-plus-official fa-4x', 'aria-hidden': 'true' }),
-							_react2.default.createElement(
-								'span',
-								{ className: 'login-btn-text' },
-								'Log In with Google'
-							)
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'fb-login' },
-						_react2.default.createElement(
-							'button',
-							{ className: 'facebook', onClick: function onClick() {
-									return props.authenticate('facebook');
-								} },
-							_react2.default.createElement('i', { className: 'fa fa-facebook-official fa-4x', 'aria-hidden': 'true' }),
-							_react2.default.createElement(
-								'span',
-								{ className: 'login-btn-text' },
-								'Log In with Facebook'
-							)
-						)
-					)
-				)
-			)
-		);
-	};
-
-	exports.default = Register;
-
-	// 		<div className="container main-content">
-	// 			  <div className="row">
-	// 			    <div className="col-md-12">
-	// 			      <h1><small>Register and keep track of your requests.</small></h1>
-	// 			    </div>
-	// 			  </div>
-	// 			  <form className="form-horizontal row no-border">
-	// 			    <fieldset>
-	// 			      <legend>Register</legend>
-	// 			      <div className="col-md-6 col-sm-12">
-	// 			        <div className="form-group">
-	// 			          <label htmlFor="email" className="sr-only">Email</label>
-	// 			          <div className="col-md-10 col-sm-8">
-	// 			            <input type="email" className="form-control" placeholder="Email" />
-	// 			          </div>
-	// 			        </div>
-	// 			        <div className="form-group">
-	// 			          <label htmlFor="passWord1" className="sr-only">Password</label>
-	// 			          <div className="col-md-10 col-sm-8">
-	// 			            <input type="password" className="form-control" placeholder="Password" />
-	// 			          </div>
-	// 			        </div>
-	// 			        <div className="form-group">
-	// 			          <label htmlFor="passWord2" className="sr-only">Confirm Password</label>
-	// 			          <div className="col-md-10 col-sm-8">
-	// 			            <input type="password" className="form-control" placeholder="Confirm Password" />
-	// 			          </div>
-	// 			        </div>
-	// 			      </div>
-	// 			    </fieldset>
-	// 			  </form>
-	// 			</div>
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Register.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 224 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(173);
-
-	var _AdminNavigation = __webpack_require__(225);
-
-	var _AdminNavigation2 = _interopRequireDefault(_AdminNavigation);
-
-	var _DashHeading = __webpack_require__(226);
-
-	var _DashHeading2 = _interopRequireDefault(_DashHeading);
-
-	var _Estimate = __webpack_require__(227);
-
-	var _Estimate2 = _interopRequireDefault(_Estimate);
-
-	var _Estimates = __webpack_require__(478);
-
-	var _Estimates2 = _interopRequireDefault(_Estimates);
-
-	var _Invoice = __webpack_require__(479);
-
-	var _Invoice2 = _interopRequireDefault(_Invoice);
-
-	var _Invoices = __webpack_require__(480);
-
-	var _Invoices2 = _interopRequireDefault(_Invoices);
-
-	var _Request = __webpack_require__(481);
-
-	var _Request2 = _interopRequireDefault(_Request);
-
-	var _Requests = __webpack_require__(482);
-
-	var _Requests2 = _interopRequireDefault(_Requests);
-
-	var _base = __webpack_require__(213);
-
-	var _base2 = _interopRequireDefault(_base);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var AdminDashboard = function (_React$Component) {
-		_inherits(AdminDashboard, _React$Component);
-
-		function AdminDashboard(props) {
-			_classCallCheck(this, AdminDashboard);
-
-			var _this = _possibleConstructorReturn(this, (AdminDashboard.__proto__ || Object.getPrototypeOf(AdminDashboard)).call(this, props));
-
-			_this.fetchEstimate = _this.fetchEstimate.bind(_this);
-			_this.fetchInvoice = _this.fetchInvoice.bind(_this);
-			_this.fetchRequest = _this.fetchRequest.bind(_this);
-			_this.fetchVessel = _this.fetchVessel.bind(_this);
-			_this.postEstimate = _this.postEstimate.bind(_this);
-			_this.postInvoice = _this.postInvoice.bind(_this);
-			_this.sendJSONEmail = _this.sendJSONEmail.bind(_this);
-			_this.updateRequest = _this.updateRequest.bind(_this);
-			_this.state = {
-				displayName: null,
-				estimates: {},
-				invoices: {},
-				requests: {},
-				vessels: {}
-			};
-			return _this;
-		}
-
-		// Update State & Sync
-
-
-		_createClass(AdminDashboard, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				var _this2 = this;
-
-				// Set the state. 
-				var path = 'users/' + this.props.uid;
-				var ref = _base2.default.database().ref(path);
-				ref.once('value', function (snapshot) {
-					var data = snapshot.val() || {};
-					_this2.setState({
-						displayName: data.displayName
-					});
-				});
-				this.ref = _base2.default.syncState('/requests', {
-					context: this,
-					state: 'requests',
-					queries: {
-						orderByChild: 'date'
-					}
-				});
-				this.ref2 = _base2.default.syncState('/active-vessels', {
-					context: this,
-					state: 'vessels'
-				});
-				this.ref3 = _base2.default.syncState('/invoices', {
-					context: this,
-					state: 'invoices',
-					queries: {
-						orderByChild: 'date'
-					}
-				});
-				this.ref4 = _base2.default.syncState('/estimates', {
-					context: this,
-					state: 'estimates',
-					queries: {
-						orderByChild: 'date'
-					}
-				});
-			}
-
-			// Stop Syncing
-
-		}, {
-			key: 'componentWillUnmount',
-			value: function componentWillUnmount() {
-				_base2.default.removeBinding(this.ref);
-				_base2.default.removeBinding(this.ref2);
-				_base2.default.removeBinding(this.ref3);
-			}
-		}, {
-			key: 'fetchEstimate',
-			value: function fetchEstimate(key) {
-				return this.state.estimates['estimate-' + key];
-			}
-		}, {
-			key: 'fetchInvoice',
-			value: function fetchInvoice(key) {
-				return this.state.invoices['invoice-' + key];
-			}
-
-			// Fetches request from state
-
-		}, {
-			key: 'fetchRequest',
-			value: function fetchRequest(key) {
-				return this.state.requests['request-' + key];
-			}
-		}, {
-			key: 'fetchVessel',
-			value: function fetchVessel(key) {
-				return this.state.vessels['vessel-' + key];
-			}
-
-			// Updates an estimate
-
-		}, {
-			key: 'updateEstimate',
-			value: function updateEstimate(key, prop, value) {
-				var estimates = this.state.estimates;
-				var estimate = estimates['estimate-' + key];
-				estimate[prop] = value;
-				this.setState({
-					estimates: estimates
-				});
-			}
-
-			// Updates a request
-
-		}, {
-			key: 'updateRequest',
-			value: function updateRequest(key, prop, value) {
-				var requests = this.state.requests;
-				var request = requests['request-' + key];
-				request[prop] = value;
-				this.setState({
-					requests: requests
-				});
-			}
-
-			// Creats a new estimate record from a request record
-			// and updates the request it came from to own it.
-			// returns the new estimate parameter
-
-		}, {
-			key: 'postEstimate',
-			value: function postEstimate(ntsReq) {
-				var _this3 = this;
-
-				var date = Date.now();
-				var newEstimate = {
-					approved: 0,
-					date: date,
-					id: date,
-					owner: ntsReq.owner,
-					requestId: ntsReq.id,
-					status: 'Pending',
-					viewed: 0,
-					vesselId: ntsReq.vesselId
-				};
-				var key = 'estimate-' + newEstimate.id;
-				var path = 'estimates/' + key;
-				_base2.default.post(path, {
-					data: newEstimate,
-					then: function then(err) {
-						if (!err) {
-							console.log(err);
-						}
-					}
-				});
-				this.updateRequest(ntsReq.id, 'estimateId', newEstimate.id);
-				// Send Estimate Initialization Confirmation
-				path = 'users/' + ntsReq.owner;
-				var ref = _base2.default.database().ref(path);
-				ref.once('value', function (snapshot) {
-					var data = snapshot.val() || {};
-					newEstimate['email'] = data.email;
-					newEstimate['displayName'] = data.displayName;
-					_this3.sendJSONEmail('/mailer/estimate-created', newEstimate);
-				});
-
-				return newEstimate.id;
-			}
-
-			// Creats a new invoice record from an estimate record
-			// and updates the estimate it came from .
-			// returns the new invoice parameter
-
-		}, {
-			key: 'postInvoice',
-			value: function postInvoice(estimate) {
-				var _this4 = this;
-
-				var date = Date.now();
-				var newInvoice = {
-					date: date,
-					estimateId: estimate.id,
-					id: date,
-					items: estimate.items,
-					owner: estimate.owner,
-					requestId: estimate.requestId,
-					status: 'Pending',
-					viewed: 0,
-					vesselId: estimate.vesselId
-				};
-				var key = 'invoice-' + newInvoice.id;
-				var path = 'invoices/' + key;
-				_base2.default.post(path, {
-					data: newInvoice,
-					then: function then(err) {
-						if (!err) {
-							console.log(err);
-						}
-					}
-				});
-				this.updateEstimate(estimate.id, 'invoiceId', newInvoice.id);
-				this.updateEstimate(estimate.id, 'status', 'Invoiced');
-				path = 'users/' + estimate.owner;
-				var ref = _base2.default.database().ref(path);
-				ref.once('value', function (snapshot) {
-					var data = snapshot.val() || {};
-					newInvoice['email'] = data.email;
-					newInvoice['displayName'] = data.displayName;
-					_this4.sendJSONEmail('/mailer/invoice-created', newInvoice);
-				});
-				return newInvoice.id;
-			}
-		}, {
-			key: 'sendJSONEmail',
-			value: function sendJSONEmail(path, object) {
-				$.ajax({
-					url: path,
-					dataType: 'json',
-					contentType: "application/json",
-					type: 'POST',
-					data: JSON.stringify(object),
-					success: function (data) {
-						console.log(object);
-					}.bind(this),
-					error: function (xhr, status, err) {
-						console.error(err.toString());
-					}.bind(this)
-				});
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this5 = this;
-
-				var pathname = '/dashboard';
-				var location = this.props.location;
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'row gradient-bg' },
-					_react2.default.createElement(
-						'div',
-						{ className: 'col-md-9 col-sm-12' },
-						_react2.default.createElement(_DashHeading2.default, { path: pathname, loc: location, displayName: this.state.displayName }),
-						_react2.default.createElement(
-							'div',
-							{ className: 'visible-sm visible-xs col-sm-12 btn-group' },
-							_react2.default.createElement(_AdminNavigation2.default, { path: pathname, logout: this.props.logout, btnStyles: 'sm' })
-						),
-						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/estimates', render: function render(props) {
-								return _react2.default.createElement(_Estimates2.default, _extends({
-									estimates: _this5.state.estimates,
-									fetchVessel: _this5.fetchVessel
-								}, props));
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/estimates/:key', render: function render(props) {
-								return _react2.default.createElement(_Estimate2.default, _extends({
-									admin: true,
-									fetchEstimate: _this5.fetchEstimate,
-									fetchRequest: _this5.fetchRequest,
-									fetchVessel: _this5.fetchVessel,
-									postInvoice: _this5.postInvoice,
-									updateEstimate: _this5.updateEstimate
-								}, props));
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/invoices', render: function render(props) {
-								return _react2.default.createElement(_Invoices2.default, {
-									invoices: _this5.state.invoices,
-									fetchVessel: _this5.fetchVessel
-								});
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/invoices/:key', render: function render(props) {
-								return _react2.default.createElement(_Invoice2.default, _extends({
-									admin: true,
-									fetchInvoice: _this5.fetchInvoice,
-									fetchVessel: _this5.fetchVessel
-								}, props));
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/requests', render: function render(props) {
-								return _react2.default.createElement(_Requests2.default, {
-									requests: _this5.state.requests,
-									fetchVessel: _this5.fetchVessel
-								});
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/requests/:key', render: function render(props) {
-								return _react2.default.createElement(_Request2.default, _extends({
-									admin: true,
-									fetchEstimate: _this5.fetchEstimate,
-									fetchRequest: _this5.fetchRequest,
-									fetchVessel: _this5.fetchVessel,
-									postEstimate: _this5.postEstimate,
-									updateEstimate: _this5.updateEstimate,
-									updateRequest: _this5.updateRequest
-								}, props));
-							} })
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'hidden-sm hidden-xs col-md-3 btn-group client-nav-container' },
-						_react2.default.createElement(_AdminNavigation2.default, {
-							path: pathname,
-							logout: this.props.logout,
-							btnStyles: 'md'
-						})
-					)
-				);
-			}
-		}]);
-
-		return AdminDashboard;
-	}(_react2.default.Component);
-
-	exports.default = AdminDashboard;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "AdminDashboard.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 225 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(173);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var AdminNavigation = function AdminNavigation(props) {
-
-	  var pathname = props.path;
-	  var btnStylesMd = 'btn btn-lg btn-primary btn-block client-nav-btn';
-	  var btnStylesSm = 'btn btn-md btn-primary client-nav-btn-sm';
-	  var btnStyles = btnStyles = props.btnStyles == 'md' ? btnStylesMd : btnStylesSm;
-
-	  // const request = 					 <Link to={`${pathname}/request`}><button className={btnStyles}>New Request</button></Link>;
-
-	  var activeRequests = _react2.default.createElement(
-	    _reactRouter.Link,
-	    { to: pathname + '/requests' },
-	    _react2.default.createElement(
-	      'button',
-	      { className: btnStyles },
-	      'Active Requests'
-	    )
-	  );
-
-	  var estimates = _react2.default.createElement(
-	    _reactRouter.Link,
-	    { to: pathname + '/estimates' },
-	    _react2.default.createElement(
-	      'button',
-	      { className: btnStyles },
-	      'Estimates'
-	    )
-	  );
-
-	  var invoices = _react2.default.createElement(
-	    _reactRouter.Link,
-	    { to: pathname + '/invoices' },
-	    _react2.default.createElement(
-	      'button',
-	      { className: btnStyles },
-	      'Invoices'
-	    )
-	  );
-
-	  // const accountInformation = <Link to={`${pathname}/account`}><button className={btnStyles}>Account Information</button></Link>;
-
-	  // const vesselInformation =  <Link to={`${pathname}/vessels`}><button className={btnStyles}>Vessel Information</button></Link>;
-
-	  var logout = _react2.default.createElement(
-	    'button',
-	    { className: btnStyles + ' btn-danger', onClick: props.logout },
-	    'Log Out'
-	  );
-
-	  return _react2.default.createElement(
-	    'span',
-	    null,
-	    activeRequests,
-	    estimates,
-	    invoices,
-	    logout
-	  );
-	};
-
-	exports.default = AdminNavigation;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "AdminNavigation.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 226 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var DashHeading = function DashHeading(props) {
-
-		var pathname = props.path;
-		var displayName = props.displayName;
-		var location = props.loc;
-
-		return _react2.default.createElement(
-			'span',
-			null,
-			_react2.default.createElement(
-				'h1',
-				{ className: 'dash-location' },
-				pathname.slice(1) + ' > ' + (location = location == 'active' ? 'active requests' : location)
-			)
-		);
-	};
-
-	exports.default = DashHeading;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "DashHeading.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 227 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
 
 	var _reactBootstrap = __webpack_require__(228);
 
@@ -1909,486 +1321,193 @@ webpackJsonp([0],[
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Estimate = function Estimate(props) {
+	var Register = function (_React$Component) {
+		_inherits(Register, _React$Component);
 
-	  var estimate = props.fetchEstimate(props.params.key) || {};
-	  var vessel = props.fetchVessel(estimate.vesselId);
+		function Register() {
+			_classCallCheck(this, Register);
 
-	  // Add price
-	  var items = estimate.items;
-	  var price = 0;
-	  var key = void 0;
-	  for (key in items) {
-	    price = items[key].itemRate * items[key].itemQuant * (1 + items[key].itemTax) + price;
-	  }
+			var _this = _possibleConstructorReturn(this, (Register.__proto__ || Object.getPrototypeOf(Register)).call(this));
 
-	  if (isNaN(price)) {
-	    price = '$0.00';
-	  } else {
-	    price = '$' + price.format(2);
-	  }
+			_this.handleClose = _this.handleClose.bind(_this);
+			_this.handleLoginAuth = _this.handleLoginAuth.bind(_this);
+			_this.state = {
+				show: false
+			};
+			return _this;
+		}
 
-	  // If the estimate is empty.
-	  if (!estimate.items) {
-	    estimate.items = {
-	      blankItem: {
-	        itemName: '-',
-	        itemDesc: '-',
-	        itemQuant: '-',
-	        itemRate: '-',
-	        itemTax: '-'
-	      }
-	    };
-	  }
+		_createClass(Register, [{
+			key: 'handleClose',
+			value: function handleClose() {
+				this.setState({ show: false });
+			}
+		}, {
+			key: 'handleLoginAuth',
+			value: function handleLoginAuth(e) {
+				e.preventDefault();
+				this.props.authenticate('email', {
+					email: this.email.value,
+					password: this.password.value
+				});
+				this.handleClose();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
 
-	  var userTools = '';
+				return _react2.default.createElement(
+					'div',
+					{ className: 'container-fluid' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'row' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'login col-md-6 col-md-offset-3 text-center' },
+							_react2.default.createElement(
+								'h1',
+								null,
+								'Register / Log In'
+							),
+							_react2.default.createElement(
+								'p',
+								null,
+								'Sign in to manage your vessel\'s services'
+							),
+							_react2.default.createElement(
+								'div',
+								{ className: 'email-login' },
+								_react2.default.createElement(
+									'button',
+									{ onClick: function onClick() {
+											return _this2.setState({ show: true });
+										} },
+									_react2.default.createElement('i', { className: 'fa fa-address-card-o fa-2x', 'aria-hidden': 'true' }),
+									_react2.default.createElement(
+										'span',
+										{ className: 'login-btn-text' },
+										'Log in with Email'
+									)
+								)
+							),
+							_react2.default.createElement(
+								'div',
+								{ className: 'g-login' },
+								_react2.default.createElement(
+									'button',
+									{ onClick: function onClick() {
+											return _this2.props.authenticate('google');
+										} },
+									_react2.default.createElement('i', { className: 'fa fa-google-plus-official fa-2x', 'aria-hidden': 'true' }),
+									_react2.default.createElement(
+										'span',
+										{ className: 'login-btn-text' },
+										'Log in with Google'
+									)
+								)
+							),
+							_react2.default.createElement(
+								'div',
+								{ className: 'fb-login' },
+								_react2.default.createElement(
+									'button',
+									{ onClick: function onClick() {
+											return _this2.props.authenticate('facebook');
+										} },
+									_react2.default.createElement('i', { className: 'fa fa-facebook-official fa-2x', 'aria-hidden': 'true' }),
+									_react2.default.createElement(
+										'span',
+										{ className: 'login-btn-text' },
+										'Log in with Facebook'
+									)
+								)
+							)
+						)
+					),
+					_react2.default.createElement(
+						_reactBootstrap.Modal,
+						{
+							show: this.state.show,
+							onHide: this.handleClose,
+							container: this,
+							'aria-labelledby': 'Login'
+						},
+						_react2.default.createElement(
+							_reactBootstrap.Modal.Header,
+							{ closeButton: true },
+							_react2.default.createElement(
+								_reactBootstrap.Modal.Title,
+								{ id: 'contained-modal-title' },
+								'Log in'
+							)
+						),
+						_react2.default.createElement(
+							_reactBootstrap.Modal.Body,
+							null,
+							_react2.default.createElement(
+								'form',
+								{ onSubmit: function onSubmit(e) {
+										return _this2.handleLoginAuth(e);
+									} },
+								_react2.default.createElement(
+									'div',
+									{ className: 'form-group' },
+									_react2.default.createElement(
+										'label',
+										{ htmlFor: 'email' },
+										'Email'
+									),
+									_react2.default.createElement('input', { ref: function ref(input) {
+											return _this2.email = input;
+										}, type: 'text', className: 'form-control', placeholder: 'your@email.com' })
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: 'form-group' },
+									_react2.default.createElement(
+										'label',
+										{ htmlFor: 'password' },
+										'Password'
+									),
+									_react2.default.createElement('input', { ref: function ref(input) {
+											return _this2.password = input;
+										}, type: 'password', className: 'form-control', placeholder: 'Password' })
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: 'form-group modal-controls' },
+									_react2.default.createElement(
+										'button',
+										{ type: 'submit', className: 'btn' },
+										'Submit'
+									),
+									_react2.default.createElement(
+										'button',
+										{ onClick: this.handleClose, className: 'btn btn-danger' },
+										'Cancel'
+									)
+								)
+							)
+						)
+					)
+				);
+			}
+		}]);
 
-	  if (props.admin) {
-	    userTools = _react2.default.createElement(EstimateAdminTools, {
-	      endpoint: 'estimate-' + props.params.key,
-	      estimate: estimate,
-	      postInvoice: props.postInvoice
-	    });
-	  } else {
-	    userTools = _react2.default.createElement(EstimateClientTools, {
-	      approved: estimate.approved,
-	      id: estimate.id,
-	      updateEstimate: props.updateEstimate,
-	      viewed: estimate.viewed
-	    });
-	  }
-
-	  return _react2.default.createElement(
-	    'div',
-	    { className: 'main-row' },
-	    _react2.default.createElement(
-	      'div',
-	      { className: 'row no-border' },
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'col-md-12' },
-	        _react2.default.createElement(
-	          'ul',
-	          { className: 'estimate-heading' },
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Date: ',
-	            new Date(estimate.date).toLocaleDateString()
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Vessel: ',
-	            vessel.boatName
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Request ID: ',
-	            estimate.requestId
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Estimate ID: ',
-	            estimate.id
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Status: ',
-	            estimate.status
-	          )
-	        ),
-	        userTools,
-	        _react2.default.createElement(
-	          'table',
-	          { className: 'table table-striped' },
-	          _react2.default.createElement(
-	            'caption',
-	            null,
-	            'Estimate Items'
-	          ),
-	          _react2.default.createElement(
-	            'tbody',
-	            null,
-	            _react2.default.createElement(
-	              'tr',
-	              null,
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                'Item Name'
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                'Description'
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                'Quantity'
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                'Tax'
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                { className: 'price-td' },
-	                'Rate'
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                { className: 'price-td' },
-	                'Price'
-	              )
-	            ),
-	            Object.keys(estimate.items).map(function (key) {
-	              return _react2.default.createElement(EstimateItem, { key: key, index: key,
-	                estimate: estimate.items[key]
-	              });
-	            })
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'table',
-	          { className: 'table table-striped totals-table' },
-	          _react2.default.createElement(
-	            'caption',
-	            null,
-	            'Totals'
-	          ),
-	          _react2.default.createElement(
-	            'tbody',
-	            null,
-	            _react2.default.createElement(
-	              'tr',
-	              null,
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                'Total Price'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'tr',
-	              null,
-	              _react2.default.createElement(
-	                'td',
-	                null,
-	                price
-	              )
-	            )
-	          )
-	        )
-	      )
-	    )
-	  );
-	};
-
-	exports.default = Estimate;
-
-	/* ============== Estimate Table Items ================ */
-
-	var EstimateItem = function EstimateItem(props) {
-	  var items = props.estimate;
-	  var price = items.itemRate * items.itemQuant * (1 + items.itemTax);
-
-	  if (isNaN(price)) {
-	    price = '$0.00';
-	  } else {
-	    price = '$' + price.format(2);
-	  }
-
-	  return _react2.default.createElement(
-	    'tr',
-	    null,
-	    _react2.default.createElement(
-	      'td',
-	      null,
-	      items.itemName
-	    ),
-	    _react2.default.createElement(
-	      'td',
-	      null,
-	      items.itemDesc
-	    ),
-	    _react2.default.createElement(
-	      'td',
-	      null,
-	      items.itemQuant
-	    ),
-	    _react2.default.createElement(
-	      'td',
-	      null,
-	      items.itemTax
-	    ),
-	    _react2.default.createElement(
-	      'td',
-	      { className: 'price-td' },
-	      items.itemRate
-	    ),
-	    _react2.default.createElement(
-	      'td',
-	      { className: 'price-td' },
-	      price
-	    )
-	  );
-	};
-
-	/* ============== Client Tools ================ */
-	var EstimateClientTools = function EstimateClientTools(props) {
-
-	  var estimate = props.estimate;
-
-	  var button = _react2.default.createElement(
-	    _reactBootstrap.Button,
-	    {
-	      bsStyle: 'success',
-	      bsSize: 'sm',
-	      onClick: function onClick() {
-	        return props.updateEstimate(props.id, 'approved', '1');
-	      } },
-	    'Approve Estimate'
-	  );
-	  if (props.approved == '1') {
-	    button = 'You have approved this estimate';
-	  }
-	  // Check if this estimate has not been viewed.
-	  if (props.viewed == '0') {
-	    props.updateEstimate(props.id, 'viewed', '1');
-	  }
-
-	  return _react2.default.createElement(
-	    'span',
-	    null,
-	    button
-	  );
-	};
-
-	/* ============== Admin Tools ================ */
-
-	var EstimateAdminTools = function (_React$Component) {
-	  _inherits(EstimateAdminTools, _React$Component);
-
-	  function EstimateAdminTools(props) {
-	    _classCallCheck(this, EstimateAdminTools);
-
-	    var _this = _possibleConstructorReturn(this, (EstimateAdminTools.__proto__ || Object.getPrototypeOf(EstimateAdminTools)).call(this, props));
-
-	    _this.createInvoice = _this.createInvoice.bind(_this);
-	    _this.handleClose = _this.handleClose.bind(_this);
-	    _this.postLineItem = _this.postLineItem.bind(_this);
-	    _this.state = {
-	      show: false
-	    };
-	    return _this;
-	  }
-
-	  _createClass(EstimateAdminTools, [{
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      this.setState({ estimate: this.props.estimate });
-	      this.ref = _base2.default.syncState('/estimates/' + this.props.endpoint, {
-	        context: this,
-	        state: 'estimate'
-	      });
-	    }
-	  }, {
-	    key: 'createInvoice',
-	    value: function createInvoice() {
-	      var estimate = this.props.estimate;
-	      var param = this.props.postInvoice(estimate);
-	      this.context.router.transitionTo('/dashboard/invoices/' + param);
-	    }
-	  }, {
-	    key: 'goToInvoice',
-	    value: function goToInvoice() {
-	      this.context.router.transitionTo('/dashboard/invoices/' + this.props.estimate.invoiceId);
-	    }
-	  }, {
-	    key: 'handleClose',
-	    value: function handleClose() {
-	      this.setState({ show: false });
-	    }
-	  }, {
-	    key: 'postLineItem',
-	    value: function postLineItem(event) {
-	      event.preventDefault();
-	      var estimate = this.state.estimate;
-	      var item = {};
-	      item[this.itemName.value] = {
-	        itemName: this.itemName.value,
-	        itemDesc: this.itemDesc.value,
-	        itemQuant: this.itemQuant.value,
-	        itemRate: this.itemRate.value,
-	        itemTax: this.itemTax.value
-	      };
-	      estimate['items'] = item;
-	      this.setState({ estimate: estimate });
-	      this.handleClose();
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
-
-	      var invoiceButton = _react2.default.createElement(
-	        _reactBootstrap.Button,
-	        {
-	          bsStyle: 'success',
-	          bsSize: 'sm',
-	          onClick: function onClick() {
-	            return _this2.createInvoice();
-	          }
-	        },
-	        'Create Invoice'
-	      );
-	      if (this.state.estimate.status == 'Invoiced') {
-	        invoiceButton = _react2.default.createElement(
-	          _reactBootstrap.Button,
-	          {
-	            bsStyle: 'success',
-	            bsSize: 'sm',
-	            onClick: function onClick() {
-	              return _this2.goToInvoice();
-	            }
-	          },
-	          'View Invoice'
-	        );
-	      }
-
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          _reactBootstrap.Button,
-	          {
-	            bsStyle: 'success',
-	            bsSize: 'sm',
-	            onClick: function onClick() {
-	              return _this2.setState({ show: true });
-	            }
-	          },
-	          'Add Line Item'
-	        ),
-	        invoiceButton,
-	        _react2.default.createElement(
-	          _reactBootstrap.Modal,
-	          {
-	            show: this.state.show,
-	            onHide: this.handleClose,
-	            container: this,
-	            'aria-labelledby': 'Add Line Item'
-	          },
-	          _react2.default.createElement(
-	            _reactBootstrap.Modal.Header,
-	            { closeButton: true },
-	            _react2.default.createElement(
-	              _reactBootstrap.Modal.Title,
-	              { id: 'contained-modal-title' },
-	              'Add Line Item'
-	            )
-	          ),
-	          _react2.default.createElement(
-	            _reactBootstrap.Modal.Body,
-	            null,
-	            _react2.default.createElement(
-	              'form',
-	              { onSubmit: function onSubmit(e) {
-	                  return _this2.postLineItem(e);
-	                } },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'form-group' },
-	                _react2.default.createElement(
-	                  'label',
-	                  { className: 'sr-only', htmlFor: 'boatName' },
-	                  'Item Name'
-	                ),
-	                _react2.default.createElement('input', { ref: function ref(input) {
-	                    return _this2.itemName = input;
-	                  }, type: 'text', className: 'form-control', placeholder: 'Item Name' })
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'form-group' },
-	                _react2.default.createElement(
-	                  'label',
-	                  { className: 'sr-only', htmlFor: 'boatType' },
-	                  'Description'
-	                ),
-	                _react2.default.createElement('input', { ref: function ref(input) {
-	                    return _this2.itemDesc = input;
-	                  }, type: 'text', className: 'form-control', placeholder: 'Description' })
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'form-group' },
-	                _react2.default.createElement(
-	                  'label',
-	                  { className: 'sr-only', htmlFor: 'boatLoc' },
-	                  'Quantity'
-	                ),
-	                _react2.default.createElement('input', { ref: function ref(input) {
-	                    return _this2.itemQuant = input;
-	                  }, type: 'text', className: 'form-control', placeholder: 'Quantity' })
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'form-group' },
-	                _react2.default.createElement(
-	                  'label',
-	                  { className: 'sr-only', htmlFor: 'boatLoc' },
-	                  'Rate'
-	                ),
-	                _react2.default.createElement('input', { ref: function ref(input) {
-	                    return _this2.itemRate = input;
-	                  }, type: 'text', className: 'form-control', placeholder: 'Rate' })
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'form-group' },
-	                _react2.default.createElement(
-	                  'label',
-	                  { className: 'sr-only', htmlFor: 'boatLoc' },
-	                  'Tax'
-	                ),
-	                _react2.default.createElement('input', { ref: function ref(input) {
-	                    return _this2.itemTax = input;
-	                  }, type: 'text', className: 'form-control', placeholder: 'Tax' })
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { type: 'submit', className: 'btn btn-success' },
-	                'Submit'
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { onClick: this.handleClose, className: 'btn btn-danger' },
-	                'Cancel'
-	              )
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }]);
-
-	  return EstimateAdminTools;
+		return Register;
 	}(_react2.default.Component);
 
-	EstimateAdminTools.contextTypes = {
-	  router: _react2.default.PropTypes.object
-	};
+	exports.default = Register;
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Estimate.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Register.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
+/* 224 */,
+/* 225 */,
+/* 226 */,
+/* 227 */,
 /* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -21087,2135 +20206,6 @@ webpackJsonp([0],[
 	exports.bootstrapUtils = _bootstrapUtils;
 	exports.createChainedFunction = _createChainedFunction3['default'];
 	exports.ValidComponentChildren = _ValidComponentChildren3['default'];
-
-/***/ },
-/* 478 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(173);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Estimates = function Estimates(props) {
-		return _react2.default.createElement(
-			'table',
-			{ className: 'table table-striped' },
-			_react2.default.createElement(
-				'caption',
-				null,
-				'All Estimates'
-			),
-			_react2.default.createElement(
-				'tbody',
-				null,
-				_react2.default.createElement(
-					'tr',
-					null,
-					_react2.default.createElement(
-						'th',
-						null,
-						'ID'
-					),
-					_react2.default.createElement(
-						'th',
-						null,
-						'Date'
-					),
-					_react2.default.createElement(
-						'th',
-						null,
-						'Vessel'
-					),
-					_react2.default.createElement(
-						'th',
-						null,
-						'Status'
-					)
-				),
-				Object.keys(props.estimates).map(function (key) {
-					return _react2.default.createElement(EstimateTd, { key: key, index: key,
-						estimate: props.estimates[key],
-						fetchVessel: props.fetchVessel,
-						fetchRequest: props.fetchRequest
-					});
-				})
-			)
-		);
-	};
-
-	var EstimateTd = function EstimateTd(props) {
-		var estimate = props.estimate;
-		var vessel = props.fetchVessel(estimate.vesselId);
-		var vesselName = vessel.boatName;
-		return _react2.default.createElement(
-			'tr',
-			null,
-			_react2.default.createElement(
-				'td',
-				null,
-				_react2.default.createElement(
-					_reactRouter.Link,
-					{ to: '/dashboard/estimates/' + estimate.id },
-					estimate.id
-				)
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				new Date(estimate.date).toLocaleDateString()
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				vesselName
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				estimate.status
-			)
-		);
-	};
-
-	exports.default = Estimates;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Estimates.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 479 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactBootstrap = __webpack_require__(228);
-
-	var _base = __webpack_require__(213);
-
-	var _base2 = _interopRequireDefault(_base);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Invoice = function Invoice(props) {
-
-	  var invoice = props.fetchInvoice(props.params.key) || {};
-	  var vessel = props.fetchVessel(invoice.vesselId);
-
-	  // Add price
-	  var items = invoice.items;
-	  var price = 0;
-	  var key = void 0;
-	  for (key in items) {
-	    price = items[key].itemRate * items[key].itemQuant * (1 + items[key].itemTax) + price;
-	  }
-
-	  if (isNaN(price)) {
-	    price = '$0.00';
-	  } else {
-	    price = '$' + price.format(2);
-	  }
-
-	  // If the invoice is empty.
-	  if (!invoice.items) {
-	    invoice.items = {
-	      blankItem: {
-	        itemName: '-',
-	        itemDesc: '-',
-	        itemQuant: '-',
-	        itemRate: '-',
-	        itemTax: '-'
-	      }
-	    };
-	  }
-
-	  // If client is viewing
-
-	  return _react2.default.createElement(
-	    'div',
-	    { className: 'main-row' },
-	    _react2.default.createElement(
-	      'div',
-	      { className: 'row no-border' },
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'col-md-12' },
-	        _react2.default.createElement(
-	          'ul',
-	          { className: 'invoice-heading' },
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Date: ',
-	            new Date(invoice.date).toLocaleDateString()
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Vessel: ',
-	            vessel.boatName
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Request ID: ',
-	            invoice.requestId
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Invoice ID: ',
-	            invoice.id
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Status: ',
-	            invoice.status
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'table',
-	          { className: 'table table-striped' },
-	          _react2.default.createElement(
-	            'caption',
-	            null,
-	            'Invoice Items'
-	          ),
-	          _react2.default.createElement(
-	            'tbody',
-	            null,
-	            _react2.default.createElement(
-	              'tr',
-	              null,
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                'Item Name'
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                'Description'
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                'Quantity'
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                { className: 'price-td' },
-	                'Rate'
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                { className: 'price-td' },
-	                'Price'
-	              )
-	            ),
-	            Object.keys(invoice.items).map(function (key) {
-	              return _react2.default.createElement(InvoiceItem, { key: key, index: key,
-	                invoice: invoice.items[key]
-	              });
-	            })
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'table',
-	          { className: 'table table-striped totals-table' },
-	          _react2.default.createElement(
-	            'caption',
-	            null,
-	            'Totals'
-	          ),
-	          _react2.default.createElement(
-	            'tbody',
-	            null,
-	            _react2.default.createElement(
-	              'tr',
-	              null,
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                'Total Price'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'tr',
-	              null,
-	              _react2.default.createElement(
-	                'td',
-	                null,
-	                price
-	              )
-	            )
-	          )
-	        )
-	      )
-	    )
-	  );
-	};
-
-	exports.default = Invoice;
-
-	/* ============== Invoice Table Items ================ */
-
-	var InvoiceItem = function InvoiceItem(props) {
-	  var items = props.invoice;
-	  var price = items.itemRate * items.itemQuant * (1 + items.itemTax);
-
-	  if (isNaN(price)) {
-	    price = '$0.00';
-	  } else {
-	    price = '$' + price.format(2);
-	  }
-
-	  return _react2.default.createElement(
-	    'tr',
-	    null,
-	    _react2.default.createElement(
-	      'td',
-	      null,
-	      items.itemName
-	    ),
-	    _react2.default.createElement(
-	      'td',
-	      null,
-	      items.itemDesc
-	    ),
-	    _react2.default.createElement(
-	      'td',
-	      null,
-	      items.itemQuant
-	    ),
-	    _react2.default.createElement(
-	      'td',
-	      { className: 'price-td' },
-	      items.itemRate
-	    ),
-	    _react2.default.createElement(
-	      'td',
-	      { className: 'price-td' },
-	      price
-	    )
-	  );
-	};
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Invoice.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 480 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(173);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Invoices = function Invoices(props) {
-		return _react2.default.createElement(
-			'table',
-			{ className: 'table table-striped' },
-			_react2.default.createElement(
-				'caption',
-				null,
-				'All Invoices'
-			),
-			_react2.default.createElement(
-				'tbody',
-				null,
-				_react2.default.createElement(
-					'tr',
-					null,
-					_react2.default.createElement(
-						'th',
-						null,
-						'ID'
-					),
-					_react2.default.createElement(
-						'th',
-						null,
-						'Date'
-					),
-					_react2.default.createElement(
-						'th',
-						null,
-						'Vessel'
-					),
-					_react2.default.createElement(
-						'th',
-						null,
-						'Status'
-					)
-				),
-				Object.keys(props.invoices).map(function (key) {
-					return _react2.default.createElement(InvoiceTd, { key: key, index: key,
-						invoice: props.invoices[key],
-						fetchVessel: props.fetchVessel,
-						fetchRequest: props.fetchRequest
-					});
-				})
-			)
-		);
-	};
-
-	var InvoiceTd = function InvoiceTd(props) {
-		var invoice = props.invoice;
-		var vessel = props.fetchVessel(invoice.vesselId);
-		var vesselName = vessel.boatName;
-		return _react2.default.createElement(
-			'tr',
-			null,
-			_react2.default.createElement(
-				'td',
-				null,
-				_react2.default.createElement(
-					_reactRouter.Link,
-					{ to: '/dashboard/invoices/' + invoice.id },
-					invoice.id
-				)
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				new Date(invoice.date).toLocaleDateString()
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				vesselName
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				invoice.status
-			)
-		);
-	};
-
-	exports.default = Invoices;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Invoices.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 481 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(173);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Request = function Request(props) {
-
-	  var ntsReq = props.fetchRequest(props.params.key);
-	  var vesselInfo = props.fetchVessel(ntsReq.vesselId);
-	  var adminTools = '';
-
-	  if (props.admin) {
-
-	    if (!ntsReq.estimateId) {
-	      // Estimate Does Not Exists
-	      adminTools = _react2.default.createElement(AdminRequestTools, {
-	        ntsReq: ntsReq,
-	        postEstimate: props.postEstimate,
-	        updateRequest: props.updateRequest
-	      });
-	    } else {
-	      // Estimate Exists
-	      adminTools = _react2.default.createElement(AdminRequestTools, {
-	        ntsReq: ntsReq,
-	        updateEstimate: props.updateEstimate,
-	        updateRequest: props.updateRequest
-	      });
-	    }
-	  }
-	  // Display the request info, as well as its vessels info.
-	  return _react2.default.createElement(
-	    'div',
-	    { className: 'main-row' },
-	    _react2.default.createElement(
-	      'div',
-	      { className: 'row no-border' },
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'col-md-12' },
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          _react2.default.createElement(
-	            'small',
-	            null,
-	            'Request ID: ',
-	            ntsReq.id
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          _react2.default.createElement(
-	            'small',
-	            null,
-	            'Request Status: ',
-	            ntsReq.status
-	          )
-	        )
-	      )
-	    ),
-	    adminTools,
-	    _react2.default.createElement(
-	      'div',
-	      { className: 'row no-border' },
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'col-md-12' },
-	        _react2.default.createElement(
-	          'ul',
-	          null,
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Date Requested: ',
-	            ntsReq.date
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Boat Type: ',
-	            vesselInfo.boatType
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Boat Name: ',
-	            vesselInfo.boatName
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Boat Location: ',
-	            ntsReq.boatLoc
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Job Description: ',
-	            ntsReq.jobDesc
-	          )
-	        )
-	      )
-	    )
-	  );
-	};
-
-	// ========================================================== //
-	// Admin tools
-	// ========================================================== //
-	/* 
-	* Is rendered if the admin is logged in and viewing a request.
-	*/
-
-	var AdminRequestTools = function (_React$Component) {
-	  _inherits(AdminRequestTools, _React$Component);
-
-	  function AdminRequestTools(props) {
-	    _classCallCheck(this, AdminRequestTools);
-
-	    var _this = _possibleConstructorReturn(this, (AdminRequestTools.__proto__ || Object.getPrototypeOf(AdminRequestTools)).call(this, props));
-
-	    _this.handleChange = _this.handleChange.bind(_this);
-	    _this.createEstimate = _this.createEstimate.bind(_this);
-	    _this.updateEstimate = _this.updateEstimate.bind(_this);
-	    return _this;
-	  }
-
-	  _createClass(AdminRequestTools, [{
-	    key: 'handleChange',
-	    value: function handleChange(event) {
-	      var key = this.props.ntsReq.id;
-	      var prop = 'status';
-	      var value = event.target.value;
-	      this.props.updateRequest(key, prop, value);
-	    }
-
-	    // posts the new estimate to the db and returns its id.
-	    // transitions to estimate editor.
-
-	  }, {
-	    key: 'createEstimate',
-	    value: function createEstimate() {
-	      var ntsReq = this.props.ntsReq;
-	      var param = this.props.postEstimate(ntsReq);
-	      this.context.router.transitionTo('/dashboard/estimates/' + param);
-	    }
-	  }, {
-	    key: 'updateEstimate',
-	    value: function updateEstimate() {
-	      var estimateId = this.props.ntsReq.estimateId;
-	      var param = estimateId;
-	      this.context.router.transitionTo('/dashboard/estimates/' + param);
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-
-	      var ntsReq = this.props.ntsReq;
-	      var statusOptions = ['In Progress', 'On Hold', 'Updated', 'Completed'];
-	      var options = [];
-	      var estimateButton = void 0;
-
-	      for (var i = 0; i < statusOptions.length; i++) {
-	        options.push(_react2.default.createElement(
-	          'option',
-	          { key: i, value: statusOptions[i] },
-	          statusOptions[i]
-	        ));
-	      }
-
-	      if (!this.props.postEstimate) {
-	        // If estimate does exist
-	        estimateButton = _react2.default.createElement(EstimateButton, {
-	          classString: 'btn btn-md btn-primary',
-	          estimateFunction: this.updateEstimate,
-	          text: 'Update Estimate'
-	        });
-	      } else {
-	        // If estimate does not exist
-	        estimateButton = _react2.default.createElement(EstimateButton, {
-	          classString: 'btn btn-md btn-success',
-	          estimateFunction: this.createEstimate,
-	          text: 'Create Estimate'
-	        });
-	      }
-
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'row no-border' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-3' },
-	          _react2.default.createElement(
-	            'select',
-	            { className: 'form-control', value: ntsReq.status, onChange: this.handleChange },
-	            _react2.default.createElement(
-	              'option',
-	              { value: 'Recieved' },
-	              'Change the status'
-	            ),
-	            options
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'col-md-3' },
-	          estimateButton
-	        )
-	      );
-	    }
-	  }]);
-
-	  return AdminRequestTools;
-	}(_react2.default.Component);
-
-	var EstimateButton = function EstimateButton(props) {
-	  return _react2.default.createElement(
-	    'button',
-	    { className: props.classString, onClick: props.estimateFunction },
-	    props.text
-	  );
-	};
-
-	AdminRequestTools.contextTypes = {
-	  router: _react2.default.PropTypes.object
-	};
-
-	exports.default = Request;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Request.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 482 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(173);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Requests = function Requests(props) {
-		return _react2.default.createElement(
-			'table',
-			{ className: 'table table-striped' },
-			_react2.default.createElement(
-				'caption',
-				null,
-				'All Requests'
-			),
-			_react2.default.createElement(
-				'tbody',
-				null,
-				_react2.default.createElement(
-					'tr',
-					null,
-					_react2.default.createElement(
-						'th',
-						null,
-						'ID'
-					),
-					_react2.default.createElement(
-						'th',
-						null,
-						'Date'
-					),
-					_react2.default.createElement(
-						'th',
-						null,
-						'Vessel'
-					),
-					_react2.default.createElement(
-						'th',
-						null,
-						'Status'
-					)
-				),
-				Object.keys(props.requests).map(function (key) {
-					return _react2.default.createElement(Request, { key: key, index: key,
-						request: props.requests[key],
-						fetchVessel: props.fetchVessel
-					});
-				})
-			)
-		);
-	};
-
-	// Request Component
-	var Request = function Request(props) {
-		var request = props.request;
-		var vessel = props.fetchVessel(request.vesselId);
-		var vesselName = vessel.boatName;
-
-		return _react2.default.createElement(
-			'tr',
-			null,
-			_react2.default.createElement(
-				'td',
-				null,
-				_react2.default.createElement(
-					_reactRouter.Link,
-					{ to: '/dashboard/requests/' + request.id },
-					request.id
-				)
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				new Date(request.date).toLocaleDateString()
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				vesselName
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				request.status
-			)
-		);
-	};
-
-	exports.default = Requests;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Requests.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 483 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(173);
-
-	var _Account = __webpack_require__(484);
-
-	var _Account2 = _interopRequireDefault(_Account);
-
-	var _ClientNavigation = __webpack_require__(485);
-
-	var _ClientNavigation2 = _interopRequireDefault(_ClientNavigation);
-
-	var _DashHeading = __webpack_require__(226);
-
-	var _DashHeading2 = _interopRequireDefault(_DashHeading);
-
-	var _Estimate = __webpack_require__(227);
-
-	var _Estimate2 = _interopRequireDefault(_Estimate);
-
-	var _Estimates = __webpack_require__(478);
-
-	var _Estimates2 = _interopRequireDefault(_Estimates);
-
-	var _Invoice = __webpack_require__(479);
-
-	var _Invoice2 = _interopRequireDefault(_Invoice);
-
-	var _Invoices = __webpack_require__(480);
-
-	var _Invoices2 = _interopRequireDefault(_Invoices);
-
-	var _Register = __webpack_require__(223);
-
-	var _Register2 = _interopRequireDefault(_Register);
-
-	var _Request = __webpack_require__(481);
-
-	var _Request2 = _interopRequireDefault(_Request);
-
-	var _Requests = __webpack_require__(482);
-
-	var _Requests2 = _interopRequireDefault(_Requests);
-
-	var _RequestsForm = __webpack_require__(486);
-
-	var _RequestsForm2 = _interopRequireDefault(_RequestsForm);
-
-	var _Vessels = __webpack_require__(489);
-
-	var _Vessels2 = _interopRequireDefault(_Vessels);
-
-	var _base = __webpack_require__(213);
-
-	var _base2 = _interopRequireDefault(_base);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ClientDashboard = function (_React$Component) {
-		_inherits(ClientDashboard, _React$Component);
-
-		function ClientDashboard(props) {
-			_classCallCheck(this, ClientDashboard);
-
-			var _this = _possibleConstructorReturn(this, (ClientDashboard.__proto__ || Object.getPrototypeOf(ClientDashboard)).call(this, props));
-
-			_this.fetchEstimate = _this.fetchEstimate.bind(_this);
-			_this.fetchInvoice = _this.fetchInvoice.bind(_this);
-			_this.fetchRequest = _this.fetchRequest.bind(_this);
-			_this.fetchVessel = _this.fetchVessel.bind(_this);
-			_this.postRequest = _this.postRequest.bind(_this);
-			_this.postVessel = _this.postVessel.bind(_this);
-			_this.sendJSONEmail = _this.sendJSONEmail.bind(_this);
-			_this.updateEstimate = _this.updateEstimate.bind(_this);
-			_this.state = {
-				displayName: null,
-				email: null,
-				estimates: {},
-				invoices: {},
-				requests: {},
-				vessels: {}
-			};
-			return _this;
-		}
-
-		// Opens sync state before the component mounts
-
-
-		_createClass(ClientDashboard, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				var _this2 = this;
-
-				// Set the state. 
-				var path = 'users/' + this.props.uid;
-				var ref = _base2.default.database().ref(path);
-				ref.once('value', function (snapshot) {
-					var data = snapshot.val() || {};
-					_this2.setState({
-						displayName: data.displayName,
-						email: data.email
-					});
-				});
-				this.ref = _base2.default.syncState('/requests', {
-					context: this,
-					state: 'requests',
-					queries: {
-						orderByChild: 'owner',
-						equalTo: this.props.uid
-					}
-				});
-				this.ref2 = _base2.default.syncState('/vessels', {
-					context: this,
-					state: 'vessels',
-					queries: {
-						orderByChild: 'owner',
-						equalTo: this.props.uid
-					}
-				});
-				this.ref3 = _base2.default.syncState('/invoices', {
-					context: this,
-					state: 'invoices',
-					queries: {
-						orderByChild: 'owner',
-						equalTo: this.props.uid
-					}
-				});
-				this.ref4 = _base2.default.syncState('/estimates', {
-					context: this,
-					state: 'estimates',
-					queries: {
-						orderByChild: 'owner',
-						equalTo: this.props.uid
-					}
-				});
-			}
-
-			// Closes sync state when the component unmounts.
-
-		}, {
-			key: 'componentWillUnmount',
-			value: function componentWillUnmount() {
-				_base2.default.removeBinding(this.ref);
-				_base2.default.removeBinding(this.ref2);
-				_base2.default.removeBinding(this.ref3);
-				_base2.default.removeBinding(this.ref4);
-			}
-
-			/* ============== Common Functions ================ */
-
-		}, {
-			key: 'fetchEstimate',
-			value: function fetchEstimate(key) {
-				return this.state.estimates['estimate-' + key];
-			}
-		}, {
-			key: 'fetchInvoice',
-			value: function fetchInvoice(key) {
-				return this.state.invoices['invoice-' + key];
-			}
-		}, {
-			key: 'fetchRequest',
-			value: function fetchRequest(key) {
-				return this.state.requests['request-' + key];
-			}
-		}, {
-			key: 'fetchVessel',
-			value: function fetchVessel(key) {
-				return this.state.vessels['vessel-' + key];
-			}
-		}, {
-			key: 'updateEstimate',
-			value: function updateEstimate(key, prop, value) {
-				var estimates = this.state.estimates;
-				var estimate = estimates['estimate-' + key];
-				estimate[prop] = value;
-				this.setState({
-					estimates: estimates
-				});
-				if (prop == 'viewed') {
-					this.sendJSONEmail('/mailer/estimate-viewed', {});
-				}
-				if (prop == 'approved') {
-					this.sendJSONEmail('/mailer/estimate-approved', {});
-				}
-			}
-		}, {
-			key: 'updateRequest',
-			value: function updateRequest(key, prop, value) {
-				var requests = this.state.requests;
-				var request = requests['request-' + key];
-				request[prop] = value;
-				this.setState({
-					requests: requests
-				});
-			}
-
-			/* ============== Client Functions ================ */
-
-		}, {
-			key: 'postRequest',
-			value: function postRequest(ntsReq) {
-				var uid = this.props.uid;
-				var requests = this.state.requests;
-				var key = 'request-' + ntsReq.id;
-				var path = 'requests/' + key;
-				if (uid == null) return;
-				// push the request key and its data. 
-				_base2.default.post(path, {
-					data: ntsReq,
-					then: function then(err) {
-						if (!err) {
-							console.log(err);
-						}
-					}
-				});
-				var vesselKey = 'vessel-' + ntsReq.vesselId;
-				// update the vessel to active
-				_base2.default.post('/active-vessels/' + vesselKey, {
-					data: this.state.vessels[vesselKey],
-					then: function then(err) {
-						if (!err) {
-							console.log(err);
-						}
-					}
-				});
-				// Send Request Email Confirmation
-				ntsReq['email'] = this.state.email;
-				ntsReq['displayName'] = this.state.displayName;
-				this.sendJSONEmail('mailer/request-submitted', ntsReq);
-			}
-
-			// Add vessel to state/firebase
-
-		}, {
-			key: 'postVessel',
-			value: function postVessel(ntsVes) {
-				// if vessel exists?
-				var key = 'vessel-' + ntsVes.id;
-				var path = 'vessels/' + key;
-				// push the request key and its data. 
-				_base2.default.post(path, {
-					data: ntsVes,
-					then: function then(err) {
-						if (!err) {
-							console.log(err);
-						}
-					}
-				});
-				this.sendJSONEmail('/mailer/vessel-created', ntsVes);
-			}
-		}, {
-			key: 'sendJSONEmail',
-			value: function sendJSONEmail(path, object) {
-				$.ajax({
-					url: path,
-					dataType: 'json',
-					contentType: "application/json",
-					type: 'POST',
-					data: JSON.stringify(object),
-					success: function (data) {
-						console.log(object);
-					}.bind(this),
-					error: function (xhr, status, err) {
-						console.error(err.toString());
-					}.bind(this)
-				});
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this3 = this;
-
-				var pathname = '/dashboard';
-				var location = this.props.location;
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'row gradient-bg' },
-					_react2.default.createElement(
-						'div',
-						{ className: 'col-md-9 col-sm-12' },
-						_react2.default.createElement(
-							'div',
-							{ className: 'visible-sm visible-xs col-sm-12 btn-group' },
-							_react2.default.createElement(_ClientNavigation2.default, { path: pathname, logout: this.props.logout, btnStyles: 'sm' })
-						),
-						_react2.default.createElement(_DashHeading2.default, { path: pathname, loc: location, displayName: this.state.displayName }),
-						_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/account/:key?', render: function render(props) {
-								return _react2.default.createElement(_Account2.default, {
-									uid: _this3.props.uid
-								});
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/estimates', render: function render(props) {
-								return _react2.default.createElement(_Estimates2.default, {
-									estimates: _this3.state.estimates,
-									fetchVessel: _this3.fetchVessel
-								});
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/estimates/:key', render: function render(props) {
-								return _react2.default.createElement(_Estimate2.default, _extends({
-									fetchEstimate: _this3.fetchEstimate,
-									fetchRequest: _this3.fetchRequest,
-									fetchVessel: _this3.fetchVessel,
-									updateEstimate: _this3.updateEstimate
-								}, props));
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/invoices', render: function render(props) {
-								return _react2.default.createElement(_Invoices2.default, {
-									invoices: _this3.state.invoices,
-									fetchInvoice: _this3.fetchInvoice,
-									fetchVessel: _this3.fetchVessel
-								});
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/invoices/:key', render: function render(props) {
-								return _react2.default.createElement(_Invoice2.default, _extends({
-									fetchInvoice: _this3.fetchInvoice,
-									fetchVessel: _this3.fetchVessel
-								}, props));
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/requests', render: function render(props) {
-								return _react2.default.createElement(_Requests2.default, {
-									fetchVessel: _this3.fetchVessel,
-									requests: _this3.state.requests
-								});
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { exactly: true, pattern: pathname + '/requests/:key', render: function render(props) {
-								return _react2.default.createElement(_Request2.default, _extends({
-									fetchRequest: _this3.fetchRequest,
-									fetchVessel: _this3.fetchVessel
-								}, props));
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/request/:key?', render: function render(props) {
-								return _react2.default.createElement(_RequestsForm2.default, {
-									uid: _this3.props.uid,
-									postRequest: _this3.postRequest,
-									vessels: _this3.state.vessels
-								});
-							} }),
-						_react2.default.createElement(_reactRouter.Match, { pattern: pathname + '/vessels/:key?', render: function render(props) {
-								return _react2.default.createElement(_Vessels2.default, { postVessel: _this3.postVessel, uid: _this3.props.uid, vessels: _this3.state.vessels });
-							} })
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'hidden-sm hidden-xs col-md-3 btn-group client-nav-container' },
-						_react2.default.createElement(_ClientNavigation2.default, {
-							path: pathname,
-							logout: this.props.logout,
-							btnStyles: 'md'
-						})
-					)
-				);
-			}
-		}]);
-
-		return ClientDashboard;
-	}(_react2.default.Component);
-
-	exports.default = ClientDashboard;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "ClientDashboard.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 484 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _base = __webpack_require__(213);
-
-	var _base2 = _interopRequireDefault(_base);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Account = function (_React$Component) {
-		_inherits(Account, _React$Component);
-
-		function Account(props) {
-			_classCallCheck(this, Account);
-
-			var _this = _possibleConstructorReturn(this, (Account.__proto__ || Object.getPrototypeOf(Account)).call(this, props));
-
-			_this.state = {
-				user: {
-					displayName: null,
-					firstName: null,
-					lastName: null,
-					phone: null,
-					email: null
-				}
-			};
-			return _this;
-		}
-
-		// Update State & Sync
-
-
-		_createClass(Account, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				this.ref = _base2.default.syncState('users/' + this.props.uid, {
-					context: this,
-					state: 'user'
-				});
-			}
-
-			// Stop Syncing
-
-		}, {
-			key: 'componentWillUnmount',
-			value: function componentWillUnmount() {
-				_base2.default.removeBinding(this.ref);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var user = this.state.user;
-				return _react2.default.createElement(
-					'div',
-					{ className: 'main-row row no-border' },
-					_react2.default.createElement(
-						'div',
-						{ className: 'col-md-12' },
-						_react2.default.createElement(
-							'h2',
-							null,
-							_react2.default.createElement(
-								'small',
-								null,
-								'Account Settings'
-							)
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'row no-border' },
-						_react2.default.createElement(
-							'div',
-							{ className: 'col-md-12' },
-							_react2.default.createElement(
-								'ul',
-								null,
-								_react2.default.createElement(
-									'li',
-									null,
-									'Display Name: ',
-									user.displayName
-								),
-								_react2.default.createElement(
-									'li',
-									null,
-									'First Name: ',
-									user.firstName
-								),
-								_react2.default.createElement(
-									'li',
-									null,
-									'Last Name: ',
-									user.lastName
-								),
-								_react2.default.createElement(
-									'li',
-									null,
-									'Contact Email: ',
-									user.email
-								),
-								_react2.default.createElement(
-									'li',
-									null,
-									'Contact Phone: ',
-									user.phone
-								)
-							)
-						)
-					)
-				);
-			}
-		}]);
-
-		return Account;
-	}(_react2.default.Component);
-
-	exports.default = Account;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Account.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 485 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(173);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ClientNavigation = function ClientNavigation(props) {
-
-	  var pathname = props.path;
-	  var btnStylesMd = 'btn btn-lg btn-primary btn-block client-nav-btn';
-	  var btnStylesSm = 'btn btn-md btn-primary client-nav-btn-sm';
-	  var btnStyles = btnStyles = props.btnStyles == 'md' ? btnStylesMd : btnStylesSm;
-
-	  var accountInformation = _react2.default.createElement(
-	    _reactRouter.Link,
-	    { to: pathname + '/account' },
-	    _react2.default.createElement(
-	      'button',
-	      { className: btnStyles },
-	      'Account Information'
-	    )
-	  );
-
-	  var estimates = _react2.default.createElement(
-	    _reactRouter.Link,
-	    { to: pathname + '/estimates' },
-	    _react2.default.createElement(
-	      'button',
-	      { className: btnStyles },
-	      'Estimates'
-	    )
-	  );
-
-	  var invoices = _react2.default.createElement(
-	    _reactRouter.Link,
-	    { to: pathname + '/invoices' },
-	    _react2.default.createElement(
-	      'button',
-	      { className: btnStyles },
-	      'Invoices'
-	    )
-	  );
-
-	  var logout = _react2.default.createElement(
-	    'button',
-	    { className: btnStyles + ' btn-danger', onClick: props.logout },
-	    'Log Out'
-	  );
-
-	  var request = _react2.default.createElement(
-	    _reactRouter.Link,
-	    { to: pathname + '/request' },
-	    _react2.default.createElement(
-	      'button',
-	      { className: btnStyles },
-	      'New Request'
-	    )
-	  );
-
-	  var requestsActive = _react2.default.createElement(
-	    _reactRouter.Link,
-	    { to: pathname + '/requests' },
-	    _react2.default.createElement(
-	      'button',
-	      { className: btnStyles },
-	      'Active Requests'
-	    )
-	  );
-
-	  var vesselInformation = _react2.default.createElement(
-	    _reactRouter.Link,
-	    { to: pathname + '/vessels' },
-	    _react2.default.createElement(
-	      'button',
-	      { className: btnStyles },
-	      'Vessel Information'
-	    )
-	  );
-
-	  return _react2.default.createElement(
-	    'span',
-	    null,
-	    request,
-	    requestsActive,
-	    estimates,
-	    invoices,
-	    accountInformation,
-	    vesselInformation,
-	    logout
-	  );
-	};
-
-	exports.default = ClientNavigation;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "ClientNavigation.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 486 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _SelectVessel = __webpack_require__(487);
-
-	var _SelectVessel2 = _interopRequireDefault(_SelectVessel);
-
-	var _helperData = __webpack_require__(488);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var RequestsForm = function (_React$Component) {
-	  _inherits(RequestsForm, _React$Component);
-
-	  function RequestsForm(props) {
-	    _classCallCheck(this, RequestsForm);
-
-	    var _this = _possibleConstructorReturn(this, (RequestsForm.__proto__ || Object.getPrototypeOf(RequestsForm)).call(this, props));
-
-	    _this.handleChange = _this.handleChange.bind(_this);
-
-	    var vesselsArray = [];
-	    for (var key in _this.props.vessels) {
-	      vesselsArray.push(_this.props.vessels[key]);
-	    }
-
-	    if (!vesselsArray[0]) {
-	      var vessel = {
-	        boatName: '',
-	        boatType: '',
-	        boatLoc: ''
-	      };
-	      vesselsArray.push(vessel);
-	    }
-
-	    _this.state = {
-	      vessel: vesselsArray[0],
-	      vessels: vesselsArray,
-	      length: vesselsArray.length
-	    };
-	    return _this;
-	  }
-
-	  _createClass(RequestsForm, [{
-	    key: 'handleChange',
-	    value: function handleChange(event) {
-	      this.setState({
-	        vessel: this.state.vessels[event.target.value]
-	      });
-	    }
-	  }, {
-	    key: 'submitRequest',
-	    value: function submitRequest(event) {
-	      event.preventDefault();
-
-	      var ntsReq = {
-	        boatLoc: this.boatLoc.value,
-	        date: Date.now(),
-	        jobDesc: this.jobDesc.value,
-	        owner: this.props.uid,
-	        status: 'Recieved',
-	        techy: 0,
-	        vesselId: this.state.vessel.id
-	      };
-
-	      ntsReq['id'] = ntsReq.date;
-	      this.props.postRequest(ntsReq);
-	      this.context.router.transitionTo('/dashboard/requests/' + ntsReq.id);
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
-
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'main-row' },
-	        _react2.default.createElement(
-	          'h1',
-	          { className: 'hidden-xs' },
-	          _react2.default.createElement(
-	            'small',
-	            null,
-	            'Request a service and recieve a response within 24 Hours'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'form',
-	          { className: 'form-horizontal row no-border col-md-12', onSubmit: function onSubmit(e) {
-	              return _this2.submitRequest(e);
-	            } },
-	          _react2.default.createElement(
-	            'fieldset',
-	            null,
-	            _react2.default.createElement(
-	              'legend',
-	              null,
-	              'Vessel Information'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-md-8 col-sm-8' },
-	                _react2.default.createElement(_SelectVessel2.default, {
-	                  handleChange: this.handleChange,
-	                  vessels: this.state.vessels,
-	                  length: this.state.length
-	                })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { htmlFor: 'boatName', className: 'sr-only' },
-	                'Boat Name'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-md-8 col-sm-8' },
-	                _react2.default.createElement('input', { ref: function ref(input) {
-	                    return _this2.boatName = input;
-	                  }, type: 'text', className: 'form-control', placeholder: 'Boat Name',
-	                  value: this.state.vessel.boatName
-	                })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { htmlFor: 'boatType', className: 'sr-only' },
-	                'Boat Type'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-md-8 col-sm-8' },
-	                _react2.default.createElement('input', { ref: function ref(input) {
-	                    return _this2.boatType = input;
-	                  }, type: 'text', className: 'form-control', placeholder: 'Boat Model and Length',
-	                  value: this.state.vessel.boatType
-	                })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { htmlFor: 'boatLoc', className: 'sr-only' },
-	                'Boat Location'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-md-8 col-sm-8' },
-	                _react2.default.createElement('input', { ref: function ref(input) {
-	                    return _this2.boatLoc = input;
-	                  }, type: 'text', className: 'form-control', placeholder: 'Boat Location',
-	                  value: this.state.vessel.boatLoc
-	                })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { htmlFor: 'jobDesc', className: 'sr-only' },
-	                'Job Description'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-md-8 col-sm-8' },
-	                _react2.default.createElement('textarea', { ref: function ref(input) {
-	                    return _this2.jobDesc = input;
-	                  }, className: 'form-control', rows: '6', placeholder: 'Job Description' })
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'fieldset',
-	            null,
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-md-6 col-sm-12' },
-	              _react2.default.createElement(
-	                'label',
-	                { htmlFor: 'submit', className: 'sr-only' },
-	                'Submit Request'
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { type: 'submit', className: 'btn btn-default btn-primary' },
-	                'Request Service'
-	              )
-	            )
-	          )
-	        ),
-	        _react2.default.createElement('div', null)
-	      );
-	    }
-	  }]);
-
-	  return RequestsForm;
-	}(_react2.default.Component);
-
-	RequestsForm.contextTypes = {
-	  router: _react2.default.PropTypes.object
-	};
-
-	exports.default = RequestsForm;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "RequestsForm.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 487 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var SelectVessel = function SelectVessel(props) {
-
-	  var vesselsArray = props.vessels;
-	  var options = [];
-	  for (var i = 0; i < vesselsArray.length; i++) {
-	    options.push(_react2.default.createElement(VesselOption, { key: i, index: i, details: vesselsArray[i] }));
-	  }
-
-	  return _react2.default.createElement(
-	    "select",
-	    { className: "form-control", value: vesselsArray[i], onChange: props.handleChange },
-	    _react2.default.createElement(
-	      "option",
-	      { value: "Select a Vessel" },
-	      "Select a Vessel"
-	    ),
-	    options
-	  );
-	};
-
-	var VesselOption = function VesselOption(props) {
-	  var details = props.details;
-
-	  return _react2.default.createElement(
-	    "option",
-	    { value: props.index },
-	    details.boatName
-	  );
-	};
-
-	exports.default = SelectVessel;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "SelectVessel.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 488 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.rando = rando;
-	exports.getFunName = getFunName;
-	exports.getLength = getLength;
-	exports.getType = getType;
-	exports.getLoc = getLoc;
-	exports.getDesc = getDesc;
-	exports.getName = getName;
-	function rando(arr) {
-		return arr[Math.floor(Math.random() * arr.length)];
-	}
-
-	function getFunName() {
-		var adjectives = ['adorable', 'beautiful', 'clean', 'drab', 'elegant', 'fancy', 'glamorous', 'handsome', 'long', 'magnificent', 'old-fashioned', 'plain', 'quaint', 'sparkling', 'ugliest', 'unsightly', 'angry', 'bewildered', 'clumsy', 'defeated', 'embarrassed', 'fierce', 'grumpy', 'helpless', 'itchy', 'jealous', 'lazy', 'mysterious', 'nervous', 'obnoxious', 'panicky', 'repulsive', 'scary', 'thoughtless', 'uptight', 'worried'];
-
-		var nouns = ['women', 'men', 'children', 'teeth', 'feet', 'people', 'leaves', 'mice', 'geese', 'halves', 'knives', 'wives', 'lives', 'elves', 'loaves', 'potatoes', 'tomatoes', 'cacti', 'foci', 'fungi', 'nuclei', 'syllabuses', 'analyses', 'diagnoses', 'oases', 'theses', 'crises', 'phenomena', 'criteria', 'data'];
-
-		return rando(adjectives) + '-' + rando(adjectives) + '-' + rando(nouns);
-	}
-
-	function getLength() {
-		return Math.floor(Math.random() * 100);
-	}
-
-	function getType() {
-
-		var type = ['Hunter', 'Piece-o-crap', 'Bucket', 'Sled', 'Log', 'Potato', 'Slick', 'Courage', 'Tub'];
-
-		return rando(type) + '-' + getLength();
-	}
-
-	function getLoc() {
-
-		var location = ['MDR'];
-		var slip = ['A', 'B', 'C', 'D', 'E', 'F'];
-		var number = Math.floor(Math.random() * 2000);
-
-		return rando(location) + '-' + rando(slip) + '-' + number;
-	}
-
-	function getDesc() {
-
-		var description = ['clogged my toilet', 'broke my boom', 'put a sock in my muffler', 'threw up in my fuel tank', 'thinks need a fuel change', 'thought i could use a turbo-charger'];
-
-		return getFunName() + ' ' + rando(description);
-	}
-
-	function getName() {
-		var prefixes = ["Buzz ", "Rock ", "Amazing ", "Bombastic ", "Chivalrous ", "Daring ", "Extraordinary ", "Fantastic ", "Gritty ", "Helpful ", "Incredible ", "Jaunty ", "Killer ", "Lowly ", "Quixotic ", "Savage ", "Unlikely ", "Vicious ", "Wild ", "Terrifying ", "Unlikely ", "Marvelous ", "Nefarious ", "Odious ", "Poisonous ", "Radioactive ", "Smarty ", "Mask ", "Powerhouse ", "Buzz ", "Smarty ", "Mask ", "Tough ", "Incredible ", "Firey ", "Toxic ", "Wind ", "Walker ", "Captain ", "Capetape ", "Major ", "Math ", "Super ", "Glitter ", "Crimson ", "Moon ", "Chaser ", "The Electric ", "Speeding ", "Magenta ", "Comet ", "Obsidian ", "Pink ", "Green ", "Sparkle ", "Jade ", "Jester ", "Thunder ", "Rapid ", "Duke ", "Whistle ", "Shadow ", "Wing ", "Arrow ", "Sapphire ", "Astro ", "Captain ", "The Glittering ", "The Outer Space ", "The Extraterrestrial ", "The Swift ", "Magic "];
-
-		var affixes = ["Flash ", "Imp", "Jaguar", "Lizard", "Nymph", "Ogre", "Python", "Queen", "Robot", "Spirit", "Thief", "Underdog", "Vampire", "Wizard", "Witch", "Alien ", "Beast", "Dragon", "Eagle", "Fairy", "Giant", "Hawk", "Wonder", "Atom", "Powerhouse ", "Protector ", "Pants", "Destroyer", "Crusher", "Defender", "Kid", "Wizard", "Falcon", "Phoenix", "Hurricane", "Hunter ", "Sleuth ", "Kitten", "Fluffball", "Dragon", "Pony", "Gazius ", "Magmamingo ", "Chimitar ", "Oysterminate ", "Discorpion ", "Unicorn", "Feather", "Lightning", "Thunder"];
-
-		return rando(prefixes) + ' ' + rando(affixes);
-	}
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "helperData.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 489 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _VesselForm = __webpack_require__(490);
-
-	var _VesselForm2 = _interopRequireDefault(_VesselForm);
-
-	var _base = __webpack_require__(213);
-
-	var _base2 = _interopRequireDefault(_base);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Vessels = function (_React$Component) {
-		_inherits(Vessels, _React$Component);
-
-		function Vessels(props) {
-			_classCallCheck(this, Vessels);
-
-			var _this = _possibleConstructorReturn(this, (Vessels.__proto__ || Object.getPrototypeOf(Vessels)).call(this, props));
-
-			_this.addForm = _this.addForm.bind(_this);
-			_this.removeForm = _this.removeForm.bind(_this);
-			_this.state = {
-				numForms: 0
-			};
-			return _this;
-		}
-
-		// OnClick show vessel form
-
-
-		_createClass(Vessels, [{
-			key: 'addForm',
-			value: function addForm() {
-				var oldState = this.state.numForms + 1;
-				this.setState({ numForms: oldState });
-			}
-		}, {
-			key: 'removeForm',
-			value: function removeForm() {
-				// Cancels all open forms
-				var oldState = this.state.numForms;
-				this.setState({ numForms: 0 });
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				var vessels = this.props.vessels;
-				var btnStyles = 'btn btn-sm';
-				var forms = [];
-
-				if (!this.props.vessels) {
-					vessels = {
-						vessel: {
-							boatName: '-',
-							boatType: '-'
-						}
-					};
-				}
-
-				for (var i = 0; i < this.state.numForms; i++) {
-					forms.push(_react2.default.createElement(_VesselForm2.default, {
-						key: i, index: i,
-						postVessel: this.props.postVessel,
-						uid: this.props.uid,
-						removeForm: this.removeForm
-					}));
-				}
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'main-row' },
-					_react2.default.createElement(
-						'div',
-						{ className: 'row no-border' },
-						_react2.default.createElement(
-							'div',
-							{ className: 'col-md-12' },
-							_react2.default.createElement(
-								'button',
-								{ onClick: this.addForm, className: btnStyles + ' btn-success' },
-								'Add a vessel'
-							),
-							forms,
-							_react2.default.createElement(
-								'table',
-								{ className: 'table table-striped' },
-								_react2.default.createElement(
-									'caption',
-									null,
-									'Current Vessels'
-								),
-								_react2.default.createElement(
-									'tbody',
-									null,
-									_react2.default.createElement(
-										'tr',
-										null,
-										_react2.default.createElement(
-											'th',
-											null,
-											'Hull ID'
-										),
-										_react2.default.createElement(
-											'th',
-											null,
-											'CF'
-										),
-										_react2.default.createElement(
-											'th',
-											null,
-											'Name'
-										),
-										_react2.default.createElement(
-											'th',
-											null,
-											'Type'
-										),
-										_react2.default.createElement(
-											'th',
-											null,
-											'Verified'
-										)
-									),
-									Object.keys(vessels).map(function (key) {
-										return _react2.default.createElement(VesselTd, { key: key, index: key, vessel: _this2.props.vessels[key] });
-									})
-								)
-							)
-						)
-					)
-				);
-			}
-		}]);
-
-		return Vessels;
-	}(_react2.default.Component);
-
-	exports.default = Vessels;
-
-
-	var VesselTd = function VesselTd(props) {
-		var vessel = props.vessel;
-		return _react2.default.createElement(
-			'tr',
-			null,
-			_react2.default.createElement(
-				'td',
-				null,
-				'-'
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				'-'
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				vessel.boatName
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				vessel.boatType
-			),
-			_react2.default.createElement(
-				'td',
-				null,
-				'1'
-			)
-		);
-	};
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Vessels.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 490 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _helperData = __webpack_require__(488);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var VesselForm = function (_React$Component) {
-		_inherits(VesselForm, _React$Component);
-
-		function VesselForm(props) {
-			_classCallCheck(this, VesselForm);
-
-			return _possibleConstructorReturn(this, (VesselForm.__proto__ || Object.getPrototypeOf(VesselForm)).call(this, props));
-		}
-
-		_createClass(VesselForm, [{
-			key: 'submit',
-			value: function submit(event) {
-				event.preventDefault();
-				var ntsVes = {
-					boatLoc: this.boatLoc.value,
-					boatName: this.boatName.value,
-					boatType: this.boatType.value,
-					hullId: 0,
-					id: Date.now(),
-					owner: this.props.uid,
-					stateId: 0,
-					status: 'archived',
-					uscgId: 0,
-					verified: 0
-				};
-				this.props.postVessel(ntsVes);
-			}
-		}, {
-			key: 'cancel',
-			value: function cancel(event) {
-				// Cancels all open forms
-				this.props.removeForm(this.props.index);
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				return _react2.default.createElement(
-					'form',
-					{ className: 'form-inline', onSubmit: function onSubmit(e) {
-							return _this2.submit(e);
-						} },
-					_react2.default.createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2.default.createElement(
-							'label',
-							{ className: 'sr-only', htmlFor: 'boatName' },
-							'Vessel Name'
-						),
-						_react2.default.createElement('input', { ref: function ref(input) {
-								return _this2.boatName = input;
-							}, type: 'text', className: 'form-control', defaultValue: (0, _helperData.getName)(), placeholder: 'Vessel Name' })
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2.default.createElement(
-							'label',
-							{ className: 'sr-only', htmlFor: 'boatType' },
-							'Vessel Type'
-						),
-						_react2.default.createElement('input', { ref: function ref(input) {
-								return _this2.boatType = input;
-							}, type: 'text', className: 'form-control', defaultValue: (0, _helperData.getType)(), placeholder: 'Vessel Model' })
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2.default.createElement(
-							'label',
-							{ className: 'sr-only', htmlFor: 'boatLoc' },
-							'Vessel Location'
-						),
-						_react2.default.createElement('input', { ref: function ref(input) {
-								return _this2.boatLoc = input;
-							}, type: 'text', className: 'form-control', defaultValue: (0, _helperData.getLoc)(), placeholder: 'Vessel Location' })
-					),
-					_react2.default.createElement(
-						'button',
-						{ type: 'submit', className: 'btn btn-success' },
-						'Submit'
-					),
-					_react2.default.createElement(
-						'button',
-						{ type: 'button', onClick: function onClick(e) {
-								return _this2.cancel(e);
-							}, className: 'btn btn-danger' },
-						'Cancel'
-					)
-				);
-			}
-		}]);
-
-		return VesselForm;
-	}(_react2.default.Component);
-
-	exports.default = VesselForm;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("D:\\EASY_G\\OneDrive\\webDocuments\\nts-nerf\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "VesselForm.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }
 ]);
